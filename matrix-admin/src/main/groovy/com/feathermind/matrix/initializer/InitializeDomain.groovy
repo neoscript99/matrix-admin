@@ -18,7 +18,7 @@ import java.lang.annotation.*
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface InitializeDomain {
-    String[] value() default ['default'];
+    String value() default 'initList';
 
     Class[] depends() default [];
 

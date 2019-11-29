@@ -16,13 +16,6 @@ group = 'com.feathermind.matrix'
 version = '1.0'
 sourceCompatibility = '1.8'
 
-configurations {
-	developmentOnly
-	runtimeClasspath {
-		extendsFrom developmentOnly
-	}
-}
-
 repositories {
 	maven { url "http://maven.aliyun.com/nexus/content/groups/public" }
 	jcenter()
@@ -39,7 +32,9 @@ dependencies {
 	implementation "org.apache.tomcat.embed:tomcat-embed-logging-log4j:8.5.0"
 	implementation 'org.springframework.boot:spring-boot-starter-logging'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	//devtools存在Domain Class加载多次问题
+	//https://github.com/grails/grails-data-mapping/issues/970
+	//developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 
 	implementation 'net.unicon.cas:cas-client-autoconfig-support:2.2.0-GA'

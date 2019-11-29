@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component
  *
  * Created by Neo on 2017-07-01.
  */
-//@Component
+@Component
 @Order(InitializeOrder.FIRST)
 class MatrixAdminInitRunner extends AbstractDataInitializerRunner {
 

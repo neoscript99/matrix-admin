@@ -1,0 +1,10 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.feathermind.matrix.MatrixAdminAutoConfiguration
+
+# PropertySource Loaders
+org.springframework.boot.env.PropertySourceLoader=\
+  com.feathermind.matrix.config.GroovyConfigPropertySourceLoader
+
+# Application Listeners
+org.springframework.context.ApplicationListener=\
+  com.feathermind.matrix.config.ErrorLoggingApplicationListener
