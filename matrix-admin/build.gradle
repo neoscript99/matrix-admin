@@ -1,0 +1,61 @@
+buildscript {
+	repositories {
+		maven { url "http://maven.aliyun.com/nexus/content/groups/public" }
+		jcenter()
+		maven { url "https://repo.grails.org/grails/core" }
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.2.1.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'groovy'
+}
+
+group = 'com.feathermind.matrix'
+version = '1.0'
+sourceCompatibility = '1.8'
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
+
+repositories {
+	maven { url "http://maven.aliyun.com/nexus/content/groups/public" }
+	jcenter()
+	maven { url "https://repo.grails.org/grails/core" }
+}
+
+dependencies {
+	implementation("org.grails:gorm-hibernate5-spring-boot:7.0.1.RELEASE")
+	implementation "org.hibernate:hibernate-core"
+	implementation "org.hibernate:hibernate-ehcache"
+	implementation "com.h2database:h2:1.4.192"
+
+	implementation "org.apache.tomcat:tomcat-jdbc:8.5.0"
+	implementation "org.apache.tomcat.embed:tomcat-embed-logging-log4j:8.5.0"
+	implementation 'org.springframework.boot:spring-boot-starter-logging'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+
+	implementation 'net.unicon.cas:cas-client-autoconfig-support:2.2.0-GA'
+	implementation 'cn.hutool:hutool-core:5.0.3'
+	implementation 'cn.hutool:hutool-crypto:5.0.3'
+	implementation 'org.apache.poi:poi-ooxml:3.16'
+
+	testImplementation('org.spockframework:spock-spring:1.3-groovy-2.5')
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+bootRun {
+	jvmArgs('-Dspring.output.ansi.enabled=always')
+	systemProperty 'spring.profiles.active', 'dev'
+	systemProperty 'init', 'true'
+	systemProperties System.properties
+}
