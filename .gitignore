@@ -5,7 +5,7 @@ build/
 classes/
 bin/
 out/
-.idea
+.idea/
 *.iml
 *.ipr
 *.iws

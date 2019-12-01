@@ -1,6 +1,5 @@
 package com.feathermind.matrix.controller
 
-import com.feathermind.matrix.domain.sys.User
 import com.feathermind.matrix.service.AbstractService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -40,4 +39,16 @@ abstract class DomainController<T> {
     ResponseEntity<T> save(@RequestBody Map entityMap) {
         return ResponseEntity.ok(domainService.save(entityMap))
     }
+
+    @PostMapping("/list")
+    ResponseEntity<List<T>> list(@RequestBody Map criteria) {
+        return ResponseEntity.ok(domainService.list(criteria))
+    }
+
+    @PostMapping("/count")
+    ResponseEntity<Integer> count(@RequestBody Map criteria) {
+        return ResponseEntity.ok(domainService.count(criteria))
+    }
+
+    static final List<String> COUNT_REMOVE_KEY = ['maxResults', 'firstResult', 'order']
 }
