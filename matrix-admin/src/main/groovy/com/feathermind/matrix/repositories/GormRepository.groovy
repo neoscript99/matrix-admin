@@ -1,9 +1,11 @@
 package com.feathermind.matrix.repositories
 
+import com.feathermind.matrix.util.JsonUtil
 import groovy.transform.CompileStatic
 import groovy.transform.TypeCheckingMode
 import groovy.util.logging.Slf4j
 import com.feathermind.matrix.util.GormCriteriaUtil
+import org.grails.datastore.gorm.GormEnhancer
 import org.grails.datastore.gorm.GormEntity
 import org.hibernate.SessionFactory
 import org.hibernate.criterion.CriteriaSpecification
@@ -140,7 +142,9 @@ class GormRepository implements GeneralRepository {
      */
     @Override
     Number deleteById(Class domain, Object id) {
-        deleteByIds(domain, [id])
+        GormEnhancer.findStaticApi(domain).where {
+            idEq id
+        }.deleteAll()
     }
 
     /**
@@ -148,7 +152,9 @@ class GormRepository implements GeneralRepository {
      */
     @Override
     Number deleteByIds(Class domain, List idList) {
-        deleteMatch(domain, ['in': [['id', idList]]])
+        GormEnhancer.findStaticApi(domain).where {
+            inList('id', idList)
+        }.deleteAll()
     }
 
     /**

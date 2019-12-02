@@ -1,0 +1,26 @@
+plugins {
+    id "com.moowork.node" version "1.3.1"
+}
+node {
+    download = false
+}
+
+task yarnBuild(type: YarnTask) {
+    args = ['build']
+    doLast {
+        copy {
+            from "src/utils/config.dev.ts"
+            into "src/utils/"
+            rename 'config.dev.ts', 'config.ts'
+        }
+    }
+}
+
+task copyProdConfig(type: Copy) {
+    from "src/utils/config.prod.ts"
+    into "src/utils/"
+
+    rename 'config.prod.ts', 'config.ts'
+}
+
+yarnBuild.dependsOn(copyProdConfig)

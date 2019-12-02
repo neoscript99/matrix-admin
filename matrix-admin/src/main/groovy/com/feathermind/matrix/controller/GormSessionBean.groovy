@@ -1,6 +1,7 @@
 package com.feathermind.matrix.controller
 
-
+import com.feathermind.matrix.domain.sys.Token
+import com.feathermind.matrix.service.CasClientService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
 import org.springframework.context.annotation.ScopedProxyMode
@@ -11,17 +12,17 @@ import org.springframework.web.context.WebApplicationContext
 @Component
 class GormSessionBean {
     @Autowired
-    com.feathermind.matrix.service.CasClientService casClientService
+    CasClientService casClientService
 
-    private com.feathermind.matrix.domain.sys.Token token
+    private Token token
 
-    com.feathermind.matrix.domain.sys.Token getToken() {
+    Token getToken() {
         if (!token && casClientService.clientEnabled)
             token = casClientService.createTokenByCas()
         return token
     }
 
-    void setToken(com.feathermind.matrix.domain.sys.Token token) {
+    void setToken(Token token) {
         this.token = token
     }
 }

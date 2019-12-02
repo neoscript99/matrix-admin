@@ -1,6 +1,7 @@
 package com.feathermind.matrix.controller
 
-
+import com.feathermind.matrix.service.AttachmentService
+import com.feathermind.matrix.service.CasClientService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.CacheControl
 import org.springframework.http.MediaType
@@ -19,9 +20,11 @@ class GormController {
     @Autowired
     GormSessionBean gormSessionBean
     @Autowired
-    com.feathermind.matrix.service.AttachmentService attachmentService
+    AttachmentService attachmentService
     @Autowired
-    com.feathermind.matrix.service.CasClientService casClientService
+    CasClientService casClientService
+    @Autowired
+            UserController userController
 
     @GetMapping("attach/{id}")
     public ResponseEntity<byte[]> getAttach(@PathVariable("id") String id) throws IOException {
@@ -39,8 +42,7 @@ class GormController {
 
     @GetMapping("logout")
     public RedirectView logout(HttpSession session) {
-        gormSessionBean.token = null;
-        session.invalidate()
+        userController.logout(session)
         String redirectUrl = casClientService.clientEnabled ? casClientService.getLogoutUrl() : '/index.html'
         return new RedirectView(redirectUrl);
     }

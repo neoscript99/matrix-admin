@@ -2,4 +2,5 @@ rootProject.name = 'yzedu-research'
 
 include 'matrix-admin',
         'yzres-service',
-        'oo-rest-mobx'
+        'oo-rest-mobx',
+        'yzres-web'

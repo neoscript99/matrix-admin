@@ -45,7 +45,7 @@ class MenuInitializer extends AbstractDataInitializer implements DataInitializer
                 new Menu(label: '用户角色', app: 'UserRole', seq: 44, parentId: sys.id, icon: 'deployment-unit'),
                 new Menu(label: '角色管理', app: 'Role', seq: 11, parentId: sys.id, icon: 'deployment-unit'),
                 new Menu(label: '机构管理', app: 'Dept', seq: 22, parentId: sys.id, icon: 'apartment'),
-                new Menu(label: '发布通知', app: 'Note', seq: 55, parentId: sys.id, icon: 'notification'),
+                //new Menu(label: '发布通知', app: 'Note', seq: 55, parentId: sys.id, icon: 'notification'),
                 new Menu(label: '参数维护', app: 'Param', seq: 66, parentId: sys.id, icon: 'setting')
         ]
     }
