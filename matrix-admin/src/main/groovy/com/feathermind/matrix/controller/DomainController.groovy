@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = ["http://localhost:3000", "null"], allowCredentials = "true")
 abstract class DomainController<T> {
     protected Logger log = LoggerFactory.getLogger(this.getClass())
     private Class<T> domain;
