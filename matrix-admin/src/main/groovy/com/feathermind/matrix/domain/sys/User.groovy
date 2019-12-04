@@ -1,5 +1,6 @@
 package com.feathermind.matrix.domain.sys
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.feathermind.matrix.util.EncoderUtil
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
@@ -12,6 +13,8 @@ import com.feathermind.matrix.initializer.InitializeDomain
 @ToString(includePackage = false, includes = 'name,dept')
 @EqualsAndHashCode(includes = 'account')
 @InitializeDomain(depends = [Department])
+@JsonIgnoreProperties(value = ['password', "dirtyPropertyNames", "errors", "dirty", "attached", "version", "properties", "metaClass", "tenantId", "dbo"]
+        , allowSetters = true)
 /**
  * 管理后台的系统用户信息
  * sys包下都是管理后台相关domain

@@ -86,6 +86,14 @@ class UserController extends DomainController<User> {
                                                 defaultRoles : casClientService.casDefaultRoles]))
     }
 
+    @PostMapping("/resetPassword")
+    ResponseEntity<ResBean> resetPassword(@RequestBody Map req) {
+        def user = userService.get(req.userId)
+        user.password=req.passwordHash
+        userService.saveEntity(user)
+        return ResponseEntity.ok(new ResBean())
+    }
+
     @Override
     AbstractService<User> getDomainService() {
         return userService

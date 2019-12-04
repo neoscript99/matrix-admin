@@ -1,5 +1,7 @@
 package com.feathermind.matrix.repositories
 
+import cn.hutool.core.bean.BeanUtil
+import cn.hutool.core.bean.copier.CopyOptions
 import com.feathermind.matrix.util.JsonUtil
 import groovy.transform.CompileStatic
 import groovy.transform.TypeCheckingMode
@@ -28,6 +30,8 @@ class GormRepository implements GeneralRepository {
     MessageSource messageSource
     @Autowired
     SessionFactory sessionFactory
+
+    static String[] PROPERTY_NOT_COPY = ['id', 'version', 'metaClass', 'lastUpdated', 'dateCreated'].toArray(new String[0])
     /**
      * @see GeneralRepository#get
      */
@@ -63,10 +67,13 @@ class GormRepository implements GeneralRepository {
     @Override
     public <T> T saveMap(Class<T> domain, Map map) {
         GormEntity newEntity = JsonUtil.mapToBean(map, domain)
-        if (newEntity.ident())
-            saveTransietEntity(newEntity)
-        else
-            saveEntity(newEntity)
+        if (newEntity.ident()) {
+            //支持部分属性更新,不能直接用bean做copy是因为bean会有初始话的值
+            GormEntity updateEntity = get(domain, newEntity.ident())
+            BeanUtil.fillBeanWithMap(map, updateEntity, CopyOptions.create().setIgnoreProperties(PROPERTY_NOT_COPY))
+            saveEntity(updateEntity)
+        } else
+            saveEntity(JsonUtil.mapToBean(map, domain))
     }
 
     /**
@@ -81,8 +88,7 @@ class GormRepository implements GeneralRepository {
             if (attachedEntity.hasProperty('version'))
                 log.debug("old version is $attachedEntity.version")
 
-            BeanUtils.copyProperties(transietEntity, attachedEntity,
-                    ['id', 'version', 'metaClass'].toArray(new String[0]))
+            BeanUtils.copyProperties(transietEntity, attachedEntity, PROPERTY_NOT_COPY)
             saveEntity(attachedEntity)
         } else //insert
             saveEntity(transietEntity)

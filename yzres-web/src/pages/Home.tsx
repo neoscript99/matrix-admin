@@ -11,7 +11,7 @@ import {
   DeptList,
   Note,
   Param,
-  Profile,
+  UserProfile,
   MenuEntity,
   OperatorSwitch,
   UserRoleList,
@@ -112,7 +112,7 @@ export class Home extends Component<P, { collapsed: boolean }> {
                 />
                 <Route path={`${pathPrefix}Note/`} render={() => <Note services={adminServices} name="通知" />} />
                 <Route path={`${pathPrefix}Param/`} render={() => <Param services={adminServices} name="参数" />} />
-                <Route path={`${pathPrefix}Profile/`} render={() => <Profile />} />
+                <Route path={`${pathPrefix}Profile/`} render={() => <UserProfile services={adminServices} />} />
                 <Route render={() => <Welcome />} />
               </Switch>
             </Content>
