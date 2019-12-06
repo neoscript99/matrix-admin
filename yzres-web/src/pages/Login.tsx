@@ -35,13 +35,16 @@ class LoginForm extends Component<FormComponentProps<any>> {
       <div className="login-page">
         <div className="form-box l-col-wrap">
           <div className="l-col form-box__content">
-            <h1 className="form-box__title">模拟登录系统介绍</h1>
+            <h1 className="form-box__title">鄞州区教育局科研项目管理系统</h1>
             <div>
               <p>
-                登录系统管理： <em>维护模拟登录的系统</em>
+                项目立项： <em>各单位提交立项申请</em>
               </p>
               <p>
-                登录信息管理： <em>模拟登录的用户和密码</em>
+                成果评比： <em>专家对项目成果进行评分、排名</em>
+              </p>
+              <p>
+                论文评比： <em>专家对论文进行评分、排名</em>
               </p>
             </div>
           </div>
