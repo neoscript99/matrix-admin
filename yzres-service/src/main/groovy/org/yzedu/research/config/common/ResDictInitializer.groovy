@@ -17,49 +17,41 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
     void doInit() {
         topicCateDict()
         topicSourceDict()
-        degreeDict()
-        researchDirectionDict()
+        resContentDict()
+        resTargetDict()
+        resAchieveFormDict()
+        resAchieveCateDict()
     }
 
     void topicCateDict() {
         def dictType = new DictType(id: 'yz-res-topic-cate', name: '课题类别').save()
 
-        new Dict(code: 'YZZD', name: '鄞州重点', seq: 1, type: dictType).save();
-        new Dict(code: 'YZGH', name: '鄞州规划', seq: 2, type: dictType).save();
-        new Dict(code: 'YZYS', name: '鄞州艺术', seq: 3, type: dictType).save();
-        new Dict(code: 'YZKJ', name: '鄞州课程', seq: 4, type: dictType).save();
-        new Dict(code: 'YZDY', name: '鄞州德育', seq: 5, type: dictType).save();
-        new Dict(code: 'YZTY', name: '鄞州体育', seq: 6, type: dictType).save();
+        new Dict(code: 'YZZD', name: '鄞州重点', seq: 10, type: dictType).save();
+        new Dict(code: 'YZGH', name: '鄞州规划', seq: 20, type: dictType).save();
+        new Dict(code: 'YZYS', name: '鄞州艺术', seq: 30, type: dictType).save();
+        new Dict(code: 'YZKJ', name: '鄞州课程', seq: 40, type: dictType).save();
+        new Dict(code: 'YZDY', name: '鄞州德育', seq: 50, type: dictType).save();
+        new Dict(code: 'YZTY', name: '鄞州体育', seq: 60, type: dictType).save();
     }
 
     void topicSourceDict() {
         def dictType = new DictType(id: 'yz-res-topic-source', name: '课题来源').save()
 
-        new Dict(code: 'CZ', name: '初中', seq: 1, type: dictType).save();
-        new Dict(code: 'XX', name: '小学', seq: 2, type: dictType).save();
-        new Dict(code: 'JN', name: '九年制', seq: 3, type: dictType).save();
-        new Dict(code: 'YJ', name: '幼教', seq: 4, type: dictType).save();
-        new Dict(code: 'TJ', name: '特教', seq: 5, type: dictType).save();
-        new Dict(code: 'CJ', name: '成教', seq: 6, type: dictType).save();
-        new Dict(code: 'MB', name: '民办', seq: 7, type: dictType).save();
-        new Dict(code: 'ZS', name: '直属', seq: 8, type: dictType).save();
-    }
-
-    void degreeDict() {
-        def dictType = new DictType(id: 'yz-res-degree', name: '学历').save()
-
-        new Dict(code: 'doctor', name: '博士研究生', seq: 1, type: dictType).save();
-        new Dict(code: 'master', name: '硕士研究生', seq: 2, type: dictType).save();
-        new Dict(code: 'bachelor', name: '大学本科', seq: 3, type: dictType).save();
-        new Dict(code: 'college-below', name: '大专及以下', seq: 4, type: dictType).save();
-
+        new Dict(code: 'CZ', name: '初中', seq: 10, type: dictType).save();
+        new Dict(code: 'XX', name: '小学', seq: 20, type: dictType).save();
+        new Dict(code: 'JN', name: '九年制', seq: 30, type: dictType).save();
+        new Dict(code: 'YJ', name: '幼教', seq: 40, type: dictType).save();
+        new Dict(code: 'TJ', name: '特教', seq: 50, type: dictType).save();
+        new Dict(code: 'CJ', name: '成教', seq: 60, type: dictType).save();
+        new Dict(code: 'MB', name: '民办', seq: 70, type: dictType).save();
+        new Dict(code: 'ZS', name: '直属', seq: 80, type: dictType).save();
     }
 
     /**
      * 研究内容
      */
-    void researchDirectionDict() {
-        def dictType = new DictType(id: 'yz-res-dir', name: '研究内容').save()
+    void resContentDict() {
+        def dictType = new DictType(id: 'yz-res-content', name: '研究内容').save()
 
         new Dict(code: 'school-manage', name: '学校管理', seq: 10, type: dictType).save();
         new Dict(code: 'edu-mode', name: '育人模式', seq: 20, type: dictType).save();
@@ -91,11 +83,42 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         new Dict(code: 'other', name: '其他', seq: 100, type: dictType).save();
     }
 
-    void targetDict() {
+    void resTargetDict() {
         def dictType = new DictType(id: 'yz-res-target', name: '研究对象').save()
         new Dict(code: 'student', name: '学生', seq: 10, type: dictType).save();
-        new Dict(code: 'teacher', name: '教师', seq: 10, type: dictType).save();
-        new Dict(code: 'school', name: '学校（幼儿园）', seq: 10, type: dictType).save();
-        new Dict(code: 'other', name: '其它', seq: 10, type: dictType).save();
+        new Dict(code: 'teacher', name: '教师', seq: 20, type: dictType).save();
+        new Dict(code: 'school', name: '学校（幼儿园）', seq: 30, type: dictType).save();
+        new Dict(code: 'other', name: '其它', seq: 40, type: dictType).save();
+    }
+
+    void resAchieveFormDict(){
+        def dictType = new DictType(id: 'yz-res-achieve-form', name: '成果形式').save()
+        new Dict(code: 'writing-translation', name: '专（译）著', seq: 10, type: dictType).save();
+        new Dict(code: 'research-report', name: '研究报告', seq: 20, type: dictType).save();
+        new Dict(code: 'paper', name: '论文', seq: 30, type: dictType).save();
+        new Dict(code: 'student-book', name: '学生用书', seq: 40, type: dictType).save();
+        new Dict(code: 'teacher-book', name: '教师用书', seq: 50, type: dictType).save();
+        new Dict(code: 'training-aid', name: '教具', seq: 60, type: dictType).save();
+        new Dict(code: 'other', name: '其它', seq: 70, type: dictType).save();
+    }
+
+    void resAchieveCateDict(){
+        def dictType = new DictType(id: 'yz-res-achieve-cate', name: '成果类别').save()
+        new Dict(code: 'c1-integrated-study', name: 'C1综合研究类', seq: 10, type: dictType).save();
+        //C2教学研究类，细分：
+        new Dict(code: 'c2-1-integrated-teaching', name: 'C2-1：教学综合', seq: 20, type: dictType).save();
+        new Dict(code: 'c2-2-chinese', name: 'C2-2：语文', seq: 30, type: dictType).save();
+        new Dict(code: 'c2-3-mathematics', name: 'C2-3：数学', seq: 40, type: dictType).save();
+        new Dict(code: 'c2-4-english', name: 'C2-4：英语', seq: 50, type: dictType).save();
+        new Dict(code: 'c2-5-science', name: 'C2-5：科学（物理、化学、生物、信息技术）', seq: 60, type: dictType).save();
+        new Dict(code: 'c2-6-society', name: 'C2-6：社会（政治、历史、地理）', seq: 70, type: dictType).save();
+        new Dict(code: 'c2-7-sport', name: 'C2-7：体育', seq: 80, type: dictType).save();
+        new Dict(code: 'c2-8-music', name: 'C2-8：音乐', seq: 90, type: dictType).save();
+        new Dict(code: 'c2-9-painting', name: 'C2-9：美术', seq: 100, type: dictType).save();
+        new Dict(code: 'c3-course-study', name: 'C3课程研究类', seq: 110, type: dictType).save();
+        new Dict(code: 'c4-moral-mental', name: 'C4德育、心理教育研究类', seq: 120, type: dictType).save();
+        new Dict(code: 'd-preschool-edu', name: 'D幼儿教育类', seq: 130, type: dictType).save();
+        new Dict(code: 'e-achieve-extension', name: 'E成果推广类', seq: 140, type: dictType).save();
+
     }
 }

@@ -8,14 +8,12 @@ import groovy.transform.ToString
 @ToString(includePackage = false, includes = 'name')
 @InitializeDomain
 class Department {
-    static final Department HEAD_OFFICE = new Department(name: '总部', seq: 1);
     String id
     String name;
     Integer seq;
     Boolean enabled = true
-
+    static final Department HEAD_OFFICE = new Department(name: '总部', seq: 1);
     static initList = [HEAD_OFFICE]
-    static graphql = true
     static constraints = {
         name unique: true
     }

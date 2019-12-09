@@ -29,7 +29,9 @@ class User {
 
     Department dept
 
-    //User lastUser;
+    String phoneNumber
+    String email
+
     Date lastUpdated;
     Date dateCreated;
 
@@ -40,10 +42,10 @@ class User {
     static constraints = {
         account unique: true
         password maxSize: 80
-        //lastUser nullable: true
+        phoneNumber nullable: true
+        email nullable: true
     }
 
-    static graphql
 
     static final User ADMIN = (new User(account: 'admin', name: '系统管理员', dept: Department.HEAD_OFFICE,
             editable: false))

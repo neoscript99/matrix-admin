@@ -7,7 +7,6 @@ import com.feathermind.matrix.domain.sys.User
 import com.feathermind.matrix.service.AbstractService
 import com.feathermind.matrix.service.CasClientService
 import com.feathermind.matrix.service.TokenService
-import com.feathermind.matrix.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,13 +20,9 @@ import javax.servlet.http.HttpSession
 @RequestMapping("/api/user")
 class UserController extends DomainController<User> {
     @Autowired
-    UserService userService
-    @Autowired
     CasClientService casClientService
     @Autowired
     TokenService tokenService
-    @Autowired(required = false)
-    GormSessionBean gormSessionBean
 
     @PostMapping("/login")
     ResponseEntity<LoginInfo> login(@RequestBody Map req) {
