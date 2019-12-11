@@ -1,14 +1,14 @@
 package org.yzedu.research.config.common
 
-import com.feathermind.matrix.domain.sys.Department
 import com.feathermind.matrix.domain.sys.Role
 import com.feathermind.matrix.initializer.AbstractDataInitializer
 import com.feathermind.matrix.initializer.DataInitializer
 import groovy.transform.CompileStatic
+import groovy.transform.TypeCheckingMode
 import org.springframework.core.annotation.Order
 
 @Order(100)
-@CompileStatic
+@CompileStatic(TypeCheckingMode.SKIP)
 class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInitializer {
     @Override
     boolean isInited() {

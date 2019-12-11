@@ -31,19 +31,20 @@ class User {
 
     String phoneNumber
     String email
+    String sexCode
 
     Date lastUpdated;
     Date dateCreated;
 
     static mapping = {
         dept fetch: 'join', lazy: false
-        //lastUser fetch: 'join', lazy: false
     }
     static constraints = {
         account unique: true
         password maxSize: 80
         phoneNumber nullable: true
         email nullable: true
+        sexCode nullable: true
     }
 
 

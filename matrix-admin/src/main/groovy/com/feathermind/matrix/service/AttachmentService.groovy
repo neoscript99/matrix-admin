@@ -1,5 +1,6 @@
 package com.feathermind.matrix.service
 
+import cn.hutool.core.lang.UUID
 import com.feathermind.matrix.domain.sys.AttachmentFile
 import com.feathermind.matrix.domain.sys.AttachmentInfo
 import com.feathermind.matrix.util.EncoderUtil
@@ -7,10 +8,13 @@ import grails.gorm.transactions.ReadOnly
 import org.apache.poi.util.IOUtils
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.support.ResourcePatternResolver
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @Service
 class AttachmentService extends AbstractService<AttachmentInfo> {
+
+    static public String ATTACH_TEMP_ID_PREFIX = 'MatrixTempFile_';
 
     AttachmentInfo saveWithFile(File file, String ownerId, String ownerName) {
         if (file && file.isFile())
@@ -20,7 +24,7 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
 
     }
 
-    AttachmentInfo saveWithByte(String name, String ownerId, ownerName, byte[] data) {
+    AttachmentInfo saveWithByte(String name, String ownerId, String ownerName, byte[] data) {
         def fileHash = EncoderUtil.sha256(data);
         def attInfo = new AttachmentInfo(name: name, ownerId: ownerId, ownerName: ownerName, fileSize: data.length);
         def existFile = getFile(fileHash)
@@ -97,6 +101,18 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
         //def file = resourcePatternResolver.getResource(resPath).file;
         def data = IOUtils.toByteArray(res.getInputStream())
         saveWithByte(res.filename, ownerId, ownerName, data);
+    }
+
+    String genTempOwnerId() {
+        return "${ATTACH_TEMP_ID_PREFIX}${UUID.fastUUID().toString()}"
+    }
+
+    @Scheduled(cron = "0 0 * * * *")
+    void cleanTemp() {
+        log.info("定时删除一些没有所属对象的附件，正式环境删除一天前的临时附件")
+        def list = list([like: [['ownerId', "${ATTACH_TEMP_ID_PREFIX}%".toString()]],
+                         lt  : [['dateCreated', new Date() - 1]]])
+        deleteInfoByOwners(list*.ownerId)
     }
 
     static class InfoAndFile {

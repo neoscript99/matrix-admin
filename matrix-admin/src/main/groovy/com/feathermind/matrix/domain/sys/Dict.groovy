@@ -20,13 +20,17 @@ class Dict {
     void setType(DictType type) {
         this.type = type
         if (code)
-            id = "$type.id~$code"
+            id = Dict.genId(type, code)
     }
 
     void setCode(String code) {
         this.code = code
         if (type)
-            id = "$type.id~$code"
+            id = Dict.genId(type, code)
+    }
+
+    static String genId(DictType type, String code) {
+        return "$type.id~$code"
     }
     static mapping = {
         id generator: 'assigned', maxSize: 128

@@ -21,6 +21,10 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         resTargetDict()
         resAchieveFormDict()
         resAchieveCateDict()
+        applyStatusDict()
+        topicStatusDict()
+
+        reviewTypeDict()
     }
 
     void topicCateDict() {
@@ -91,7 +95,7 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         new Dict(code: 'other', name: '其它', seq: 40, type: dictType).save();
     }
 
-    void resAchieveFormDict(){
+    void resAchieveFormDict() {
         def dictType = new DictType(id: 'yz-res-achieve-form', name: '成果形式').save()
         new Dict(code: 'writing-translation', name: '专（译）著', seq: 10, type: dictType).save();
         new Dict(code: 'research-report', name: '研究报告', seq: 20, type: dictType).save();
@@ -102,7 +106,7 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         new Dict(code: 'other', name: '其它', seq: 70, type: dictType).save();
     }
 
-    void resAchieveCateDict(){
+    void resAchieveCateDict() {
         def dictType = new DictType(id: 'yz-res-achieve-cate', name: '成果类别').save()
         new Dict(code: 'c1-integrated-study', name: 'C1综合研究类', seq: 10, type: dictType).save();
         //C2教学研究类，细分：
@@ -121,4 +125,45 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         new Dict(code: 'e-achieve-extension', name: 'E成果推广类', seq: 140, type: dictType).save();
 
     }
+
+    /**
+     * 立项、结题、参评都用这个状态字典
+     */
+    void applyStatusDict() {
+        def dictType = new DictType(id: 'yz-res-apply-status', name: '审核状态').save()
+
+        new Dict(code: 'draft', name: '草稿', seq: 10, type: dictType).save();
+        new Dict(code: 'wait', name: '待审核', seq: 20, type: dictType).save();
+        new Dict(code: 'repair', name: '退回修改', seq: 20, type: dictType).save();
+        new Dict(code: 'fail', name: '通不过', seq: 20, type: dictType).save();
+        new Dict(code: 'pass', name: '通过', seq: 20, type: dictType).save();
+
+    }
+
+    void topicStatusDict() {
+        def dictType = new DictType(id: 'yz-res-topic-status', name: '课题状态').save()
+
+        new Dict(code: 'created', name: '已新建', seq: 10, type: dictType).save();
+        new Dict(code: 'applied', name: '已立项', seq: 20, type: dictType).save();
+        new Dict(code: 'finished', name: '已结题', seq: 40, type: dictType).save();
+        new Dict(code: 'reviewed', name: '已参评', seq: 50, type: dictType).save();
+    }
+
+    void reviewTypeDict() {
+        def dictType = new DictType(id: 'yz-res-review-type', name: '评审类型').save()
+
+        new Dict(code: 'topic', name: '课题成果评审', seq: 10, type: dictType).save();
+        new Dict(code: 'paper', name: '论文评审', seq: 20, type: dictType).save();
+    }
+
+
+    void projectLevelDict() {
+        def dictType = new DictType(id: 'yz-res-project-level', name: '立项情况').save()
+
+        new Dict(code: 'state', name: '省级规划立项', seq: 10, type: dictType).save();
+        new Dict(code: 'city', name: '市级规划立项', seq: 20, type: dictType).save();
+        new Dict(code: 'district', name: '区级规划立项', seq: 30, type: dictType).save();
+        new Dict(code: 'none', name: '无各级规划立项', seq: 40, type: dictType).save();
+    }
+
 }

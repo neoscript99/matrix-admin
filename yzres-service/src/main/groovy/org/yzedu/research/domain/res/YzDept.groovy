@@ -4,6 +4,9 @@ import com.feathermind.matrix.domain.sys.Department
 import grails.gorm.annotation.Entity
 import groovy.transform.ToString
 
+/**
+ * 鄞州教育局单位信息
+ */
 @Entity
 @ToString(includePackage = false, includeNames = true, includes = 'name,contact')
 class YzDept extends Department{
@@ -15,6 +18,9 @@ class YzDept extends Department{
     String shortDial
     String email
     String address
+
+    //每个立项计划单位默认申报数
+    Integer defaultApplyNum
 
     Date dateCreated
     Date lastUpdated
