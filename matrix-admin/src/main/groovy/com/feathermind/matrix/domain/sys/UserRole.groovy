@@ -4,8 +4,10 @@ import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import com.feathermind.matrix.initializer.InitializeDomain
+import groovy.transform.TupleConstructor
 
 @Entity
+@TupleConstructor(includes = 'user,role')
 @InitializeDomain(depends = [User, Role])
 @ToString(includes = ['role', 'user'])
 @EqualsAndHashCode(includes = ['role', 'user'])

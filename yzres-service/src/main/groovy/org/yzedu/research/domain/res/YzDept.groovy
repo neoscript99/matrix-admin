@@ -20,7 +20,7 @@ class YzDept extends Department{
     String address
 
     //每个立项计划单位默认申报数
-    Integer defaultApplyNum
+    Integer defaultApplyNum = 0
 
     Date dateCreated
     Date lastUpdated

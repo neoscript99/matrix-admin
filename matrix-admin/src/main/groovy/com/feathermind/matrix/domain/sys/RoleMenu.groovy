@@ -3,8 +3,10 @@ package com.feathermind.matrix.domain.sys
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import groovy.transform.TupleConstructor
 
 @Entity
+@TupleConstructor(includes = 'role,menu')
 @ToString(includes = ['role', 'menu'])
 @EqualsAndHashCode(includes = ['role', 'menu'])
 class RoleMenu implements Serializable {

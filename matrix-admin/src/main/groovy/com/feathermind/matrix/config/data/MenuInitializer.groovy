@@ -18,7 +18,7 @@ class MenuInitializer extends AbstractDataInitializer implements DataInitializer
 
     void doInit() {
 
-        def rootMenu = save(new Menu(label: 'Root', icon: 'folder'))
+        Menu rootMenu = save(new Menu(label: 'Root', icon: 'folder'))
 
         initAdminMenu(rootMenu.id).each {
             save(it)
@@ -53,7 +53,7 @@ class MenuInitializer extends AbstractDataInitializer implements DataInitializer
     private List initNormalUsersMenu(def rootId) {
 
         [
-                new Menu(label: '用户设置', app: 'Profile', seq: 99, parentId: rootId, icon: 'edit')
+                new Menu(label: '个人设置', app: 'Profile', seq: 99, parentId: rootId, icon: 'edit')
         ]
     }
 

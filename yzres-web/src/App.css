@@ -14,25 +14,11 @@
     flex-wrap: wrap;
 }
 
-.page-head {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    background: #fff;
-    box-shadow: 0 2px 8px #f0f1f2;
-    font-weight: bolder;
-}
-
 .page-head-logo {
     height: 49px;
     width: 125px;
     background: url('asset/logo.png'), no-repeat;
     margin: 8px;
-}
-
-.page-side {
-    border-top: solid thin #f3f3f3;
-    border-bottom: solid thin #f3f3f3;
 }
 
 /*解决PortletListView和PortletTab标题相差两个像素的问题*/
