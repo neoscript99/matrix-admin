@@ -2,7 +2,16 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
 import { adminServices } from '../services';
 import { Welcome } from './Welcome';
-import { RoleList, DeptList, NoteList, ParamList, OperatorSwitch, UserRoleList, PageSwitchProps } from 'oo-rest-mobx';
+import {
+  RoleList,
+  DeptList,
+  NoteList,
+  ParamList,
+  UserList,
+  OperatorSwitch,
+  UserRoleList,
+  PageSwitchProps,
+} from 'oo-rest-mobx';
 import { YzUserList, YzUserProfile } from './yz-user';
 
 const allOp: OperatorSwitch = { create: true, update: true, delete: true };
@@ -18,6 +27,10 @@ export class PageSwitch extends Component<PageSwitchProps> {
         />
         <Route
           path={`${pathPrefix}User/`}
+          render={() => <UserList services={adminServices} operatorVisible={allOp} name="用户" />}
+        />
+        <Route
+          path={`${pathPrefix}YzUser/`}
           render={() => <YzUserList services={adminServices} operatorVisible={allOp} name="用户" />}
         />
         <Route

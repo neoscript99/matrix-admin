@@ -1,9 +1,11 @@
 package org.yzedu.research.config.common
 
+import com.feathermind.matrix.domain.sys.Department
 import com.feathermind.matrix.domain.sys.Role
 import com.feathermind.matrix.domain.sys.UserRole
 import com.feathermind.matrix.initializer.AbstractDataInitializer
 import com.feathermind.matrix.initializer.DataInitializer
+import com.feathermind.matrix.util.EncoderUtil
 import groovy.transform.CompileStatic
 import groovy.transform.TypeCheckingMode
 import org.springframework.core.annotation.Order
@@ -13,6 +15,8 @@ import org.yzedu.research.domain.res.YzUser
 @Order(200)
 @CompileStatic(TypeCheckingMode.SKIP)
 class ResUserDeptInitializer extends AbstractDataInitializer implements DataInitializer {
+
+    static final String DEFAULT_PASS = EncoderUtil.sha256('abc000')
 
     @Override
     boolean isInited() {
@@ -30,10 +34,13 @@ class ResUserDeptInitializer extends AbstractDataInitializer implements DataInit
             telephone: '88121117', shortDial: '666188')
 
     void initDept() {
+        Department.list().each {
+            it.enabled = false;
+        }
         yzOfficeDept.save()
     }
 
-    static YzUser resManagerUser = new YzUser(name: '科研系统管理员', account: 'manager', phoneNumber: '88121117', dept: yzOfficeDept)
+    static YzUser resManagerUser = new YzUser(name: '科研系统管理员', account: 'manager', phoneNumber: '88121117', dept: yzOfficeDept, password: DEFAULT_PASS)
 
     def initUser() {
         resManagerUser.save()

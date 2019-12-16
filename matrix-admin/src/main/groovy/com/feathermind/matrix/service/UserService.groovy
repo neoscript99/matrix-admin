@@ -59,6 +59,10 @@ class UserService extends AbstractService<User> {
 
     User saveUserWithRoles(Map userMap, List<String> roleIds) {
         def user = save(userMap)
+        return saveUserWithRoles(user, roleIds);
+    }
+
+    User saveUserWithRoles(User user, List<String> roleIds) {
         generalRepository.deleteMatch(UserRole, [eq: [['user.id', user.id]]])
         roleIds.each {
             new UserRole(user: user, role: Role.get(it)).save()

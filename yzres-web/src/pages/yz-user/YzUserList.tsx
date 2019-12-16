@@ -1,6 +1,7 @@
 import React from 'react';
 import { UserList, AdminPageProps, UserSearchForm } from 'oo-rest-mobx';
 import { YzUserForm } from './YzUserForm';
+import { yzUserService } from '../../services';
 
 export class YzUserList extends UserList {
   constructor(props: AdminPageProps) {
@@ -8,7 +9,7 @@ export class YzUserList extends UserList {
   }
 
   get domainService() {
-    return this.props.services.userService;
+    return yzUserService;
   }
 
   getUserColumns() {
