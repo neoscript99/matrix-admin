@@ -30,7 +30,7 @@ class ResUserDeptInitializer extends AbstractDataInitializer implements DataInit
     }
 
 
-    static YzDept yzOfficeDept = new YzDept(name: '鄞州区教研室', seq: 0, contact: '鲍老师', address: '鄞州区学府路5号鄞州教育综合服务楼306室',
+    static YzDept yzOfficeDept = new YzDept(name: '鄞州区教育科学研究室', seq: 0, contact: '鲍老师', address: '鄞州区学府路5号鄞州教育综合服务楼306室',
             telephone: '88121117', shortDial: '666188')
 
     void initDept() {

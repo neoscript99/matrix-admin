@@ -1,8 +1,6 @@
 import React from 'react';
-import { UserForm, commonRules, transforms } from 'oo-rest-mobx';
+import { UserForm, commonRules, InputField, DatePickerField, SelectField } from 'oo-rest-mobx';
 import { yzUserService } from '../../services';
-import { WrappedFormUtils } from 'antd/lib/form/Form';
-import { Input, Form, DatePicker } from 'antd';
 const { required } = commonRules;
 
 export class YzUserForm extends UserForm {
@@ -10,34 +8,48 @@ export class YzUserForm extends UserForm {
     return yzUserService;
   }
 
-  getExtraFormItem(getFieldDecorator: WrappedFormUtils['getFieldDecorator'], formItemCss: React.CSSProperties) {
+  getExtraFormItem() {
+    const {
+      form,
+      services: { dictService },
+    } = this.props;
+    const css = this.formItemCss;
+    const req = { rules: [required] };
     return (
       <React.Fragment>
-        <Form.Item label="身份证" style={formItemCss}>
-          {getFieldDecorator('idCard', {
+        <InputField
+          fieldId="idCard"
+          formItemProps={{ label: '身份证', style: css }}
+          formUtils={form}
+          maxLength={18}
+          decorator={{
             rules: [required, { min: 16, max: 18, message: '格式错误' }],
-          })(<Input maxLength={18} />)}
-        </Form.Item>
-        <Form.Item label="生日" style={formItemCss}>
-          {getFieldDecorator('birthDay', {
-            rules: [{ ...required, type: 'date', transform: transforms.momentToDay }],
-          })(<DatePicker />)}
-        </Form.Item>
-        <Form.Item label="职务职称" style={formItemCss}>
-          {getFieldDecorator('title', {
-            rules: [required],
-          })(<Input maxLength={30} />)}
-        </Form.Item>
-        <Form.Item label="专业" style={formItemCss}>
-          {getFieldDecorator('major', {
-            rules: [required],
-          })(<Input maxLength={30} />)}
-        </Form.Item>
-        <Form.Item label="最后学历" style={formItemCss}>
-          {getFieldDecorator('degreeCode', {
-            rules: [required],
-          })(<Input maxLength={20} />)}
-        </Form.Item>
+          }}
+        />
+        <DatePickerField fieldId="birthDay" formItemProps={{ label: '生日', style: css }} formUtils={form} required />
+        <InputField
+          fieldId="title"
+          formItemProps={{ label: '职务职称', style: css }}
+          formUtils={form}
+          maxLength={30}
+          decorator={req}
+        />
+        <InputField
+          fieldId="major"
+          formItemProps={{ label: '专业', style: css }}
+          formUtils={form}
+          maxLength={30}
+          decorator={req}
+        />
+        <SelectField
+          fieldId="degreeCode"
+          formItemProps={{ label: '最后学历', style: css }}
+          formUtils={form}
+          dataSource={dictService.getDict('pub-degree')}
+          valueProp="code"
+          labelProp="name"
+          decorator={req}
+        />
       </React.Fragment>
     );
   }

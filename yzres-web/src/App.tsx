@@ -5,6 +5,7 @@ import { Login, LoginFormProps, Home } from 'oo-rest-mobx';
 import { adminServices } from './services';
 import { config } from './utils';
 import { PageSwitch } from './pages';
+import logo from './asset/logo.png';
 const introRender = (
   <div>
     <p>
@@ -28,7 +29,7 @@ const homeProps = {
   adminServices,
   serverLogout: config.serverLogout,
   serverRoot: config.serverRoot,
-  logoRender: <div className="page-head-logo" />,
+  logoRender: <img src={logo} />,
   PageSwitch,
   loginPath,
   footRender: '鄞州教育 ©2020',

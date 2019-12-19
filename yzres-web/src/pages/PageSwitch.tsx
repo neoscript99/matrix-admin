@@ -13,6 +13,8 @@ import {
   PageSwitchProps,
 } from 'oo-rest-mobx';
 import { YzUserList, YzUserProfile } from './yz-user';
+import { YzDeptList } from './yz-dept';
+import { WorkPlanList } from './work-plan';
 
 const allOp: OperatorSwitch = { create: true, update: true, delete: true };
 export class PageSwitch extends Component<PageSwitchProps> {
@@ -20,6 +22,7 @@ export class PageSwitch extends Component<PageSwitchProps> {
     const { pathPrefix } = this.props;
     return (
       <Switch>
+        <Route path={`${pathPrefix}WorkPlan/`} render={() => <WorkPlanList name="课题立项申报计划" />} />
         <Route path={`${pathPrefix}Role/`} render={() => <RoleList services={adminServices} name="角色" />} />
         <Route
           path={`${pathPrefix}UserRole/`}
@@ -37,6 +40,12 @@ export class PageSwitch extends Component<PageSwitchProps> {
           path={`${pathPrefix}Dept/`}
           render={() => (
             <DeptList services={adminServices} operatorVisible={{ update: true, create: true }} name="机构" />
+          )}
+        />
+        <Route
+          path={`${pathPrefix}YzDept/`}
+          render={() => (
+            <YzDeptList services={adminServices} operatorVisible={{ update: true, create: true }} name="机构" />
           )}
         />
         <Route path={`${pathPrefix}Note/`} render={() => <NoteList services={adminServices} name="通知" />} />

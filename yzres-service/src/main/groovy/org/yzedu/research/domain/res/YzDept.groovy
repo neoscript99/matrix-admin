@@ -28,6 +28,7 @@ class YzDept extends Department{
     static mapping = {
     }
     static constraints = {
+        contact nullable: true
         telephone nullable: true
         cellphone nullable: true
         shortDial nullable: true

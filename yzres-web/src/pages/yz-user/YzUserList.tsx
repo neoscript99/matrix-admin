@@ -17,7 +17,7 @@ export class YzUserList extends UserList {
     const item = this.getSelectItem();
     if (item)
       this.setState({
-        formProps: this.getFormProps('修改', { ...item, birthDay: moment(item.birthDay) }),
+        formProps: this.getFormProps('修改', { ...item, birthDay: item.birthDay && moment(item.birthDay) }),
       });
   }
 
