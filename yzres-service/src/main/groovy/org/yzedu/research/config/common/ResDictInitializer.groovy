@@ -143,7 +143,7 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
     void topicStatusDict() {
         def dictType = new DictType(id: 'yz-res-topic-status', name: '课题状态').save()
 
-        new Dict(code: 'created', name: '已新建', seq: 10, type: dictType).save();
+        new Dict(code: 'created', name: '新建', seq: 10, type: dictType).save();
         new Dict(code: 'applied', name: '已立项', seq: 20, type: dictType).save();
         new Dict(code: 'finished', name: '已结题', seq: 40, type: dictType).save();
         new Dict(code: 'reviewed', name: '已参评', seq: 50, type: dictType).save();

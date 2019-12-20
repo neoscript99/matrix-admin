@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserForm, commonRules, InputField, DatePickerField, SelectField } from 'oo-rest-mobx';
+import { UserForm, commonRules, transforms, InputField, DatePickerField, SelectField } from 'oo-rest-mobx';
 import { yzUserService } from '../../services';
 const { required } = commonRules;
 
@@ -8,6 +8,10 @@ export class YzUserForm extends UserForm {
     return yzUserService;
   }
 
+  saveEntity(saveItem) {
+    saveItem.birthDay = transforms.momentToDayString(saveItem.birthDay);
+    return super.saveEntity(saveItem);
+  }
   getExtraFormItem() {
     const {
       form,

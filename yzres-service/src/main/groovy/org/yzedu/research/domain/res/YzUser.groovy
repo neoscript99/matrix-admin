@@ -18,7 +18,7 @@ class YzUser extends User{
      * 课题负责人姓名	性别（上级存在）	身份证号码	出生日期	职务职称	专业	最后学历▼
      */
     String idCard
-    Date birthDay
+    String birthDay
     //职务职称
     String title
     String major

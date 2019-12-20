@@ -15,6 +15,11 @@ export const yzUserService = new YzUserService(restClient);
 export const adminServices = new AdminServices(restClient, afterLogin, { deptService: yzDeptService });
 export const dictService = adminServices.dictService;
 export const workPlanService = new DomainService({ domain: 'topicWorkPlan', restClient, storeClass: MobxDomainStore });
+export const initialApplyService = new DomainService({
+  domain: 'topicInitialApply',
+  restClient,
+  storeClass: MobxDomainStore,
+});
 
 export const userService = adminServices.userService;
 userService.trySessionLogin().then(loginInfo => loginInfo.success || userService.tryLocalLogin());

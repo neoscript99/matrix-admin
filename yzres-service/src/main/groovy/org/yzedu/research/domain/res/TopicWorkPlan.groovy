@@ -18,8 +18,8 @@ class TopicWorkPlan {
     String planName
     //立项年度
     Integer planYear
-    //课题类别 字典id
-    String topicCateId
+    //课题类别 字典代码
+    String topicCateCode
     //申报开始日期
     String planBeginDay
     //申报截止日期
@@ -43,8 +43,16 @@ class TopicWorkPlan {
     static constraints = {
     }
     static DemoPlan = new TopicWorkPlan([planName      : '2020年鄞州区教育科学规划课题申报计划',
-                                         planYear      : 2020, topicCateId: 'YZGH',
+                                         planYear      : 2020, topicCateCode: 'YZGH',
                                          planBeginDay  : '2019-12-01', planEndDay: '2020-03-10',
                                          finishDeadline: '2021-12-31'])
-    static initList = [DemoPlan]
+    static DemoPlan2 = new TopicWorkPlan([planName      : '2020年鄞州区教育科学重点课题申报计划',
+                                          planYear      : 2020, topicCateCode: 'YZZD',
+                                          planBeginDay  : '2019-12-01', planEndDay: '2020-03-10',
+                                          finishDeadline: '2021-12-31'])
+    static DemoPlan3 = new TopicWorkPlan([planName      : '2020年鄞州区教育科学艺术课题申报计划',
+                                          planYear      : 2020, topicCateCode: 'YZYS',
+                                          planBeginDay  : '2019-12-01', planEndDay: '2020-03-10',
+                                          finishDeadline: '2021-12-31'])
+    static initList = [DemoPlan, DemoPlan2, DemoPlan3]
 }
