@@ -1,7 +1,9 @@
 import React from 'react';
 import { EntityPageList, EntityColumnProps, SimpleSearchForm, ListOptions, StringUtil } from 'oo-rest-mobx';
-import { dictService, initialApplyService } from '../../services';
+import { dictService, initialApplyService, workPlanService } from '../../services';
 import { observer } from 'mobx-react';
+import { Card } from 'antd';
+import { WorkPlanCard } from '../work-plan';
 const columns: EntityColumnProps[] = [
   { title: '计划标题', dataIndex: 'plan.planName', width: '20em' },
   { title: '立项年度', dataIndex: 'plan.planYear' },
@@ -18,6 +20,19 @@ const columns: EntityColumnProps[] = [
 export class InitialApplyList extends EntityPageList {
   get columns() {
     return columns;
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        {super.render()}
+        <Card title="进行中的申报计划">
+          {workPlanService.store.allList.map(plan => (
+            <WorkPlanCard key={plan.id} plan={plan} />
+          ))}
+        </Card>
+      </React.Fragment>
+    );
   }
 
   get domainService() {

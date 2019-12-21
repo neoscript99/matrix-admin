@@ -14,6 +14,12 @@ const columns: EntityColumnProps[] = [
 
 @observer
 export class WorkPlanList extends EntityPageList {
+  render() {
+    //依赖dictService.store.allList
+    console.log('WorkPlanList.render: ', dictService.store.allList.length);
+    return super.render();
+  }
+
   get columns() {
     return columns;
   }
