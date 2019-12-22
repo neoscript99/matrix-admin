@@ -13,15 +13,3 @@
     justify-content: space-between;
     flex-wrap: wrap;
 }
-
-.page-head-logo {
-    height: 49px;
-    width: 125px;
-    background: url('asset/logo.png'), no-repeat;
-    margin: 8px;
-}
-
-/*解决PortletListView和PortletTab标题相差两个像素的问题*/
-.ant-tabs .ant-tabs-large-bar .ant-tabs-tab {
-    padding: 17px;
-}

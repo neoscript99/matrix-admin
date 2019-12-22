@@ -2,9 +2,11 @@ import { LoginInfo, AdminServices, DomainService, SpringBootClient, MobxDomainSt
 import { config } from '../utils';
 import { YzUserService } from './YzUserService';
 import { YzDeptService } from './YzDeptService';
+import { WorkPlanService } from './WorkPlanService';
 
 function afterLogin(loginInfo: LoginInfo) {
   if (!loginInfo.token) throw 'token不能为空';
+  workPlanService.initDictList();
 }
 
 export const restClient = new SpringBootClient({ rootUrl: config.serverRoot });
@@ -14,7 +16,7 @@ export const yzDeptService = new YzDeptService(restClient);
 export const yzUserService = new YzUserService(restClient);
 export const adminServices = new AdminServices(restClient, afterLogin, { deptService: yzDeptService });
 export const dictService = adminServices.dictService;
-export const workPlanService = new DomainService({ domain: 'topicWorkPlan', restClient, storeClass: MobxDomainStore });
+export const workPlanService = new WorkPlanService(restClient);
 export const initialApplyService = new DomainService({
   domain: 'topicInitialApply',
   restClient,

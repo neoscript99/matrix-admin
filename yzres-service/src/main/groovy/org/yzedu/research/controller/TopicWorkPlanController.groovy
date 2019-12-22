@@ -3,6 +3,7 @@ package org.yzedu.research.controller
 import com.feathermind.matrix.controller.DomainController
 import com.feathermind.matrix.service.AbstractService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -16,8 +17,8 @@ class TopicWorkPlanController extends DomainController<TopicWorkPlan> {
     TopicWorkPlanService topicWorkPlanService
 
     @PostMapping("/listStarted")
-    listStarted(){
-        return topicWorkPlanService.listStarted()
+    ResponseEntity<List<TopicWorkPlan>> listStarted() {
+        return ResponseEntity.ok(topicWorkPlanService.listStarted())
     }
 
     @Override
