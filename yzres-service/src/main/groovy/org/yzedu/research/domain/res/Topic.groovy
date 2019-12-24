@@ -21,6 +21,7 @@ class Topic {
      * */
     String topicCode
     String topicName
+    String topicCateCode
     String topicSourceCode
     String researchContentCode
     String researchSubjectCode

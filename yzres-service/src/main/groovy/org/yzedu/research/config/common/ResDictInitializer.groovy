@@ -18,6 +18,7 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         topicCateDict()
         topicSourceDict()
         resContentDict()
+        subjectDict()
         resTargetDict()
         resAchieveFormDict()
         resAchieveCateDict()

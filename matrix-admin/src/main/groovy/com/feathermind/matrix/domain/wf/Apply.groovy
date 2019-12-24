@@ -26,5 +26,6 @@ class Apply {
     }
     static constraints = {
         passTime nullable: true
+        name maxSize: 50
     }
 }

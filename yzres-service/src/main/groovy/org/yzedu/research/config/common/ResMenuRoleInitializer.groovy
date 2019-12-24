@@ -46,6 +46,12 @@ class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInit
             new RoleMenu(role: Role.ADMINISTRATORS, menu: it).save()
             new RoleMenu(role: MAIN_MANAGER, menu: it).save()
         }
+        RoleMenu.findAllByRole(Role.NORMAL_USERS).each {
+            new RoleMenu(RES_USER, it.menu).save()
+            new RoleMenu(DEPT_MANAGER, it.menu).save()
+            new RoleMenu(EXPERT, it.menu).save()
+            new RoleMenu(MAIN_MANAGER, it.menu).save()
+        }
     }
 
     List initBaseMenu() {

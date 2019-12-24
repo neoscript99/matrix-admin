@@ -3,6 +3,7 @@ import { config } from '../utils';
 import { YzUserService } from './YzUserService';
 import { YzDeptService } from './YzDeptService';
 import { WorkPlanService } from './WorkPlanService';
+import { TopicService } from './TopicService';
 
 function afterLogin(loginInfo: LoginInfo) {
   if (!loginInfo.token) throw 'token不能为空';
@@ -17,6 +18,7 @@ export const yzUserService = new YzUserService(restClient);
 export const adminServices = new AdminServices(restClient, afterLogin, { deptService: yzDeptService });
 export const dictService = adminServices.dictService;
 export const workPlanService = new WorkPlanService(restClient);
+export const topicService = new TopicService(restClient);
 export const initialApplyService = new DomainService({
   domain: 'topicInitialApply',
   restClient,

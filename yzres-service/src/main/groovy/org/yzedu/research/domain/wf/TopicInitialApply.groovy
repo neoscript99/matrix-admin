@@ -13,14 +13,15 @@ class TopicInitialApply extends Apply{
     TopicWorkPlan plan
     Topic topic
     //仅限申报重点课题填写
-    Topic originTopic
+    String originTopicCode
+    String originTopicName
 
     static mapping = {
         plan fetch: 'join', lazy: false
         topic fetch: 'join', lazy: false
-        originTopic fetch: 'join', lazy: false
     }
     static constraints = {
-        originTopic nullable: true
+        originTopicCode nullable: true
+        originTopicName nullable: true
     }
 }

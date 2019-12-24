@@ -1,21 +1,27 @@
 import React, { Component } from 'react';
-import { Icon, Card, Progress } from 'antd';
+import { Card, Progress, Button } from 'antd';
 import { Entity } from 'oo-rest-mobx';
 import moment from 'moment';
 export interface WorkPlanCardProps {
   plan: Entity;
+  onApply: (plan: Entity) => void;
 }
 export class WorkPlanCard extends Component<WorkPlanCardProps> {
+  handleApply() {
+    const { plan, onApply } = this.props;
+    onApply(plan);
+  }
   render() {
     const { plan } = this.props;
     const begin = moment(plan.planBeginDay);
     const past = moment().diff(begin, 'day') + 1;
     const total = moment(plan.planEndDay).diff(begin, 'day') + 1;
     const percent = Math.floor((past * 100) / total);
-    console.debug('percent: ', past, total, percent);
     const action = (
       <div>
-        <Icon type="form" /> 提交申请
+        <Button icon="form" onClick={this.handleApply.bind(this)}>
+          提交申请
+        </Button>
       </div>
     );
     return (

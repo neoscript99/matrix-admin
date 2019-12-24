@@ -18,14 +18,14 @@ import com.feathermind.matrix.initializer.InitializeDomain
 class Role {
     //管理员，所有菜单权限
     static final Role ADMINISTRATORS = new Role(roleName: '系统管理员', roleCode: 'Administrators',
-            editable: false, description: 'System Administrators.')
+            editable: false, description: '系统参数管理.')
 
     static final Role NORMAL_USERS = new Role(roleName: '普通用户', roleCode: 'NormalUsers',
-            editable: false, description: 'Normal users has user related menus.')
+            editable: false, description: '普通用户.')
 
     //公开用户，可支持匿名用户查看网站通知等开放功能
     static final Role PUBLIC = new Role(roleName: '默认角色', roleCode: ' Public',
-            editable: false, description: 'Public role associate with public menus.')
+            editable: false, description: '默认角色可开放给CAS登录用户和匿名用户.')
 
     String id
     String roleName
