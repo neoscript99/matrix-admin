@@ -1,1 +1,2 @@
-export * from './TopicList'
+export * from './TopicList';
+export * from './TopicMember';

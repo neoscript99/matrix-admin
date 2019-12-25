@@ -5,7 +5,6 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: stretch;
-    padding-bottom: 10px;
 }
 
 .flex-row {

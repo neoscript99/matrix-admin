@@ -5,16 +5,27 @@ import { observer } from 'mobx-react';
 import { Collapse } from 'antd';
 import { WorkPlanCard } from '../work-plan';
 import { InitialApplyForm } from './InitialApplyForm';
+import { InitialApplyOperate } from './InitialApplyOperate';
 const columns: EntityColumnProps[] = [
-  { title: '计划标题', dataIndex: 'plan.planName', width: '20em' },
-  { title: '立项年度', dataIndex: 'plan.planYear' },
+  { title: '所属计划', dataIndex: 'plan.planName' },
   { title: '课题名称', dataIndex: 'topic.topicName' },
   { title: '课题编号', dataIndex: 'topic.topicCode' },
-  { title: '申请状态', dataIndex: 'statusCode', render: dictService.dictRender.bind(null, 'yz-res-apply-status') },
+  { title: '负责人', dataIndex: 'topic.personInCharge.name' },
+  {
+    title: '申请状态',
+    dataIndex: 'statusCode',
+    render: dictService.dictRender.bind(null, 'yz-res-apply-status'),
+  },
+  { title: '操作', render: (text, record) => <InitialApplyOperate /> },
 ];
 
 @observer
 export class InitialApplyList extends EntityPageList {
+  constructor(props) {
+    super(props);
+    this.tableProps.pagination.pageSize = 6;
+  }
+
   get columns() {
     return columns;
   }

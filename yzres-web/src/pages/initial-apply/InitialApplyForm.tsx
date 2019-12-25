@@ -4,8 +4,6 @@ import {
   StyleUtil,
   InputField,
   commonRules,
-  genRules,
-  SelectField,
   DatePickerField,
   transforms,
   EntityFormProps,
@@ -43,7 +41,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
       inputItem: { plan },
     } = this.props;
     const important = plan.topicCateCode === 'YZZD';
-    const [day, req] = [{ rules: [genRules.momentDay(true)] }, { rules: [commonRules.required] }];
+    const req = { rules: [commonRules.required] };
     return (
       <Form style={StyleUtil.flexForm()}>
         <InputField
@@ -76,6 +74,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
           dictType="yz-res-topic-source"
           formUtils={form}
           decorator={req}
+          defaultSelectFirst
         />
         <DictSelectField
           fieldId="researchContentCode"
@@ -84,6 +83,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
           dictType="yz-res-content"
           formUtils={form}
           decorator={req}
+          defaultSelectFirst
         />
         <DictSelectField
           fieldId="researchSubjectCode"
@@ -92,6 +92,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
           dictType="yz-res-subject"
           formUtils={form}
           decorator={req}
+          defaultSelectFirst
         />
         <DictSelectField
           fieldId="researchTargetCode"
@@ -100,6 +101,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
           dictType="yz-res-target"
           formUtils={form}
           decorator={req}
+          defaultSelectFirst
         />
         <DictSelectField
           fieldId="prepareAchieveFormCode"
@@ -108,12 +110,14 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
           dictType="yz-res-achieve-form"
           formUtils={form}
           decorator={req}
+          defaultSelectFirst
         />
         <DatePickerField
           fieldId="prepareFinishDay"
           formItemProps={{ label: '计划完成时间', style: itemCss }}
           formUtils={form}
-          decorator={day}
+          required={true}
+          defaultDiffDays={365}
         />
       </Form>
     );
