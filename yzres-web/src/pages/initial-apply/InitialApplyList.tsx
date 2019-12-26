@@ -1,11 +1,19 @@
 import React from 'react';
-import { EntityPageList, EntityColumnProps, SimpleSearchForm, ListOptions, StringUtil } from 'oo-rest-mobx';
+import {
+  EntityPageList,
+  EntityColumnProps,
+  SimpleSearchForm,
+  ListOptions,
+  StringUtil,
+  EntityFormProps,
+} from 'oo-rest-mobx';
 import { dictService, initialApplyService, workPlanService } from '../../services';
 import { observer } from 'mobx-react';
 import { Collapse } from 'antd';
 import { WorkPlanCard } from '../work-plan';
 import { InitialApplyForm } from './InitialApplyForm';
 import { InitialApplyOperate } from './InitialApplyOperate';
+
 const columns: EntityColumnProps[] = [
   { title: '所属计划', dataIndex: 'plan.planName' },
   { title: '课题名称', dataIndex: 'topic.topicName' },
@@ -16,7 +24,7 @@ const columns: EntityColumnProps[] = [
     dataIndex: 'statusCode',
     render: dictService.dictRender.bind(null, 'yz-res-apply-status'),
   },
-  { title: '操作', render: (text, record) => <InitialApplyOperate /> },
+  { title: '操作', render: (text, record) => <InitialApplyOperate item={record} /> },
 ];
 
 @observer
@@ -33,14 +41,14 @@ export class InitialApplyList extends EntityPageList {
   handleApply = plan => {
     const item = { plan };
     const formProps = this.getFormProps('提交', item);
-    formProps.title = plan.planName;
     this.setState({ formProps });
   };
 
-  getFormProps(action: string, item?: any) {
+  getFormProps(action: string, item?: any): EntityFormProps {
     const props = super.getFormProps(action, item);
-    return { ...props, containerProps: { width: '48em' } };
+    return { ...props, modalProps: { width: '48em', title: item.plan.planName } };
   }
+
   render() {
     const { startedList: planList } = workPlanService.store;
     //依赖dictService.store.allList
@@ -49,7 +57,7 @@ export class InitialApplyList extends EntityPageList {
       <React.Fragment>
         {super.render()}
         {planList && (
-          <Collapse defaultActiveKey={['1']} style={{ marginTop: '1em' }}>
+          <Collapse style={{ marginTop: '1em' }} defaultActiveKey="1">
             <Collapse.Panel header="进行中的立项申报计划" key="1">
               <div className="flex-row">
                 {planList.map(plan => (
