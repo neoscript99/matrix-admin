@@ -11,6 +11,8 @@ import org.springframework.core.io.support.ResourcePatternResolver
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
+import java.time.LocalDateTime
+
 @Service
 class AttachmentService extends AbstractService<AttachmentInfo> {
 
@@ -110,8 +112,9 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
     @Scheduled(cron = "0 0 * * * *")
     void cleanTemp() {
         log.info("定时删除一些没有所属对象的附件，正式环境删除一天前的临时附件")
+        def date = LocalDateTime.now().minusDays(1)
         def list = list([like: [['ownerId', "${ATTACH_TEMP_ID_PREFIX}%".toString()]],
-                         lt  : [['dateCreated', new Date() - 1]]])
+                         lt  : [['dateCreated', Date.from(date.toInstant())]]])
         deleteInfoByOwners(list*.ownerId)
     }
 
