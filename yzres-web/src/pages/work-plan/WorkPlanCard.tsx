@@ -14,7 +14,7 @@ export class WorkPlanCard extends Component<WorkPlanCardProps> {
   render() {
     const { plan } = this.props;
     const begin = moment(plan.planBeginDay);
-    const past = moment().diff(begin, 'day') + 1;
+    const past = moment().diff(begin, 'day');
     const total = moment(plan.planEndDay).diff(begin, 'day') + 1;
     const percent = Math.floor((past * 100) / total);
     const action = (

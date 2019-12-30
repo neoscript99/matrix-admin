@@ -1,40 +1,42 @@
 import React, { Component } from 'react';
 import { Button, Popconfirm } from 'antd';
 import { Entity } from 'oo-rest-mobx';
-import { TopicMember } from '../topic';
+import { RouteComponentProps } from 'react-router';
+import { topicService } from '../../services';
 
-interface P {
+interface P extends Partial<RouteComponentProps> {
   item: Entity;
 }
-
-interface S {
-  showMember?: boolean;
-}
-
-export class InitialApplyOperate extends Component<P, S> {
-  state = {} as S;
+export class InitialApplyOperate extends Component<P> {
   handleMember = () => {
-    this.setState({ showMember: true });
+    const {
+      history,
+      item: { topic },
+    } = this.props;
+    topicService.store.currentItem = topic;
+    history && history.push('/TopicMember');
   };
 
   render() {
     const { item } = this.props;
-    const { showMember } = this.state;
     const buttonCss: React.CSSProperties = { padding: '0 2px' };
     return (
       <div className="flex-row" style={{ margin: '-10px 0' }}>
         <Button type="link" style={buttonCss} onClick={this.handleMember}>
           课题成员管理
         </Button>
-        <TopicMember topic={item.topic} visible={!!showMember} />
-        <Button type="link" style={buttonCss}>
-          提交审核
-        </Button>
-        <Popconfirm title="确定删除?" okText="确定" cancelText="取消">
+        {item.statusCode === 'draft' && (
           <Button type="link" style={buttonCss}>
-            删除
+            提交审核
           </Button>
-        </Popconfirm>
+        )}
+        {item.statusCode === 'draft' && (
+          <Popconfirm title="确定删除?" okText="确定" cancelText="取消">
+            <Button type="link" style={buttonCss}>
+              删除
+            </Button>
+          </Popconfirm>
+        )}
       </div>
     );
   }

@@ -15,6 +15,7 @@ export const restClient = new SpringBootClient({ rootUrl: config.serverRoot });
 export const yzDeptService = new YzDeptService(restClient);
 //本服务仅用户鄞州项目的用户管理，不做登录等操作
 export const yzUserService = new YzUserService(restClient);
+export const topicMemberService = new YzUserService(restClient);
 export const adminServices = new AdminServices(restClient, afterLogin, { deptService: yzDeptService });
 export const dictService = adminServices.dictService;
 export const workPlanService = new WorkPlanService(restClient);

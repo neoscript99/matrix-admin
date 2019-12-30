@@ -45,7 +45,7 @@ class ResUserDeptInitializer extends AbstractDataInitializer implements DataInit
     }
 
     static YzUser resManagerUser = new YzUser(name: '科研系统管理员', account: 'manager', phoneNumber: '88121117', dept: yzOfficeDept, password: DEFAULT_PASS)
-    static YzUser demoSchoolUser = new YzUser(name: '鄞州中学管理员', account: 'yz_middle', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS)
+    static YzUser demoSchoolUser = new YzUser(name: '高级中学管理员', account: 'yz_middle', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS)
     static YzUser expertUser = new YzUser(name: '评审专家', account: 'expert', phoneNumber: '88888888', dept: expertDept, password: DEFAULT_PASS)
 
     def initUser() {
@@ -57,5 +57,12 @@ class ResUserDeptInitializer extends AbstractDataInitializer implements DataInit
         new UserRole(demoSchoolUser, DEPT_MANAGER).save()
         new UserRole(demoSchoolUser, RES_USER).save()
         new UserRole(expertUser, EXPERT).save()
+        initDemoSchoolMember()
+    }
+
+    def initDemoSchoolMember() {
+        new YzUser(name: '成员1', account: '高级中学管理员01', idCard: '333000199012126661', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
+        new YzUser(name: '成员2', account: '高级中学管理员02', idCard: '333000199012126662', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
+        new YzUser(name: '成员3', account: '高级中学管理员03', idCard: '333000199012126663', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
     }
 }

@@ -24,7 +24,6 @@ const columns: EntityColumnProps[] = [
     dataIndex: 'statusCode',
     render: dictService.dictRender.bind(null, 'yz-res-apply-status'),
   },
-  { title: '操作', render: (text, record) => <InitialApplyOperate item={record} /> },
 ];
 
 @observer
@@ -35,7 +34,14 @@ export class InitialApplyList extends EntityPageList {
   }
 
   get columns() {
-    return columns;
+    const { history, location, match } = this.props;
+    return [
+      ...columns,
+      {
+        title: '操作',
+        render: (text, record) => <InitialApplyOperate {...{ history, location, match }} item={record} />,
+      },
+    ];
   }
 
   handleApply = plan => {

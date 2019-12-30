@@ -16,6 +16,7 @@ import { YzUserList, YzUserProfile } from './yz-user';
 import { YzDeptList } from './yz-dept';
 import { WorkPlanList } from './work-plan';
 import { InitialApplyList } from './initial-apply';
+import { TopicMember } from './topic';
 
 const allOp: OperatorSwitch = { create: true, update: true, delete: true };
 export class PageSwitch extends Component<PageSwitchProps> {
@@ -27,7 +28,7 @@ export class PageSwitch extends Component<PageSwitchProps> {
           path={`${pathPrefix}WorkPlan/`}
           render={() => <WorkPlanList operatorVisible={allOp} name="课题立项申报计划" />}
         />
-        <Route path={`${pathPrefix}InitialApply/`} render={() => <InitialApplyList name="立项申报" />} />
+        <Route path={`${pathPrefix}InitialApply/`} render={props => <InitialApplyList {...props} name="立项申报" />} />
         <Route path={`${pathPrefix}Role/`} render={() => <RoleList services={adminServices} name="角色" />} />
         <Route
           path={`${pathPrefix}UserRole/`}
@@ -56,6 +57,10 @@ export class PageSwitch extends Component<PageSwitchProps> {
         <Route path={`${pathPrefix}Note/`} render={() => <NoteList services={adminServices} name="通知" />} />
         <Route path={`${pathPrefix}Param/`} render={() => <ParamList services={adminServices} name="参数" />} />
         <Route path={`${pathPrefix}Profile/`} render={() => <YzUserProfile services={adminServices} />} />
+        <Route
+          path={`${pathPrefix}TopicMember/`}
+          render={props => <TopicMember {...props} services={adminServices} />}
+        />
         <Route render={() => <Welcome />} />
       </Switch>
     );
