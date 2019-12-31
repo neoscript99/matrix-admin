@@ -48,6 +48,11 @@ abstract class DomainController<T> {
         return ResponseEntity.ok(domainService.deleteByIds(req.ids))
     }
 
+    @PostMapping("/deleteMatch")
+    ResponseEntity<Number> deleteMatch(@RequestBody Map criteria) {
+        return ResponseEntity.ok(domainService.deleteMatch(criteria))
+    }
+
     @PostMapping("/save")
     ResponseEntity<T> save(@RequestBody Map entityMap) {
         return ResponseEntity.ok(domainService.save(entityMap))

@@ -1,6 +1,6 @@
-rootProject.name = 'yzedu-research'
+rootProject.name = 'matrix-research'
 
 include 'matrix-admin',
-        'yzres-service',
+        'res-service',
         'oo-rest-mobx',
-        'yzres-web'
+        'res-web'
