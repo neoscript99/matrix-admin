@@ -11,15 +11,6 @@ export class ResUserList<
   get domainService() {
     return resUserService;
   }
-
-  handleUpdate() {
-    const item = this.getSelectItem();
-    if (item)
-      this.setState({
-        formProps: this.getFormProps('修改', { ...item, birthDay: item.birthDay && moment(item.birthDay) }),
-      });
-  }
-
   getExtraColumns() {
     return [
       { title: '职务职称', dataIndex: 'title' },

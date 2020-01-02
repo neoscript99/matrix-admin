@@ -18,7 +18,7 @@ import { WorkPlanList } from './work-plan';
 import { InitialApplyList } from './initial-apply';
 import { TopicMember } from './topic';
 
-const allOp: OperatorSwitch = { create: true, update: true, delete: true };
+const allOp: OperatorSwitch = { create: true, update: true, delete: true, view: true };
 export class PageSwitch extends Component<PageSwitchProps> {
   render() {
     const { pathPrefix } = this.props;

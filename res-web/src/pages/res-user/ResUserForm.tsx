@@ -8,13 +8,10 @@ export class ResUserForm extends UserForm {
     return resUserService;
   }
 
-  saveEntity(saveItem) {
-    saveItem.birthDay = transforms.momentToDayString(saveItem.birthDay);
-    return super.saveEntity(saveItem);
-  }
   getExtraFormItem() {
     const {
       form,
+      readonly,
       services: { dictService },
     } = this.props;
     const css = this.formItemCss;
@@ -29,14 +26,22 @@ export class ResUserForm extends UserForm {
           decorator={{
             rules: [required, { min: 16, max: 18, message: '格式错误' }],
           }}
+          disabled={readonly}
         />
-        <DatePickerField fieldId="birthDay" formItemProps={{ label: '生日', style: css }} formUtils={form} required />
+        <DatePickerField
+          fieldId="birthDay"
+          formItemProps={{ label: '生日', style: css }}
+          formUtils={form}
+          required
+          disabled={readonly}
+        />
         <InputField
           fieldId="title"
           formItemProps={{ label: '职务职称', style: css }}
           formUtils={form}
           maxLength={30}
           decorator={req}
+          disabled={readonly}
         />
         <InputField
           fieldId="major"
@@ -44,6 +49,7 @@ export class ResUserForm extends UserForm {
           formUtils={form}
           maxLength={30}
           decorator={req}
+          disabled={readonly}
         />
         <SelectField
           fieldId="degreeCode"
@@ -53,6 +59,7 @@ export class ResUserForm extends UserForm {
           valueProp="code"
           labelProp="name"
           decorator={req}
+          disabled={readonly}
         />
       </React.Fragment>
     );

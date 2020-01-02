@@ -4,12 +4,12 @@ import { Entity } from 'oo-rest-mobx';
 import { RouteComponentProps } from 'react-router';
 import { initialApplyService, resUserService, topicService } from '../../services';
 import { ClickParam } from 'antd/lib/menu';
+import { checkEditable } from './index';
 
 interface P extends Partial<RouteComponentProps> {
   item: Entity;
   onChange?: (item: Entity) => void;
 }
-const editableStatuses = ['draft', 'repair'];
 export class InitialApplyOperate extends Component<P> {
   approveMenuClick = ({ key: statusCode }: ClickParam) => {
     const { item } = this.props;
@@ -39,13 +39,10 @@ export class InitialApplyOperate extends Component<P> {
   render() {
     const buttonCss: React.CSSProperties = { padding: '0 2px' };
     const { item } = this.props;
-    const editable = editableStatuses.includes(item.statusCode);
+    const editable = checkEditable(item.statusCode);
     const approveAble = item.statusCode === 'wait' && resUserService.isMainManager();
     return (
       <div className="flex-row" style={{ margin: '-10px 0' }}>
-        <Button type="link" style={buttonCss}>
-          查看详情
-        </Button>
         {editable && (
           <Button type="link" style={buttonCss} onClick={this.handleMember}>
             课题成员管理
@@ -55,13 +52,6 @@ export class InitialApplyOperate extends Component<P> {
           <Button type="link" style={buttonCss} onClick={this.handleSubmit}>
             提交审核
           </Button>
-        )}
-        {editable && (
-          <Popconfirm title="确定删除?" okText="确定" cancelText="取消" onConfirm={this.handleDelete}>
-            <Button type="link" style={buttonCss}>
-              删除
-            </Button>
-          </Popconfirm>
         )}
         {approveAble && (
           <Dropdown

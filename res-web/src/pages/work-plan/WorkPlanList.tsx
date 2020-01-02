@@ -38,7 +38,7 @@ export class WorkPlanList extends EntityPageList {
         finishDeadline: item.finishDeadline && moment(item.finishDeadline),
       };
       this.setState({
-        formProps: this.getFormProps('修改', updateItem),
+        formProps: this.genFormProps('修改', updateItem),
       });
     }
   }

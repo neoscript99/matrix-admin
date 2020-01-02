@@ -13,6 +13,7 @@ import { Collapse } from 'antd';
 import { WorkPlanCard } from '../work-plan';
 import { InitialApplyForm } from './InitialApplyForm';
 import { InitialApplyOperate } from './InitialApplyOperate';
+import { checkEditable } from './index';
 
 const columns: EntityColumnProps[] = [
   { title: '所属计划', dataIndex: 'plan.planName' },
@@ -42,13 +43,13 @@ export class InitialApplyList extends EntityPageList {
   }
 
   handleApply = plan => {
-    const item = { plan };
-    const formProps = this.getFormProps('提交', item);
+    const item = { plan, topic: {} };
+    const formProps = this.genFormProps('提交', item);
     this.setState({ formProps });
   };
 
-  getFormProps(action: string, item?: any): EntityFormProps {
-    const props = super.getFormProps(action, item);
+  genFormProps(action: string, item?: any, exProps?: Partial<EntityFormProps>): EntityFormProps {
+    const props = super.genFormProps(action, item, exProps);
     return { ...props, modalProps: { width: '48em', title: item.plan.planName } };
   }
 
@@ -96,6 +97,15 @@ export class InitialApplyList extends EntityPageList {
       };
     }
     return param;
+  }
+  getOperatorVisible() {
+    return { update: true, delete: true, view: true };
+  }
+  getOperatorEnable() {
+    const value = super.getOperatorEnable();
+    const item = this.getSelectItem();
+    const editable = !!item && checkEditable(item.statusCode);
+    return { ...value, update: value.update && editable, delete: value.delete && editable };
   }
 }
 

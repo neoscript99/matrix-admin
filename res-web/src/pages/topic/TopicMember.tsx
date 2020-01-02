@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, message, Transfer } from 'antd';
-import { OperatorBar, Entity, UserFormProps, UserListProps, EntityListState } from 'oo-rest-mobx';
+import { OperatorBar, Entity, UserFormProps, UserListProps, EntityListState, EntityFormProps } from 'oo-rest-mobx';
 import { ResUserService } from '../../services/ResUserService';
 import { ResUserList } from '../res-user';
 import { resTopicUserService, topicMemberService, topicService, loginService } from '../../services';
@@ -99,8 +99,8 @@ export class TopicMember extends ResUserList<UserListProps, S> {
     return { enabled: true };
   }
 
-  getFormProps(action: string, item?: Entity): UserFormProps {
-    const props = super.getFormProps(action, item);
+  genFormProps(action: string, item?: Entity, exProps?: Partial<EntityFormProps>): UserFormProps {
+    const props = super.genFormProps(action, item, exProps);
     props.hideRoles = true;
     props.justSameDept = true;
     props.autoGenerateAccount = true;

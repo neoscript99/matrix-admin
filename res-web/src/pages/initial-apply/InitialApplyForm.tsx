@@ -25,32 +25,39 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
       },
     } = this.props;
     const day = moment().format('MMDD');
-    saveItem.prepareFinishDay = transforms.momentToDayString(saveItem.prepareFinishDay);
-    saveItem.dept = loginService.store.loginInfo.user!.dept;
-    saveItem.topicCateCode = topicCateCode;
-    saveItem.topicStatusCode = 'created';
-    saveItem.topicCode = `${topicCateCode}-${planYear}-${day}-${StringUtil.randomString(4)}`;
-    const user = { id: loginService.store.loginInfo.user!.id };
-    saveItem.personInCharge = user;
-    const topic = await topicService.save(saveItem);
-    return await super.saveEntity({ name: `${saveItem.topicName}立项申请`, applier: user, statusCode: 'draft', topic });
+    const { topic } = saveItem;
+    topic.dept = { id: loginService.dept!.id };
+    topic.topicCateCode = topicCateCode;
+    topic.topicStatusCode = 'created';
+    topic.topicCode = `${topicCateCode}-${planYear}-${day}-${StringUtil.randomString(4)}`;
+    const user = { id: loginService.user!.id };
+    topic.personInCharge = user;
+    const savedTopic = await topicService.save(topic);
+    return await super.saveEntity({
+      name: `${topic.topicName}立项申请`,
+      applier: user,
+      statusCode: 'draft',
+      topic: { id: savedTopic.id },
+    });
   }
   getForm() {
     const itemCss: React.CSSProperties = { width: '22em', marginBottom: '10px' };
     const {
       form,
-      inputItem: { plan },
+      readonly,
+      inputItem: { topic },
     } = this.props;
-    const important = plan.topicCateCode === 'YZZD';
+    const important = topic.topicCateCode === 'YZZD';
     const req = { rules: [commonRules.required] };
     return (
       <Form style={StyleUtil.flexForm()}>
         <InputField
-          fieldId="topicName"
+          fieldId="topic.topicName"
           formItemProps={{ label: '课题名', style: { ...itemCss, width: '44em' } }}
           formUtils={form}
           maxLength={30}
           decorator={req}
+          disabled={readonly}
         />
         {important && (
           <InputField
@@ -58,6 +65,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
             formItemProps={{ label: '原课题名', style: { ...itemCss, width: '44em' } }}
             formUtils={form}
             maxLength={36}
+            disabled={readonly}
           />
         )}
         {important && (
@@ -66,59 +74,66 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
             formItemProps={{ label: '原课题编号', style: itemCss }}
             formUtils={form}
             maxLength={36}
+            disabled={readonly}
           />
         )}
         <DictSelectField
-          fieldId="topicSourceCode"
+          fieldId="topic.topicSourceCode"
           formItemProps={{ label: '课题来源', style: itemCss }}
           dictService={dictService}
           dictType="res-topic-source"
           formUtils={form}
           decorator={req}
           defaultSelectFirst
+          disabled={readonly}
         />
         <DictSelectField
-          fieldId="researchContentCode"
+          fieldId="topic.researchContentCode"
           formItemProps={{ label: '研究内容', style: itemCss }}
           dictService={dictService}
           dictType="res-content"
           formUtils={form}
           decorator={req}
           defaultSelectFirst
+          disabled={readonly}
         />
         <DictSelectField
-          fieldId="researchSubjectCode"
+          fieldId="topic.researchSubjectCode"
           formItemProps={{ label: '涉及学科', style: itemCss }}
           dictService={dictService}
           dictType="res-subject"
           formUtils={form}
           decorator={req}
           defaultSelectFirst
+          disabled={readonly}
         />
         <DictSelectField
-          fieldId="researchTargetCode"
+          fieldId="topic.researchTargetCode"
           formItemProps={{ label: '研究对象', style: itemCss }}
           dictService={dictService}
           dictType="res-target"
           formUtils={form}
           decorator={req}
           defaultSelectFirst
+          disabled={readonly}
         />
         <DictSelectField
-          fieldId="prepareAchieveFormCode"
+          fieldId="topic.prepareAchieveFormCode"
           formItemProps={{ label: '成果拟形式', style: itemCss }}
           dictService={dictService}
           dictType="res-achieve-form"
           formUtils={form}
           decorator={req}
           defaultSelectFirst
+          disabled={readonly}
         />
         <DatePickerField
-          fieldId="prepareFinishDay"
+          fieldId="topic.prepareFinishDay"
           formItemProps={{ label: '计划完成时间', style: itemCss }}
           formUtils={form}
           required={true}
           defaultDiffDays={365}
+          disabled={readonly}
         />
       </Form>
     );
