@@ -14,9 +14,10 @@ import {
 } from 'oo-rest-mobx';
 import { ResUserList, ResUserProfile } from './res-user';
 import { ResDeptList } from './res-dept';
-import { WorkPlanList } from './work-plan';
+import { InitialPlanList } from './initial-plan';
 import { InitialApplyList } from './initial-apply';
-import { TopicMember } from './topic';
+import { TopicList, TopicMember } from './topic';
+import { FinishApplyList } from './finish-apply';
 
 const allOp: OperatorSwitch = { create: true, update: true, delete: true, view: true };
 export class PageSwitch extends Component<PageSwitchProps> {
@@ -24,11 +25,6 @@ export class PageSwitch extends Component<PageSwitchProps> {
     const { pathPrefix } = this.props;
     return (
       <Switch>
-        <Route
-          path={`${pathPrefix}WorkPlan/`}
-          render={() => <WorkPlanList operatorVisible={allOp} name="课题立项申报计划" />}
-        />
-        <Route path={`${pathPrefix}InitialApply/`} render={props => <InitialApplyList {...props} name="立项申报" />} />
         <Route path={`${pathPrefix}Role/`} render={() => <RoleList services={adminServices} name="角色" />} />
         <Route
           path={`${pathPrefix}UserRole/`}
@@ -57,10 +53,17 @@ export class PageSwitch extends Component<PageSwitchProps> {
         <Route path={`${pathPrefix}Note/`} render={() => <NoteList services={adminServices} name="通知" />} />
         <Route path={`${pathPrefix}Param/`} render={() => <ParamList services={adminServices} name="参数" />} />
         <Route path={`${pathPrefix}Profile/`} render={() => <ResUserProfile services={adminServices} />} />
+        <Route path={`${pathPrefix}InitialPlan/`}>
+          {() => <InitialPlanList operatorVisible={allOp} name="课题立项申报计划" />}
+        </Route>
+        <Route path={`${pathPrefix}InitialApply/`} render={props => <InitialApplyList {...props} name="立项申报" />} />
+
+        <Route path={`${pathPrefix}Topic/`} render={() => <TopicList name="课题" />} />
         <Route
           path={`${pathPrefix}TopicMember/`}
           render={props => <TopicMember {...props} services={adminServices} />}
         />
+        <Route path={`${pathPrefix}FinishApply/`} render={() => <FinishApplyList name="结题流程" />} />
         <Route render={() => <Welcome />} />
       </Switch>
     );

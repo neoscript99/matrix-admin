@@ -1,34 +1,25 @@
 import React from 'react';
-import {
-  EntityPageList,
-  EntityColumnProps,
-  SimpleSearchForm,
-  ListOptions,
-  StringUtil,
-  EntityFormProps,
-} from 'oo-rest-mobx';
-import { dictService, initialApplyService, workPlanService } from '../../services';
+import { EntityColumnProps, EntityFormProps } from 'oo-rest-mobx';
+import { dictService, initialPlanService } from '../../services';
 import { observer } from 'mobx-react';
 import { Collapse } from 'antd';
-import { WorkPlanCard } from '../work-plan';
+import { InitialPlanCard } from '../initial-plan';
 import { InitialApplyForm } from './InitialApplyForm';
 import { InitialApplyOperate } from './InitialApplyOperate';
 import { checkEditable } from './index';
+import { TopicList } from '../topic';
 
 const columns: EntityColumnProps[] = [
-  { title: '所属计划', dataIndex: 'plan.planName' },
-  { title: '课题名称', dataIndex: 'topic.topicName' },
-  { title: '课题编号', dataIndex: 'topic.topicCode' },
-  { title: '负责人', dataIndex: 'topic.personInCharge.name' },
+  { title: '所属计划', dataIndex: 'initialPlan.planName' },
   {
     title: '申请状态',
-    dataIndex: 'statusCode',
+    dataIndex: 'initialApply.statusCode',
     render: dictService.dictRender.bind(null, 'res-apply-status'),
   },
 ];
 
 @observer
-export class InitialApplyList extends EntityPageList {
+export class InitialApplyList extends TopicList {
   constructor(props) {
     super(props);
     this.tableProps.pagination.pageSize = 6;
@@ -39,22 +30,22 @@ export class InitialApplyList extends EntityPageList {
     const render = (text, record) => (
       <InitialApplyOperate {...{ history, location, match }} onChange={this.refresh.bind(this)} item={record} />
     );
-    return [...columns, { title: '操作', render }];
+    return [...this.getBaseColumns(), ...columns, { title: '操作', render }];
   }
 
-  handleApply = plan => {
-    const item = { plan, topic: {} };
+  handleApply = initialPlan => {
+    const item = { initialPlan };
     const formProps = this.genFormProps('提交', item);
     this.setState({ formProps });
   };
 
   genFormProps(action: string, item?: any, exProps?: Partial<EntityFormProps>): EntityFormProps {
     const props = super.genFormProps(action, item, exProps);
-    return { ...props, modalProps: { width: '48em', title: item.plan.planName } };
+    return { ...props, modalProps: { width: '48em', title: item.initialPlan.planName } };
   }
 
   render() {
-    const { startedList: planList } = workPlanService.store;
+    const { startedList: planList } = initialPlanService.store;
     //依赖dictService.store.allList
     console.log('WorkPlanList.render: ', dictService.store.allList.length);
     return (
@@ -65,7 +56,7 @@ export class InitialApplyList extends EntityPageList {
             <Collapse.Panel header="进行中的立项申报计划" key="1">
               <div className="flex-row">
                 {planList.map(plan => (
-                  <WorkPlanCard key={plan.id} plan={plan} onApply={this.handleApply} />
+                  <InitialPlanCard key={plan.id} plan={plan} onApply={this.handleApply} />
                 ))}
               </div>
             </Collapse.Panel>
@@ -75,28 +66,8 @@ export class InitialApplyList extends EntityPageList {
     );
   }
 
-  get domainService() {
-    return initialApplyService;
-  }
-
-  getSearchForm() {
-    return InitialApplySearchForm;
-  }
-
   getEntityForm() {
     return InitialApplyForm;
-  }
-
-  getQueryParam(): ListOptions {
-    const param = super.getQueryParam();
-    const { searchParam } = this.domainService.store;
-    if (searchParam && StringUtil.isNotBlank(searchParam.searchKey)) {
-      const key = `%${searchParam.searchKey}%`;
-      param.criteria = {
-        or: { plan: { like: [['planName', key]] }, topic: { like: [['topicName', key]] } },
-      };
-    }
-    return param;
   }
   getOperatorVisible() {
     return { update: true, delete: true, view: true };
@@ -107,8 +78,4 @@ export class InitialApplyList extends EntityPageList {
     const editable = !!item && checkEditable(item.statusCode);
     return { ...value, update: value.update && editable, delete: value.delete && editable };
   }
-}
-
-export class InitialApplySearchForm extends SimpleSearchForm {
-  placeholder = '计划标题、课题名';
 }

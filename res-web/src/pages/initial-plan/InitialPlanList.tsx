@@ -1,9 +1,8 @@
 import React from 'react';
 import { EntityPageList, EntityColumnProps, SimpleSearchForm, ListOptions, StringUtil } from 'oo-rest-mobx';
-import { dictService, workPlanService } from '../../services';
+import { dictService, initialPlanService } from '../../services';
 import { observer } from 'mobx-react';
-import { WorkPlanForm } from './WorkPlanForm';
-import moment from 'moment';
+import { InitialPlanForm } from './InitialPlanForm';
 const columns: EntityColumnProps[] = [
   { title: '计划标题', dataIndex: 'planName' },
   { title: '立项年度', dataIndex: 'planYear' },
@@ -13,7 +12,7 @@ const columns: EntityColumnProps[] = [
 ];
 
 @observer
-export class WorkPlanList extends EntityPageList {
+export class InitialPlanList extends EntityPageList {
   render() {
     //依赖dictService.store.allList
     console.log('WorkPlanList.render: ', dictService.store.allList.length);
@@ -25,29 +24,14 @@ export class WorkPlanList extends EntityPageList {
   }
 
   get domainService() {
-    return workPlanService;
-  }
-
-  handleUpdate() {
-    const item = this.getSelectItem();
-    if (item) {
-      const updateItem = {
-        ...item,
-        planBeginDay: item.planBeginDay && moment(item.planBeginDay),
-        planEndDay: item.planEndDay && moment(item.planEndDay),
-        finishDeadline: item.finishDeadline && moment(item.finishDeadline),
-      };
-      this.setState({
-        formProps: this.genFormProps('修改', updateItem),
-      });
-    }
+    return initialPlanService;
   }
 
   getEntityForm() {
-    return WorkPlanForm;
+    return InitialPlanForm;
   }
   getSearchForm() {
-    return WorkPlanSearchForm;
+    return InitialPlanSearchForm;
   }
   getQueryParam(): ListOptions {
     const param = super.getQueryParam();
@@ -60,6 +44,6 @@ export class WorkPlanList extends EntityPageList {
   }
 }
 
-export class WorkPlanSearchForm extends SimpleSearchForm {
+export class InitialPlanSearchForm extends SimpleSearchForm {
   placeholder = '计划标题';
 }

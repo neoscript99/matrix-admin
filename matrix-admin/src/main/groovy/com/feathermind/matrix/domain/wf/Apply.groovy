@@ -14,6 +14,7 @@ import groovy.transform.ToString
 class Apply {
     String id
     String name
+    String type
     User applier
     String statusCode
     Date passTime

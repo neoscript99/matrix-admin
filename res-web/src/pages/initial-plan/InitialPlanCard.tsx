@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Card, Progress, Button } from 'antd';
 import { Entity } from 'oo-rest-mobx';
 import moment from 'moment';
-export interface WorkPlanCardProps {
+export interface InitialPlanCardProps {
   plan: Entity;
   onApply: (plan: Entity) => void;
 }
-export class WorkPlanCard extends Component<WorkPlanCardProps> {
+export class InitialPlanCard extends Component<InitialPlanCardProps> {
   handleApply() {
     const { plan, onApply } = this.props;
     onApply(plan);
@@ -25,7 +25,7 @@ export class WorkPlanCard extends Component<WorkPlanCardProps> {
       </div>
     );
     return (
-      <Card style={{ width: 300 }} actions={[action]}>
+      <Card style={{ width: 300, margin: '0.2rem' }} actions={[action]}>
         <Card.Meta
           avatar={<Progress type="dashboard" width={50} percent={percent} />}
           title={<p style={{ whiteSpace: 'normal' }}>{plan.planName}</p>}

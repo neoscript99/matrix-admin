@@ -13,7 +13,7 @@ import groovy.transform.ToString
 @ToString(includePackage = false, includeNames = true, includes = 'planName')
 @EqualsAndHashCode(includes = 'id')
 @InitializeDomain(profiles = 'dev')
-class TopicWorkPlan {
+class InitialPlan {
     String id
     String planName
     //立项年度
@@ -42,17 +42,17 @@ class TopicWorkPlan {
     }
     static constraints = {
     }
-    static DemoPlan = new TopicWorkPlan([planName      : '2020年教育科学规划课题申报计划',
-                                         planYear      : 2020, topicCateCode: 'YZGH',
-                                         planBeginDay  : '2019-12-01', planEndDay: '2020-03-10',
-                                         finishDeadline: '2021-12-31'])
-    static DemoPlan2 = new TopicWorkPlan([planName      : '2020年教育科学重点课题申报计划',
-                                          planYear      : 2020, topicCateCode: 'YZZD',
-                                          planBeginDay  : '2019-12-01', planEndDay: '2020-01-30',
-                                          finishDeadline: '2021-12-31'])
-    static DemoPlan3 = new TopicWorkPlan([planName      : '2020年教育科学艺术课题申报计划',
-                                          planYear      : 2020, topicCateCode: 'YZYS',
-                                          planBeginDay  : '2019-12-01', planEndDay: '2020-03-10',
-                                          finishDeadline: '2021-12-31'])
+    static DemoPlan = new InitialPlan([planName      : '2020年教育科学规划课题申报计划',
+                                       planYear      : 2020, topicCateCode: 'YZGH',
+                                       planBeginDay  : '2019-12-01', planEndDay: '2020-03-10',
+                                       finishDeadline: '2021-12-31'])
+    static DemoPlan2 = new InitialPlan([planName      : '2020年教育科学重点课题申报计划',
+                                        planYear      : 2020, topicCateCode: 'YZZD',
+                                        planBeginDay  : '2019-12-01', planEndDay: '2020-01-30',
+                                        finishDeadline: '2021-12-31'])
+    static DemoPlan3 = new InitialPlan([planName      : '2020年教育科学艺术课题申报计划',
+                                        planYear      : 2020, topicCateCode: 'YZYS',
+                                        planBeginDay  : '2019-12-01', planEndDay: '2020-03-10',
+                                        finishDeadline: '2021-12-31'])
     static initList = [DemoPlan, DemoPlan2, DemoPlan3]
 }

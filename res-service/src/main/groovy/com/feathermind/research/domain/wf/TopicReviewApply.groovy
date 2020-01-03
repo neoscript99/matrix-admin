@@ -1,9 +1,9 @@
 package com.feathermind.research.domain.wf
 
 import com.feathermind.matrix.domain.wf.Apply
+import com.feathermind.research.domain.res.ResUser
 import grails.gorm.annotation.Entity
 import com.feathermind.research.domain.res.ReviewPlan
-import com.feathermind.research.domain.res.Topic
 
 /**
  * 课题成果评审申请
@@ -12,11 +12,13 @@ import com.feathermind.research.domain.res.Topic
 @Entity
 class TopicReviewApply extends Apply {
     ReviewPlan plan
-    Topic topic
-    String achieveCateCode
-    String projectLevelCode
+    //成果名称
+    String achieveName
+    //成果负责人姓名
+    ResUser personInCharge
 
-    static mapping = {
-        topic fetch: 'join', lazy: false
-    }
+    //成果类别
+    String achieveCateCode
+    //立项情况
+    String projectLevelCode
 }

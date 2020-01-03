@@ -1,20 +1,13 @@
 import React from 'react';
 import { Form } from 'antd';
-import {
-  EntityForm,
-  commonRules,
-  InputField,
-  InputNumberField,
-  SelectField,
-  DatePickerField,
-} from 'oo-rest-mobx';
+import { EntityForm, commonRules, InputField, InputNumberField, SelectField, DatePickerField } from 'oo-rest-mobx';
 import moment from 'moment';
 import { dictService } from '../../services';
 const { required, numberRule } = commonRules;
 
-export class WorkPlanForm extends EntityForm {
+export class InitialPlanForm extends EntityForm {
   getForm() {
-    const { form } = this.props;
+    const { form, readonly } = this.props;
     const year = moment().year();
     return (
       <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
@@ -24,6 +17,7 @@ export class WorkPlanForm extends EntityForm {
           formUtils={form}
           maxLength={36}
           decorator={{ rules: [required] }}
+          disabled={readonly}
         />
         <InputNumberField
           fieldId="planYear"
@@ -32,6 +26,7 @@ export class WorkPlanForm extends EntityForm {
           min={1900}
           max={9999}
           decorator={{ initialValue: year, rules: [numberRule] }}
+          disabled={readonly}
         />
         <SelectField
           fieldId="topicCateCode"
@@ -41,10 +36,32 @@ export class WorkPlanForm extends EntityForm {
           labelProp="name"
           valueProp="code"
           decorator={{ rules: [required] }}
+          disabled={readonly}
         />
-        <DatePickerField fieldId="planBeginDay" formItemProps={{ label: '申报开始日期' }} formUtils={form} required />
-        <DatePickerField fieldId="planEndDay" formItemProps={{ label: '申报截止日期' }} formUtils={form} required />
-        <DatePickerField fieldId="finishDeadline" formItemProps={{ label: '结题截止日期' }} formUtils={form} required />
+        <DatePickerField
+          fieldId="planBeginDay"
+          formItemProps={{ label: '申报开始日期' }}
+          formUtils={form}
+          required
+          defaultDiffDays={1}
+          disabled={readonly}
+        />
+        <DatePickerField
+          fieldId="planEndDay"
+          formItemProps={{ label: '申报截止日期' }}
+          formUtils={form}
+          required
+          defaultDiffDays={90}
+          disabled={readonly}
+        />
+        <DatePickerField
+          fieldId="finishDeadline"
+          formItemProps={{ label: '结题截止日期' }}
+          formUtils={form}
+          required
+          defaultDiffDays={730}
+          disabled={readonly}
+        />
       </Form>
     );
   }

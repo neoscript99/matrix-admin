@@ -8,9 +8,4 @@ import grails.gorm.annotation.Entity
  */
 @Entity
 class TopicFinishApply extends Apply {
-    TopicInitialApply initialApply
-
-    static mapping = {
-        initialApply fetch: 'join', lazy: false
-    }
 }

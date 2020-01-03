@@ -1,5 +1,6 @@
 package com.feathermind.matrix.service
 
+import cn.hutool.core.date.DateUtil
 import cn.hutool.core.lang.UUID
 import com.feathermind.matrix.domain.sys.AttachmentFile
 import com.feathermind.matrix.domain.sys.AttachmentInfo
@@ -112,9 +113,8 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
     @Scheduled(cron = "0 0 * * * *")
     void cleanTemp() {
         log.info("定时删除一些没有所属对象的附件，正式环境删除一天前的临时附件")
-        def date = LocalDateTime.now().minusDays(1)
         def list = list([like: [['ownerId', "${ATTACH_TEMP_ID_PREFIX}%".toString()]],
-                         lt  : [['dateCreated', Date.from(date.toInstant())]]])
+                         lt  : [['dateCreated', DateUtil.yesterday()]]])
         deleteInfoByOwners(list*.ownerId)
     }
 

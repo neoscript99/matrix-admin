@@ -5,54 +5,63 @@ import {
   InputField,
   commonRules,
   DatePickerField,
-  transforms,
   EntityFormProps,
   Entity,
   StringUtil,
   DictSelectField,
+  SelectField,
 } from 'oo-rest-mobx';
 import { Form } from 'antd';
-import { dictService, topicService, loginService } from '../../services';
+import { dictService, topicService, loginService, resUserService, applyService } from '../../services';
 import moment from 'moment';
 export interface InitialApplyFormProps extends EntityFormProps {
   inputItem: Entity;
 }
-export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
+interface S {
+  deptUserList?: any[];
+}
+export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
+  state = {} as S;
+  async componentDidMount() {
+    const deptUserList = await resUserService.getDeptUsers(loginService.dept!);
+    this.setState({ deptUserList });
+  }
   async saveEntity(saveItem) {
     const {
       inputItem: {
-        plan: { topicCateCode, planYear },
+        initialPlan: { topicCateCode, planYear },
       },
     } = this.props;
-    const day = moment().format('MMDD');
-    const { topic } = saveItem;
-    topic.dept = { id: loginService.dept!.id };
-    topic.topicCateCode = topicCateCode;
-    topic.topicStatusCode = 'created';
-    topic.topicCode = `${topicCateCode}-${planYear}-${day}-${StringUtil.randomString(4)}`;
     const user = { id: loginService.user!.id };
-    topic.personInCharge = user;
-    const savedTopic = await topicService.save(topic);
-    return await super.saveEntity({
-      name: `${topic.topicName}立项申请`,
+    const day = moment().format('MMDD');
+    const apply = {
+      name: `${saveItem.topicName}立项申请`,
+      type: 'TopicInitialApply',
       applier: user,
       statusCode: 'draft',
-      topic: { id: savedTopic.id },
-    });
+    };
+    const initialApply = await applyService.save(apply);
+    saveItem.initialApply = initialApply;
+    saveItem.dept = { id: loginService.dept!.id };
+    saveItem.topicCateCode = topicCateCode;
+    saveItem.topicStatusCode = 'created';
+    saveItem.topicCode = `${topicCateCode}-${planYear}-${day}-${StringUtil.randomString(4)}`;
+    return await super.saveEntity(saveItem);
   }
   getForm() {
     const itemCss: React.CSSProperties = { width: '22em', marginBottom: '10px' };
     const {
       form,
       readonly,
-      inputItem: { topic },
+      inputItem: { initialPlan },
     } = this.props;
-    const important = topic.topicCateCode === 'YZZD';
+    const { deptUserList } = this.state;
+    const important = initialPlan.topicCateCode === 'YZZD';
     const req = { rules: [commonRules.required] };
     return (
       <Form style={StyleUtil.flexForm()}>
         <InputField
-          fieldId="topic.topicName"
+          fieldId="topicName"
           formItemProps={{ label: '课题名', style: { ...itemCss, width: '44em' } }}
           formUtils={form}
           maxLength={30}
@@ -77,8 +86,18 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
             disabled={readonly}
           />
         )}
+        <SelectField
+          fieldId="personInCharge.id"
+          formItemProps={{ label: '课题负责人', style: itemCss }}
+          formUtils={form}
+          dataSource={deptUserList}
+          valueProp="id"
+          labelProp="name"
+          decorator={req}
+          disabled={readonly}
+        />
         <DictSelectField
-          fieldId="topic.topicSourceCode"
+          fieldId="topicSourceCode"
           formItemProps={{ label: '课题来源', style: itemCss }}
           dictService={dictService}
           dictType="res-topic-source"
@@ -88,7 +107,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
           disabled={readonly}
         />
         <DictSelectField
-          fieldId="topic.researchContentCode"
+          fieldId="researchContentCode"
           formItemProps={{ label: '研究内容', style: itemCss }}
           dictService={dictService}
           dictType="res-content"
@@ -98,7 +117,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
           disabled={readonly}
         />
         <DictSelectField
-          fieldId="topic.researchSubjectCode"
+          fieldId="researchSubjectCode"
           formItemProps={{ label: '涉及学科', style: itemCss }}
           dictService={dictService}
           dictType="res-subject"
@@ -108,7 +127,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
           disabled={readonly}
         />
         <DictSelectField
-          fieldId="topic.researchTargetCode"
+          fieldId="researchTargetCode"
           formItemProps={{ label: '研究对象', style: itemCss }}
           dictService={dictService}
           dictType="res-target"
@@ -118,7 +137,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
           disabled={readonly}
         />
         <DictSelectField
-          fieldId="topic.prepareAchieveFormCode"
+          fieldId="prepareAchieveFormCode"
           formItemProps={{ label: '成果拟形式', style: itemCss }}
           dictService={dictService}
           dictType="res-achieve-form"
@@ -128,7 +147,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps> {
           disabled={readonly}
         />
         <DatePickerField
-          fieldId="topic.prepareFinishDay"
+          fieldId="prepareFinishDay"
           formItemProps={{ label: '计划完成时间', style: itemCss }}
           formUtils={form}
           required={true}

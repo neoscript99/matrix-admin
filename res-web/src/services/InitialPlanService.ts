@@ -1,13 +1,13 @@
 import { AbstractClient, DomainService, MobxDomainStore, Entity, DictInitService } from 'oo-rest-mobx';
 import { observable } from 'mobx';
 
-export class WorkPlanStore extends MobxDomainStore {
+export class InitialPlanStore extends MobxDomainStore {
   @observable
   startedList?: Entity[];
 }
-export class WorkPlanService extends DomainService<WorkPlanStore> implements DictInitService {
+export class InitialPlanService extends DomainService<InitialPlanStore> implements DictInitService {
   constructor(restClient: AbstractClient) {
-    super({ domain: 'topicWorkPlan', storeClass: WorkPlanStore, restClient });
+    super({ domain: 'initialPlan', storeClass: InitialPlanStore, restClient });
   }
   listStarted() {
     return this.restClient.post(this.getApiUri('listStarted')).then(res => ((this.store.startedList = res), res));
