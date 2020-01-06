@@ -10,6 +10,7 @@ import {
   StringUtil,
   DictSelectField,
   SelectField,
+  UploadField,
 } from 'oo-rest-mobx';
 import { Form } from 'antd';
 import { dictService, topicService, loginService, resUserService, applyService } from '../../services';
@@ -36,7 +37,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
     const day = moment().format('MMDD');
     const apply = {
       name: `${saveItem.topicName}立项申请`,
-      type: 'TopicInitialApply',
+      type: 'topic_initial_apply',
       applier: user,
       statusCode: 'draft',
     };
@@ -66,7 +67,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
           formUtils={form}
           maxLength={30}
           decorator={req}
-          disabled={readonly}
+          readonly={readonly}
         />
         {important && (
           <InputField
@@ -74,7 +75,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             formItemProps={{ label: '原课题名', style: { ...itemCss, width: '44em' } }}
             formUtils={form}
             maxLength={36}
-            disabled={readonly}
+            readonly={readonly}
           />
         )}
         {important && (
@@ -83,7 +84,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             formItemProps={{ label: '原课题编号', style: itemCss }}
             formUtils={form}
             maxLength={36}
-            disabled={readonly}
+            readonly={readonly}
           />
         )}
         <SelectField
@@ -94,7 +95,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
           valueProp="id"
           labelProp="name"
           decorator={req}
-          disabled={readonly}
+          readonly={readonly}
         />
         <DictSelectField
           fieldId="topicSourceCode"
@@ -104,7 +105,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
           formUtils={form}
           decorator={req}
           defaultSelectFirst
-          disabled={readonly}
+          readonly={readonly}
         />
         <DictSelectField
           fieldId="researchContentCode"
@@ -114,7 +115,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
           formUtils={form}
           decorator={req}
           defaultSelectFirst
-          disabled={readonly}
+          readonly={readonly}
         />
         <DictSelectField
           fieldId="researchSubjectCode"
@@ -124,7 +125,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
           formUtils={form}
           decorator={req}
           defaultSelectFirst
-          disabled={readonly}
+          readonly={readonly}
         />
         <DictSelectField
           fieldId="researchTargetCode"
@@ -134,7 +135,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
           formUtils={form}
           decorator={req}
           defaultSelectFirst
-          disabled={readonly}
+          readonly={readonly}
         />
         <DictSelectField
           fieldId="prepareAchieveFormCode"
@@ -144,7 +145,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
           formUtils={form}
           decorator={req}
           defaultSelectFirst
-          disabled={readonly}
+          readonly={readonly}
         />
         <DatePickerField
           fieldId="prepareFinishDay"
@@ -152,7 +153,14 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
           formUtils={form}
           required={true}
           defaultDiffDays={365}
-          disabled={readonly}
+          readonly={readonly}
+        />
+        <UploadField
+          fieldId="initialReport"
+          formItemProps={{ label: '申报盲评文本', style: itemCss }}
+          formUtils={form}
+          decorator={req}
+          readonly={readonly}
         />
       </Form>
     );

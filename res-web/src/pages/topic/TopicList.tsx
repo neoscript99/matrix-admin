@@ -30,16 +30,23 @@ export class TopicList extends EntityPageList {
     return [...baseColumns, ...exColumns];
   }
 
+  render(): JSX.Element {
+    //依赖dictService.store.allList
+    console.log('WorkPlanList.render: ', dictService.store.allList.length);
+    return super.render();
+  }
+
   getQueryParam(): ListOptions {
     const param = super.getQueryParam();
-    const { searchParam } = this.domainService.store;
-    if (searchParam && StringUtil.isNotBlank(searchParam.searchKey)) {
-      const key = `%${searchParam.searchKey}%`;
+    const {
+      searchParam: { searchKey },
+    } = this.domainService.store;
+    if (StringUtil.isNotBlank(searchKey)) {
       param.criteria = {
         or: {
           like: [
-            ['topicName', key],
-            ['topicCode', searchParam.searchKey],
+            ['topicName', `%${searchKey}%`],
+            ['topicCode', `${searchKey}%`],
           ],
         },
       };

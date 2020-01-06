@@ -1,50 +1,48 @@
 import React from 'react';
-import { EntityPageList, EntityColumnProps, SimpleSearchForm, ListOptions, StringUtil } from 'oo-rest-mobx';
-import { dictService, topicService } from '../../services';
+import { EntityColumnProps } from 'oo-rest-mobx';
+import { dictService, finishApplyService } from '../../services';
 import { observer } from 'mobx-react';
+import { TopicList } from '../topic';
+import { FinishApplyOperator } from './FinishApplyOperator';
+import { Button } from 'antd';
 
+const statusRender = (code: string) => {
+  const label = dictService.dictRender('res-apply-status', code);
+  return label || '未发起';
+};
 const columns: EntityColumnProps[] = [
-  { title: '所属计划', dataIndex: 'plan.planName' },
-  { title: '课题名称', dataIndex: 'topic.topicName' },
-  { title: '课题编号', dataIndex: 'topic.topicCode' },
-  { title: '负责人', dataIndex: 'topic.personInCharge.name' },
   {
-    title: '申请状态',
-    dataIndex: 'statusCode',
-    render: dictService.dictRender.bind(null, 'res-apply-status'),
+    title: '立项申请状态',
+    dataIndex: 'initialApply.statusCode',
+    render: statusRender,
+  },
+  {
+    title: '结题申请状态',
+    dataIndex: 'finishApply.statusCode',
+    render: statusRender,
   },
 ];
 
 @observer
-export class FinishApplyList extends EntityPageList {
+export class FinishApplyList extends TopicList {
   get columns(): EntityColumnProps[] {
-    return columns;
+    const { history, location, match } = this.props;
+    const render = (text, record) => (
+      <FinishApplyOperator {...{ history, location, match }} onChange={this.refresh.bind(this)} topic={record} />
+    );
+    return [...this.getBaseColumns(), ...columns, { title: '操作', render }];
   }
 
   get domainService() {
-    return topicService;
-  }
-
-  getSearchForm() {
-    return FinishApplySearchForm;
-  }
-
-  getQueryParam(): ListOptions {
-    const param = super.getQueryParam();
-    const { searchParam } = this.domainService.store;
-    if (searchParam && StringUtil.isNotBlank(searchParam.searchKey)) {
-      const key = `%${searchParam.searchKey}%`;
-      param.criteria = {
-        or: { plan: { like: [['planName', key]] }, topic: { like: [['topicName', key]] } },
-      };
-    }
-    return param;
+    return finishApplyService;
   }
   getOperatorVisible() {
-    return { update: true, delete: true, view: true };
+    return { view: true };
   }
-}
 
-export class FinishApplySearchForm extends SimpleSearchForm {
-  placeholder = '计划标题、课题名';
+  getQueryParam() {
+    const param = super.getQueryParam();
+    param.criteria = { ...param.criteria, ne: [['topicStatusCode', 'created']] };
+    return param;
+  }
 }

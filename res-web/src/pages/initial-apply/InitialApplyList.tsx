@@ -1,13 +1,13 @@
 import React from 'react';
 import { EntityColumnProps, EntityFormProps } from 'oo-rest-mobx';
-import { dictService, initialPlanService } from '../../services';
+import { dictService, initialApplyService, initialPlanService } from '../../services';
 import { observer } from 'mobx-react';
 import { Collapse } from 'antd';
 import { InitialPlanCard } from '../initial-plan';
 import { InitialApplyForm } from './InitialApplyForm';
-import { InitialApplyOperate } from './InitialApplyOperate';
-import { checkEditable } from './index';
+import { InitialApplyOperator } from './InitialApplyOperator';
 import { TopicList } from '../topic';
+import { ApplyUtil } from '../../utils/ApplyUtil';
 
 const columns: EntityColumnProps[] = [
   { title: '所属计划', dataIndex: 'initialPlan.planName' },
@@ -28,7 +28,7 @@ export class InitialApplyList extends TopicList {
   get columns() {
     const { history, location, match } = this.props;
     const render = (text, record) => (
-      <InitialApplyOperate {...{ history, location, match }} onChange={this.refresh.bind(this)} item={record} />
+      <InitialApplyOperator {...{ history, location, match }} onChange={this.refresh.bind(this)} topic={record} />
     );
     return [...this.getBaseColumns(), ...columns, { title: '操作', render }];
   }
@@ -46,8 +46,6 @@ export class InitialApplyList extends TopicList {
 
   render() {
     const { startedList: planList } = initialPlanService.store;
-    //依赖dictService.store.allList
-    console.log('WorkPlanList.render: ', dictService.store.allList.length);
     return (
       <React.Fragment>
         {super.render()}
@@ -66,6 +64,9 @@ export class InitialApplyList extends TopicList {
     );
   }
 
+  get domainService() {
+    return initialApplyService;
+  }
   getEntityForm() {
     return InitialApplyForm;
   }
@@ -75,7 +76,7 @@ export class InitialApplyList extends TopicList {
   getOperatorEnable() {
     const value = super.getOperatorEnable();
     const item = this.getSelectItem();
-    const editable = !!item && checkEditable(item.statusCode);
+    const editable = !!item && ApplyUtil.checkEditable(item.initialApply);
     return { ...value, update: value.update && editable, delete: value.delete && editable };
   }
 }

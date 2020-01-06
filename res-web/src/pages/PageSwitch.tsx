@@ -56,14 +56,14 @@ export class PageSwitch extends Component<PageSwitchProps> {
         <Route path={`${pathPrefix}InitialPlan/`}>
           {() => <InitialPlanList operatorVisible={allOp} name="课题立项申报计划" />}
         </Route>
-        <Route path={`${pathPrefix}InitialApply/`} render={props => <InitialApplyList {...props} name="立项申报" />} />
+        <Route path={`${pathPrefix}InitialApply/`} render={props => <InitialApplyList {...props} name="立项课题" />} />
 
         <Route path={`${pathPrefix}Topic/`} render={() => <TopicList name="课题" />} />
         <Route
           path={`${pathPrefix}TopicMember/`}
           render={props => <TopicMember {...props} services={adminServices} />}
         />
-        <Route path={`${pathPrefix}FinishApply/`} render={() => <FinishApplyList name="结题流程" />} />
+        <Route path={`${pathPrefix}FinishApply/`} render={props => <FinishApplyList {...props} name="结题课题" />} />
         <Route render={() => <Welcome />} />
       </Switch>
     );

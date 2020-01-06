@@ -25,6 +25,10 @@ export const adminServices = new AdminServices(restClient, afterLogin, {
 export const dictService = adminServices.dictService;
 export const initialPlanService = new InitialPlanService(restClient);
 export const topicService = new TopicService(restClient);
+//独立store
+export const initialApplyService = new TopicService(restClient);
+//独立store
+export const finishApplyService = new TopicService(restClient);
 export const topicMemberService = new TopicMemberService(restClient);
 export const applyService = new DomainService({ domain: 'apply', restClient, storeClass });
 
