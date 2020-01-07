@@ -73,10 +73,8 @@ export class InitialApplyList extends TopicList {
   getOperatorVisible() {
     return { update: true, delete: true, view: true };
   }
-  getOperatorEnable() {
-    const value = super.getOperatorEnable();
+  getApply(): any {
     const item = this.getSelectItem();
-    const editable = !!item && ApplyUtil.checkEditable(item.initialApply);
-    return { ...value, update: value.update && editable, delete: value.delete && editable };
+    return item && item.initialApply;
   }
 }

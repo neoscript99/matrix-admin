@@ -8,6 +8,7 @@ import {
   ListOptions,
   StringUtil,
 } from 'oo-rest-mobx';
+import { ApplyUtil } from '../../utils/ApplyUtil';
 const baseColumns: EntityColumnProps[] = [
   { title: '课题名称', dataIndex: 'topicName' },
   { title: '课题编号', dataIndex: 'topicCode' },
@@ -58,6 +59,18 @@ export class TopicList extends EntityPageList {
   }
   getSearchForm() {
     return TopicSearchForm;
+  }
+  getOperatorEnable() {
+    const value = super.getOperatorEnable();
+    const item = this.getSelectItem();
+    const editable = !!item && ApplyUtil.checkEditable(this.getApply());
+    return { ...value, update: value.update && editable, delete: value.delete && editable };
+  }
+  //当前页面要维护的申请信息，
+  //立项流程的申请对应：initialApply
+  //结题流程的申请对应：finishApply
+  getApply(): any {
+    return null;
   }
 }
 

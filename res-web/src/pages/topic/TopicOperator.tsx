@@ -7,12 +7,12 @@ import { ClickParam } from 'antd/lib/menu';
 import { ApproveDropdown } from '../../components';
 import { ApplyUtil } from '../../utils/ApplyUtil';
 
-interface P extends Partial<RouteComponentProps> {
+export interface TopicOperatorProps extends Partial<RouteComponentProps> {
   topic: Entity;
   onChange?: (item: Entity) => void;
 }
 
-export class TopicOperator extends Component<P> {
+export class TopicOperator<P extends TopicOperatorProps = TopicOperatorProps> extends Component<P> {
   approveMenuClick({ key: statusCode }: ClickParam) {
     const { topic } = this.props;
     const apply: any = { statusCode };
@@ -20,7 +20,7 @@ export class TopicOperator extends Component<P> {
       apply.passTime = new Date();
       topicService.save({ id: topic.id, topicStatusCode: 'applied' });
     }
-    this.saveApply(apply).then(this.fireChange.bind(this));
+    this.saveApply(apply);
   }
   fireChange() {
     const { topic, onChange } = this.props;
@@ -33,12 +33,12 @@ export class TopicOperator extends Component<P> {
     history && history.push('/TopicMember');
   }
   submitApply() {
-    this.saveApply({ statusCode: 'wait' }).then(this.fireChange.bind(this));
+    this.saveApply({ statusCode: 'wait' });
   }
 
   //保存申请
   saveApply(apply: any) {
-    return applyService.save({ id: this.getApply()?.id, ...apply });
+    applyService.save({ id: this.getApply()?.id, ...apply }).then(this.fireChange.bind(this));
   }
   getEditable(): boolean {
     return ApplyUtil.checkEditable(this.getApply());

@@ -1,22 +1,16 @@
 import React from 'react';
-import { TopicOperator } from '../topic';
+import { TopicOperator, TopicOperatorProps } from '../topic';
 import { Button } from 'antd';
-import { finishApplyService, loginService, topicService } from '../../services';
-
-export class FinishApplyOperator extends TopicOperator {
+interface P extends TopicOperatorProps {
+  onStartFinishApply: (topic: any) => void;
+}
+export class FinishApplyOperator extends TopicOperator<P> {
   getApply(): any {
     return this.props.topic.finishApply;
   }
-  async startFinishApply() {
-    const { topic } = this.props;
-    const user = { id: loginService.user!.id };
-    const finishApply = await this.saveApply({
-      name: `${topic.topicName}结题申请`,
-      type: 'topic_finish_apply',
-      applier: user,
-      statusCode: 'draft',
-    });
-    finishApplyService.save({ id: topic.id, finishApply }).then(this.fireChange.bind(this));
+  startFinishApply() {
+    const { onStartFinishApply, topic } = this.props;
+    onStartFinishApply(topic);
   }
   getExtraButton(): React.ReactNode {
     return (

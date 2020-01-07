@@ -158,7 +158,6 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
         <UploadField
           fieldId="initialReport"
           formItemProps={{ label: '申报盲评文本', style: itemCss }}
-          formUtils={form}
           decorator={req}
           readonly={readonly}
         />
