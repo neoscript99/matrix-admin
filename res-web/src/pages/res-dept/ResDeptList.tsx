@@ -12,9 +12,11 @@ export class ResDeptList extends DeptList {
 
   getExtraColumns() {
     return [
+      { title: '机构类型', dataIndex: 'type.name' },
+      { title: '班级数', dataIndex: 'classNumber' },
+      { title: '默认申报数', dataIndex: 'defaultApplyNum' },
       { title: '联系人', dataIndex: 'contact' },
       { title: '联系电话', dataIndex: 'telephone' },
-      { title: '默认申报数', dataIndex: 'defaultApplyNum' },
     ];
   }
   getEntityForm() {

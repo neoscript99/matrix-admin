@@ -10,9 +10,11 @@ function afterLogin(loginInfo: LoginInfo) {
   if (!loginInfo.token) throw 'token不能为空';
   initialPlanService.initDictList();
 }
+
 const storeClass = MobxDomainStore;
 export const restClient = new SpringBootClient({ rootUrl: config.serverRoot });
 
+export const resDeptTypeService = new DomainService({ domain: 'retDeptType', restClient, storeClass });
 //机构、用户服务自定义
 export const resDeptService = new ResDeptService(restClient);
 export const resUserService = new ResUserService(restClient);
@@ -33,4 +35,9 @@ export const topicMemberService = new TopicMemberService(restClient);
 export const applyService = new DomainService({ domain: 'apply', restClient, storeClass });
 
 export const loginService = adminServices.loginService;
-loginService.trySessionLogin().then(loginInfo => loginInfo.success || loginService.tryLocalLogin());
+loginService.trySessionLogin().then(loginInfo => {
+  if (loginInfo.success) {
+    loginService.tryLocalLogin();
+    resDeptTypeService.listAll({});
+  }
+});
