@@ -6,7 +6,7 @@ const { required, email, numberRule } = commonRules;
 
 export class ResDeptForm extends DeptForm {
   getExtraFormItem() {
-    const { form } = this.props;
+    const { form, readonly } = this.props;
     const req = { rules: [commonRules.required] };
     return (
       <React.Fragment>
@@ -18,19 +18,44 @@ export class ResDeptForm extends DeptForm {
           labelProp="name"
           decorator={req}
           formUtils={form}
+          readonly={readonly}
         />
-        <InputNumberField fieldId="classNumber" formItemProps={{ label: '班级数' }} formUtils={form} />
         <InputNumberField
-          fieldId="defaultApplyNum"
-          formItemProps={{ label: '默认申报数' }}
+          fieldId="classNumber"
+          formItemProps={{ label: '班级数' }}
+          formUtils={form}
+          readonly={readonly}
+        />
+        <InputNumberField
+          fieldId="maxApplyNum"
+          formItemProps={{ label: '限制申报数' }}
           formUtils={form}
           min={0}
           max={100}
           decorator={{ initialValue: 3 }}
+          readonly={readonly}
         />
-        <InputField fieldId="contact" formItemProps={{ label: '联系人' }} formUtils={form} maxLength={18} />
-        <InputField fieldId="telephone" formItemProps={{ label: '联系电话' }} formUtils={form} maxLength={18} />
-        <InputField fieldId="note" formItemProps={{ label: '备注' }} formUtils={form} maxLength={64} />
+        <InputField
+          fieldId="contact"
+          formItemProps={{ label: '联系人' }}
+          formUtils={form}
+          maxLength={18}
+          readonly={readonly}
+        />
+        <InputField
+          fieldId="telephone"
+          formItemProps={{ label: '联系电话' }}
+          formUtils={form}
+          maxLength={18}
+          readonly={readonly}
+        />
+        <InputField
+          fieldId="note"
+          formItemProps={{ label: '备注' }}
+          formUtils={form}
+          maxLength={64}
+          readonly={readonly}
+        />
       </React.Fragment>
     );
   }

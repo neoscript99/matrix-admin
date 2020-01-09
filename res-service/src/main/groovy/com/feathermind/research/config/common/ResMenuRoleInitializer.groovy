@@ -84,17 +84,17 @@ class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInit
     }
 
     List initReviewMenu() {
-        Menu parentMenu = save(new Menu(label: '评审管理', seq: 40, parentId: rootMenu.id))
+        Menu parentMenu = save(new Menu(label: '评比管理', seq: 40, parentId: rootMenu.id))
         def subList = [
-                new Menu(label: '课题评审', app: 'TopicReview', seq: 20, parentId: parentMenu.id, icon: 'monitor').save(),
-                new Menu(label: '论文评审', app: 'PaperReview', seq: 30, parentId: parentMenu.id, icon: 'eye').save(),
+                new Menu(label: '课题评比', app: 'TopicReview', seq: 20, parentId: parentMenu.id, icon: 'area-chart').save(),
+                new Menu(label: '论文评比', app: 'PaperReview', seq: 30, parentId: parentMenu.id, icon: 'line-chart').save(),
         ]
 
         subList.each {
             new RoleMenu(EXPERT, it).save()
         }
         subList.addAll([
-                new Menu(label: '评审计划', app: 'ReviewPlan', seq: 10, parentId: parentMenu.id, icon: 'schedule').save(),
+                new Menu(label: '评比计划', app: 'ReviewPlan', seq: 10, parentId: parentMenu.id, icon: 'schedule').save(),
                 new Menu(label: '结果查询', app: 'PaperReview', seq: 40, parentId: parentMenu.id, icon: 'table').save(),
         ])
 

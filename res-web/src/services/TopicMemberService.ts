@@ -5,6 +5,6 @@ export class TopicMemberService extends DomainService {
     super({ domain: 'topicMember', storeClass: MobxDomainStore, restClient });
   }
   saveMembers(topicId: string, memberIds: string[]): Promise<number> {
-    return this.restClient.post(this.getApiUri('saveMembers'), { topicId, memberIds });
+    return this.postApi('saveMembers', { topicId, memberIds });
   }
 }

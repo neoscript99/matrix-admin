@@ -38,32 +38,23 @@ export class PageSwitch extends Component<PageSwitchProps> {
           path={`${pathPrefix}ResUser/`}
           render={() => <ResUserList services={adminServices} operatorVisible={allOp} name="用户" />}
         />
-        <Route
-          path={`${pathPrefix}Dept/`}
-          render={() => (
-            <DeptList services={adminServices} operatorVisible={{ update: true, create: true }} name="机构" />
-          )}
-        />
-        <Route
-          path={`${pathPrefix}ResDept/`}
-          render={() => (
-            <ResDeptList services={adminServices} operatorVisible={{ update: true, create: true }} name="机构" />
-          )}
-        />
+        <Route path={`${pathPrefix}Dept/`}>
+          {() => <DeptList services={adminServices} operatorVisible={allOp} name="机构" />}
+        </Route>
+        <Route path={`${pathPrefix}ResDept/`}>
+          {() => <ResDeptList services={adminServices} operatorVisible={allOp} name="机构" />}
+        </Route>
         <Route path={`${pathPrefix}Note/`} render={() => <NoteList services={adminServices} name="通知" />} />
         <Route path={`${pathPrefix}Param/`} render={() => <ParamList services={adminServices} name="参数" />} />
         <Route path={`${pathPrefix}Profile/`} render={() => <ResUserProfile services={adminServices} />} />
         <Route path={`${pathPrefix}InitialPlan/`}>
           {() => <InitialPlanList operatorVisible={allOp} name="课题立项申报计划" />}
         </Route>
-        <Route path={`${pathPrefix}InitialApply/`} render={props => <InitialApplyList {...props} name="立项课题" />} />
+        <Route path={`${pathPrefix}InitialApply/`}>{props => <InitialApplyList {...props} name="立项课题" />}</Route>
 
-        <Route path={`${pathPrefix}Topic/`} render={() => <TopicList name="课题" />} />
-        <Route
-          path={`${pathPrefix}TopicMember/`}
-          render={props => <TopicMember {...props} services={adminServices} />}
-        />
-        <Route path={`${pathPrefix}FinishApply/`} render={props => <FinishApplyList {...props} name="结题课题" />} />
+        <Route path={`${pathPrefix}Topic/`}>{() => <TopicList name="课题" />}</Route>
+        <Route path={`${pathPrefix}TopicMember/`}>{props => <TopicMember {...props} services={adminServices} />}</Route>
+        <Route path={`${pathPrefix}FinishApply/`}>{props => <FinishApplyList {...props} name="结题课题" />}</Route>
         <Route render={() => <Welcome />} />
       </Switch>
     );

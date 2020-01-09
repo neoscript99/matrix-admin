@@ -12,6 +12,7 @@ import { ApplyUtil } from '../../utils/ApplyUtil';
 const baseColumns: EntityColumnProps[] = [
   { title: '课题名称', dataIndex: 'topicName' },
   { title: '课题编号', dataIndex: 'topicCode' },
+  { title: '单位', dataIndex: 'dept.name' },
   { title: '负责人', dataIndex: 'personInCharge.name' },
 ];
 const exColumns: EntityColumnProps[] = [

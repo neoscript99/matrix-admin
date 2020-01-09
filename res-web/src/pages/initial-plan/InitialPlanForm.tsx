@@ -62,6 +62,15 @@ export class InitialPlanForm extends EntityForm {
           defaultDiffDays={730}
           disabled={readonly}
         />
+        <InputNumberField
+          fieldId="maxNumberPerDept"
+          formItemProps={{ label: '限制申请数' }}
+          formUtils={form}
+          min={0}
+          max={99}
+          title="本设置项和单位本身申报数，取最小值"
+          disabled={readonly}
+        />
       </Form>
     );
   }

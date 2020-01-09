@@ -1,6 +1,7 @@
 import React from 'react';
 import { DeptList, AdminPageProps } from 'oo-rest-mobx';
 import { ResDeptForm } from './ResDeptForm';
+import { message } from 'antd';
 
 export class ResDeptList extends DeptList {
   constructor(props: AdminPageProps) {
@@ -14,12 +15,20 @@ export class ResDeptList extends DeptList {
     return [
       { title: '机构类型', dataIndex: 'type.name' },
       { title: '班级数', dataIndex: 'classNumber' },
-      { title: '默认申报数', dataIndex: 'defaultApplyNum' },
+      { title: '限制申报数', dataIndex: 'maxApplyNum' },
       { title: '联系人', dataIndex: 'contact' },
       { title: '联系电话', dataIndex: 'telephone' },
     ];
   }
   getEntityForm() {
     return ResDeptForm;
+  }
+
+  handleDelete() {
+    return super.handleDelete().catch((err: string) => {
+      if (err.includes('ConstraintViolationException'))
+        message.error('当前选择的机构存在关联信息（用户、课题），无法删除');
+      else message.error(err);
+    });
   }
 }

@@ -9,6 +9,7 @@ const columns: EntityColumnProps[] = [
   { title: '课题类别', dataIndex: 'topicCateCode', render: dictService.dictRender.bind(null, 'res-topic-cate') },
   { title: '申报开始日期', dataIndex: 'planBeginDay' },
   { title: '申报截止日期', dataIndex: 'planEndDay' },
+  { title: '限制申请数', dataIndex: 'maxNumberPerDept' },
 ];
 
 @observer

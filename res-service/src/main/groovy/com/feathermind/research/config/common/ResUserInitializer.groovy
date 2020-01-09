@@ -29,8 +29,8 @@ class ResUserInitializer extends AbstractDataInitializer implements DataInitiali
     }
 
 
-    static ResUser resManagerUser = new ResUser(name: '科研系统管理员', account: 'manager', phoneNumber: '88121117', dept: headDept, password: DEFAULT_PASS)
-    static ResUser demoSchoolUser = new ResUser(name: '高级中学管理员', account: 'adv_middle', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS)
+    static ResUser resManagerUser = new ResUser(name: '科研系统管理员', account: 'sys-admin', phoneNumber: '88121117', dept: headDept, password: DEFAULT_PASS)
+    static ResUser demoSchoolUser = new ResUser(name: '单位管理员', account: 'dept-admin', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS)
     static ResUser expertUser = new ResUser(name: '评审专家', account: 'expert', phoneNumber: '88888888', dept: expertDept, password: DEFAULT_PASS)
 
     def initUser() {

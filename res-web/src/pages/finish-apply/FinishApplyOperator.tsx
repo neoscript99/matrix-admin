@@ -5,6 +5,9 @@ interface P extends TopicOperatorProps {
   onStartFinishApply: (topic: any) => void;
 }
 export class FinishApplyOperator extends TopicOperator<P> {
+  get approvedStatus(): string {
+    return 'finished';
+  }
   getApply(): any {
     return this.props.topic.finishApply;
   }

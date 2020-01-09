@@ -3,6 +3,9 @@ package com.feathermind.research.controller
 import com.feathermind.matrix.controller.DomainController
 import com.feathermind.matrix.service.AbstractService
 import com.feathermind.research.domain.wf.TopicFinishApply
+import com.feathermind.research.service.InitialPlanService
+import com.feathermind.research.service.QualificationCheckResult
+import com.feathermind.research.service.ResDeptService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,6 +24,10 @@ import static com.feathermind.research.config.common.InitEntity.RES_USER
 class TopicController extends DomainController<Topic> {
     @Autowired
     TopicService topicService
+    @Autowired
+    InitialPlanService initialPlanService
+    @Autowired
+    ResDeptService resDeptService
 
     @PostMapping("/list")
     ResponseEntity<List<TopicFinishApply>> list(@RequestBody Map criteria) {
@@ -35,6 +42,13 @@ class TopicController extends DomainController<Topic> {
                 throw new RuntimeException('当前用户没有权限')
         }
         return ResponseEntity.ok(domainService.list(criteria))
+    }
+
+    @PostMapping("/checkQualification")
+    ResponseEntity<QualificationCheckResult> checkQualification(@RequestBody Map req) {
+        def initialPlan = initialPlanService.get(req.initialPlanId)
+        def dept = resDeptService.get(req.deptId)
+        return ResponseEntity.ok(topicService.checkQualification(initialPlan, dept))
     }
 
     @Override

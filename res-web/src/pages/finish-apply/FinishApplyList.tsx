@@ -5,7 +5,6 @@ import { observer } from 'mobx-react';
 import { TopicList } from '../topic';
 import { FinishApplyOperator } from './FinishApplyOperator';
 import { FinishApplyForm } from './FinishApplyForm';
-import { ApplyUtil } from '../../utils/ApplyUtil';
 
 const statusRender = (code: string) => {
   const label = dictService.dictRender('res-apply-status', code);

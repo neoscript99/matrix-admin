@@ -26,7 +26,8 @@ class InitialPlan {
     String planEndDay
     //结题截止日期
     String finishDeadline
-
+    //每个单位最多可申报数
+    Integer maxNumberPerDept
     /**
      * 单位申报数比例设置
      * 单位申报数*比例 计算取整方式：1、上浮 ceil 2、四舍五入 round 3、截断 floor
@@ -41,6 +42,7 @@ class InitialPlan {
     static mapping = {
     }
     static constraints = {
+        maxNumberPerDept nullable: true
     }
     static DemoPlan = new InitialPlan([planName      : '2020年教育科学规划课题申报计划',
                                        planYear      : 2020, topicCateCode: 'YZGH',
@@ -53,6 +55,6 @@ class InitialPlan {
     static DemoPlan3 = new InitialPlan([planName      : '2020年教育科学艺术课题申报计划',
                                         planYear      : 2020, topicCateCode: 'YZYS',
                                         planBeginDay  : '2019-12-01', planEndDay: '2020-03-10',
-                                        finishDeadline: '2021-12-31'])
+                                        finishDeadline: '2021-12-31', maxNumberPerDept: 1])
     static initList = [DemoPlan, DemoPlan2, DemoPlan3]
 }

@@ -1,27 +1,28 @@
 import React, { Component } from 'react';
 import { Button, message } from 'antd';
 import { Entity } from 'oo-rest-mobx';
-import { RouteComponentProps } from 'react-router';
+import { RouteChildrenProps } from 'react-router';
 import { applyService, resUserService, topicService } from '../../services';
 import { ClickParam } from 'antd/lib/menu';
 import { ApproveDropdown } from '../../components';
 import { ApplyUtil } from '../../utils/ApplyUtil';
 
-export interface TopicOperatorProps extends Partial<RouteComponentProps> {
+export interface TopicOperatorProps extends Partial<RouteChildrenProps> {
   topic: Entity;
   onChange?: (item: Entity) => void;
 }
 
-export class TopicOperator<P extends TopicOperatorProps = TopicOperatorProps> extends Component<P> {
+export abstract class TopicOperator<P extends TopicOperatorProps = TopicOperatorProps> extends Component<P> {
   approveMenuClick({ key: statusCode }: ClickParam) {
     const { topic } = this.props;
     const apply: any = { statusCode };
     if (statusCode === 'pass') {
       apply.passTime = new Date();
-      topicService.save({ id: topic.id, topicStatusCode: 'applied' });
+      topicService.save({ id: topic.id, topicStatusCode: this.approvedStatus });
     }
     this.saveApply(apply);
   }
+  abstract get approvedStatus(): string;
   fireChange() {
     const { topic, onChange } = this.props;
     message.info(`更新成功`);

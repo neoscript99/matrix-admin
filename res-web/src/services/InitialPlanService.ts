@@ -10,7 +10,7 @@ export class InitialPlanService extends DomainService<InitialPlanStore> implemen
     super({ domain: 'initialPlan', storeClass: InitialPlanStore, restClient });
   }
   listStarted() {
-    return this.restClient.post(this.getApiUri('listStarted')).then(res => ((this.store.startedList = res), res));
+    return this.postApi('listStarted').then(res => ((this.store.startedList = res), res));
   }
   initDictList() {
     this.listStarted();
