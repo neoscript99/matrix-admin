@@ -15,6 +15,7 @@ import {
 import { Typography, Form } from 'antd';
 import { dictService, topicService, loginService, resUserService, applyService } from '../../services';
 import moment from 'moment';
+import { config } from '../../utils';
 
 const { Title, Paragraph } = Typography;
 
@@ -33,8 +34,6 @@ interface QualificationCheckResult {
 }
 
 export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
-  state = { qualification: { success: false, reasons: [] } } as S;
-
   async componentDidMount() {
     const dept = loginService.dept!;
     const deptUserList = await resUserService.getDeptUsers(dept);
@@ -66,6 +65,8 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
   }
 
   getForm() {
+    if(!this.state)
+      return null;
     const itemCss: React.CSSProperties = { width: '22em', marginBottom: '10px' };
     const {
       form,
@@ -177,6 +178,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             formItemProps={{ label: '申报盲评文本', style: itemCss }}
             decorator={req}
             readonly={readonly}
+            action={`${config.serverRoot}/upload`}
           />
         </Form>
       );

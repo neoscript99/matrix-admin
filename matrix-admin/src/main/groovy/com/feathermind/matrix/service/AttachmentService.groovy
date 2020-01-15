@@ -11,13 +11,14 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.support.ResourcePatternResolver
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-
-import java.time.LocalDateTime
+import org.springframework.web.multipart.MultipartFile
 
 @Service
 class AttachmentService extends AbstractService<AttachmentInfo> {
 
-    static public String ATTACH_TEMP_ID_PREFIX = 'MatrixTempFile_';
+    AttachmentInfo saveWithMultipartFile(MultipartFile file, String ownerId, String ownerName) {
+        return this.saveWithByte(file.name, ownerId, ownerName, file.bytes)
+    }
 
     AttachmentInfo saveWithFile(File file, String ownerId, String ownerName) {
         if (file && file.isFile())
@@ -106,16 +107,17 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
         saveWithByte(res.filename, ownerId, ownerName, data);
     }
 
-    String genTempOwnerId() {
-        return "${ATTACH_TEMP_ID_PREFIX}${UUID.fastUUID().toString()}"
-    }
 
+    /**
+     * 在操作界面上，附件上传后，有可能未保存主体信息，这部分附件没有用处，可以删除
+     */
     @Scheduled(cron = "0 0 * * * *")
     void cleanTemp() {
         log.info("定时删除一些没有所属对象的附件，正式环境删除一天前的临时附件")
-        def list = list([like: [['ownerId', "${ATTACH_TEMP_ID_PREFIX}%".toString()]],
-                         lt  : [['dateCreated', DateUtil.yesterday()]]])
-        deleteInfoByOwners(list*.ownerId)
+        list([isNull: ['ownerId'],
+              lt    : [['dateCreated', DateUtil.yesterday()]]]).each {
+            deleteInfo(it)
+        }
     }
 
     static class InfoAndFile {

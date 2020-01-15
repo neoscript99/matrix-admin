@@ -1,5 +1,6 @@
 import React from 'react';
-import { Typography, Divider } from 'antd';
+import { Typography } from 'antd';
+import applyPic from '../asset/topic-apply.png';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -10,7 +11,7 @@ export const Welcome = (props: any) => (
     <Paragraph>
       本系统目标是实现科研项目管理流程的电子化，支持历史数据的查询、统计，并为进一步的数据分析、流程优化提供支撑。
     </Paragraph>
-    <Title level={2}>立项管理流程</Title>
+    <Title level={2}>立项结题流程</Title>
     <Paragraph>
       <ul>
         <li>
@@ -22,11 +23,6 @@ export const Welcome = (props: any) => (
         <li>
           <Text code>系统管理员</Text>审核立项申请
         </li>
-      </ul>
-    </Paragraph>
-    <Title level={2}>课题结题流程</Title>
-    <Paragraph>
-      <ul>
         <li>
           <Text code>单位管理员</Text>录入课题结题资料，提交结题申请
         </li>
@@ -35,6 +31,7 @@ export const Welcome = (props: any) => (
         </li>
       </ul>
     </Paragraph>
+    <img src={applyPic} />
     <Title level={2}>评比流程</Title>
     <Paragraph>
       <ul>

@@ -18,9 +18,10 @@ class AttachmentFile {
     static mapping = {
         id name: 'fileId', generator: 'assigned'
         /**
-         * todo 默认类型db2报错（varchar(20170000) is not valid ），配置blob无法转换，后续再优化
+         * todo 默认类型db2报错（varchar(20170000) is not valid ），
+         * 如果配置blob无法自动转换，后续再优化
          */
-        data type: 'blob'
+        //data type: 'blob'
     }
 
     static constraints = {
