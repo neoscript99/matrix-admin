@@ -29,14 +29,22 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
     }
 
     void topicCateDict() {
-        def dictType = new DictType(id: 'res-topic-cate', name: '课题类别').save()
+        def cateType = new DictType(id: 'res-topic-cate', name: '课题大类').save()
 
-        new Dict(code: 'YZZD', name: '鄞州重点', seq: 10, type: dictType).save();
-        new Dict(code: 'YZGH', name: '鄞州规划', seq: 20, type: dictType).save();
-        new Dict(code: 'YZYS', name: '鄞州艺术', seq: 30, type: dictType).save();
-        new Dict(code: 'YZKJ', name: '鄞州课程', seq: 40, type: dictType).save();
-        new Dict(code: 'YZDY', name: '鄞州德育', seq: 50, type: dictType).save();
-        new Dict(code: 'YZTY', name: '鄞州体育', seq: 60, type: dictType).save();
+        def yzgh = new Dict(code: 'YZGH', name: '鄞州规划', seq: 20, type: cateType).save();
+        def yzkc = new Dict(code: 'YZKC', name: '鄞州课程', seq: 40, type: cateType).save();
+        def yzdy = new Dict(code: 'YZDY', name: '鄞州德育', seq: 50, type: cateType).save();
+        def yzty = new Dict(code: 'YZTY', name: '鄞州体育', seq: 60, type: cateType).save();
+
+        def childType = new DictType(id: 'res-topic-type', name: '课题类型', parentId: cateType.id).save()
+
+        new Dict(code: 'ZD', name: '重点课题', seq: 10, type: childType, parentId: yzgh.id).save();
+        new Dict(code: 'GH', name: '规划课题', seq: 20, type: childType, parentId: yzgh.id).save();
+        new Dict(code: 'YS', name: '艺术课题', seq: 30, type: childType, parentId: yzgh.id).save();
+        new Dict(code: 'LS', name: '绿色教育', seq: 35, type: childType, parentId: yzgh.id).save();
+        new Dict(code: 'KC', name: '鄞州课程', seq: 40, type: childType, parentId: yzkc.id).save();
+        new Dict(code: 'DY', name: '鄞州德育', seq: 50, type: childType, parentId: yzdy.id).save();
+        new Dict(code: 'TY', name: '鄞州体育', seq: 60, type: childType, parentId: yzty.id).save();
     }
 
     void topicSourceDict() {

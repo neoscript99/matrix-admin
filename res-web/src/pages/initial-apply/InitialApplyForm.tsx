@@ -165,7 +165,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             dictType="res-achieve-form"
             formUtils={form}
             decorator={req}
-            defaultSelectFirst
+            mode="multiple"
             readonly={readonly}
           />
           <DatePickerField

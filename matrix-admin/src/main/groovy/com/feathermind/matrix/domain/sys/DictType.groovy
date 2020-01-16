@@ -12,8 +12,8 @@ import groovy.transform.TupleConstructor
 class DictType {
     String id
     String name
-    //上级字典项，这样可以支持多级字典
-    String parentDictId
+    //上级字典类别项，这样可以支持多级字典
+    String parentId
 
     static mapping = {
         id generator: 'assigned'
@@ -21,6 +21,6 @@ class DictType {
         sort 'seq'
     }
     static constraints = {
-        parentDictId nullable: true
+        parentId nullable: true
     }
 }

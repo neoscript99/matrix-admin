@@ -29,3 +29,18 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 }
+
+
+task copyReact(type: Copy) {
+    from('../res-web/build/') {
+        include '**/*.*'
+    }
+    into 'build/resources/main/static/'
+}
+//先evaluat依赖的工程，才能拿到对应的task yarnBuild
+evaluationDependsOn(":res-web")
+def yarnBuild = project(":res-web").tasks.yarnBuild
+bootJar {
+    copyReact.mustRunAfter(yarnBuild)
+    dependsOn(yarnBuild, copyReact)
+}
