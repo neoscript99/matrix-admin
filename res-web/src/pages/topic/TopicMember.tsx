@@ -1,6 +1,14 @@
 import React from 'react';
 import { Button, message, Transfer } from 'antd';
-import { OperatorBar, Entity, UserFormProps, UserListProps, EntityListState, EntityFormProps } from 'oo-rest-mobx';
+import {
+  Entity,
+  UserFormProps,
+  UserListProps,
+  EntityListState,
+  EntityFormProps,
+  ListOptions,
+  ListResult,
+} from 'oo-rest-mobx';
 import { ResUserService } from '../../services/ResUserService';
 import { ResUserList } from '../res-user';
 import { resTopicUserService, topicMemberService, topicService, loginService } from '../../services';
@@ -59,13 +67,19 @@ export class TopicMember extends ResUserList<UserListProps, S> {
     const targetKeys = await topicMemberService
       .listAll({ criteria: { eq: [['topic.id', topic.id]] } })
       .then(res => res.results.map(tm => tm.member.id));
-    const dataList = await resTopicUserService
-      .listAll({
-        criteria: { eq: [['dept.id', loginService.store.loginInfo.user!.dept.id]] },
-        orders: ['name'],
-      })
-      .then(res => res.results);
-    this.setState({ targetKeys, dataList });
+    this.query();
+    this.setState({ targetKeys });
+  }
+  query(): Promise<ListResult> {
+    return this.domainService
+      .listAll(this.getQueryParam())
+      .then(res => (this.setState({ dataList: res.results }), res));
+  }
+  getQueryParam(): ListOptions {
+    return {
+      criteria: { eq: [['dept.id', loginService.store.loginInfo.user!.dept.id]] },
+      orders: ['name'],
+    };
   }
 
   handleChange(targetKeys, direction, moveKeys) {

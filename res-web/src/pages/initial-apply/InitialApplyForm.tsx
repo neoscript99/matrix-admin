@@ -35,9 +35,13 @@ interface QualificationCheckResult {
 
 export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
   async componentDidMount() {
+    const { inputItem } = this.props;
     const dept = loginService.dept!;
     const deptUserList = await resUserService.getDeptUsers(dept);
-    const qualification = await topicService.checkQualification(this.props.inputItem.initialPlan.id, dept.id);
+    const qualification: QualificationCheckResult =
+      inputItem && inputItem.id
+        ? { success: true, reasons: [] }
+        : await topicService.checkQualification(this.props.inputItem.initialPlan.id, dept.id);
     this.setState({ deptUserList, qualification });
   }
 
@@ -65,8 +69,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
   }
 
   getForm() {
-    if(!this.state)
-      return null;
+    if (!this.state) return null;
     const itemCss: React.CSSProperties = { width: '22em', marginBottom: '10px' };
     const {
       form,
