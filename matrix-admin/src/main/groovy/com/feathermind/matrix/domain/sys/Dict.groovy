@@ -16,7 +16,7 @@ class Dict {
     String name
     Integer seq
     //如果type存在父类型：parentId，那么这里也要设置
-    String parentId
+    String parentCode
     Boolean enabled = true
 
     void setType(DictType type) {
@@ -41,6 +41,6 @@ class Dict {
         sort 'seq'
     }
     static constraints = {
-        parentId nullable: true
+        parentCode nullable: true
     }
 }

@@ -6,7 +6,7 @@ import { InitialPlanForm } from './InitialPlanForm';
 const columns: EntityColumnProps[] = [
   { title: '计划标题', dataIndex: 'planName' },
   { title: '立项年度', dataIndex: 'planYear' },
-  { title: '课题类别', dataIndex: 'topicCateCode', render: dictService.dictRender.bind(null, 'res-topic-cate') },
+  { title: '计划类型', dataIndex: 'planCateCode', render: dictService.dictRender.bind(null, 'res-plan-cate') },
   { title: '申报开始日期', dataIndex: 'planBeginDay' },
   { title: '申报截止日期', dataIndex: 'planEndDay' },
   { title: '限制申请数', dataIndex: 'maxNumberPerDept' },

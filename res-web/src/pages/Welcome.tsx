@@ -6,8 +6,7 @@ const { Title, Paragraph, Text } = Typography;
 
 export const Welcome = (props: any) => (
   <Typography style={{ fontSize: '1.1em' }}>
-    <Title>科研项目管理系统</Title>
-    <Title level={2}>介绍</Title>
+    <Title level={2}>系统介绍</Title>
     <Paragraph>
       本系统目标是实现科研项目管理流程的电子化，支持历史数据的查询、统计，并为进一步的数据分析、流程优化提供支撑。
     </Paragraph>

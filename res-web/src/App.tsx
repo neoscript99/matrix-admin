@@ -6,10 +6,11 @@ import { adminServices } from './services';
 import { config } from './utils';
 import { PageSwitch } from './pages';
 import logo from './asset/logo.png';
+
 const introRender = (
   <div>
     <p>
-      项目立项： <em>各单位提交立项申请</em>
+      立项管理： <em>立项流程、结题流程管理</em>
     </p>
     <p>
       成果评比： <em>专家对项目成果进行评分、排名</em>
@@ -22,7 +23,7 @@ const introRender = (
 const loginPath = '/login/';
 const loginProps: Partial<LoginFormProps> = {
   adminServices,
-  title: '鄞州区教育局科研项目管理系统',
+  title: '教育科研项目管理系统',
   introRender,
 };
 const homeProps = {
@@ -32,8 +33,20 @@ const homeProps = {
   logoRender: <img src={logo} />,
   PageSwitch,
   loginPath,
-  footRender: '鄞州教育 ©2020',
+  footRender: (
+    <div>
+      <span>鄞州教育 ©2020</span>
+      <span>
+        &nbsp;(
+        <a target="_blank" href="http://www.feathermind.cn/">
+          宁波羽意软件
+        </a>
+        &nbsp;技术支持)
+      </span>
+    </div>
+  ),
 };
+
 class App extends Component {
   render() {
     return (

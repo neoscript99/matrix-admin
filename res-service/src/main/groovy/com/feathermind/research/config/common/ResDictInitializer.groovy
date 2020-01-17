@@ -29,22 +29,23 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
     }
 
     void topicCateDict() {
-        def cateType = new DictType(id: 'res-topic-cate', name: '课题大类').save()
+        def cateType = new DictType(id: 'res-plan-cate', name: '计划类型').save()
 
-        def yzgh = new Dict(code: 'YZGH', name: '鄞州规划', seq: 20, type: cateType).save();
-        def yzkc = new Dict(code: 'YZKC', name: '鄞州课程', seq: 40, type: cateType).save();
-        def yzdy = new Dict(code: 'YZDY', name: '鄞州德育', seq: 50, type: cateType).save();
-        def yzty = new Dict(code: 'YZTY', name: '鄞州体育', seq: 60, type: cateType).save();
+        def yzgh = new Dict(code: 'YZGH', name: '规划课题', seq: 10, type: cateType).save();
+        def yzkj = new Dict(code: 'YZKJ', name: '鄞州课程', seq: 20, type: cateType).save();
+        def yzdy = new Dict(code: 'YZDY', name: '鄞州德育', seq: 30, type: cateType).save();
+        def yzyj = new Dict(code: 'YZYJ', name: '鄞州幼教', seq: 40, type: cateType).save();
+        def yzzd = new Dict(code: 'YZZD', name: '鄞州重点', seq: 50, type: cateType).save();
 
-        def childType = new DictType(id: 'res-topic-type', name: '课题类型', parentId: cateType.id).save()
+        def childType = new DictType(id: 'res-topic-cate', name: '课题类别', parentId: cateType.id).save()
 
-        new Dict(code: 'ZD', name: '重点课题', seq: 10, type: childType, parentId: yzgh.id).save();
-        new Dict(code: 'GH', name: '规划课题', seq: 20, type: childType, parentId: yzgh.id).save();
-        new Dict(code: 'YS', name: '艺术课题', seq: 30, type: childType, parentId: yzgh.id).save();
-        new Dict(code: 'LS', name: '绿色教育', seq: 35, type: childType, parentId: yzgh.id).save();
-        new Dict(code: 'KC', name: '鄞州课程', seq: 40, type: childType, parentId: yzkc.id).save();
-        new Dict(code: 'DY', name: '鄞州德育', seq: 50, type: childType, parentId: yzdy.id).save();
-        new Dict(code: 'TY', name: '鄞州体育', seq: 60, type: childType, parentId: yzty.id).save();
+        new Dict(code: 'YZGH', name: '鄞州规划', seq: 10, type: childType, parentCode: yzgh.code).save();
+        new Dict(code: 'YZLS', name: '绿色教育', seq: 20, type: childType, parentCode: yzgh.code).save();
+        new Dict(code: 'YZTY', name: '鄞州体艺', seq: 30, type: childType, parentCode: yzgh.code).save();
+        new Dict(code: 'YZKC', name: '鄞州课程', seq: 40, type: childType, parentCode: yzkj.code).save();
+        new Dict(code: 'YZDY', name: '鄞州德育', seq: 50, type: childType, parentCode: yzdy.code).save();
+        new Dict(code: 'YZYJ', name: '鄞州幼教', seq: 60, type: childType, parentCode: yzyj.code).save();
+        new Dict(code: 'YZZD', name: '鄞州重点', seq: 70, type: childType, parentCode: yzzd.code).save();
     }
 
     void topicSourceDict() {

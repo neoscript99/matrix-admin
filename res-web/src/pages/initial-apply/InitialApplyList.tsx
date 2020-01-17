@@ -34,7 +34,7 @@ export class InitialApplyList extends TopicList {
   }
 
   handleApply = initialPlan => {
-    const item = { initialPlan };
+    const item = { initialPlan, prepareFinishDay: initialPlan.finishDeadline };
     const formProps = this.genFormProps('提交', item);
     this.setState({ formProps });
   };
@@ -76,5 +76,9 @@ export class InitialApplyList extends TopicList {
   getApply(): any {
     const item = this.getSelectItem();
     return item && item.initialApply;
+  }
+
+  get name() {
+    return '立项课题';
   }
 }

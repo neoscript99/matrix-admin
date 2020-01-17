@@ -30,13 +30,13 @@ export class FinishApplyForm extends EntityForm {
     return (
       <Form style={StyleUtil.flexForm()}>
         <DictSelectField
-          fieldId="achieveFormCode"
+          fieldId="achieveFormCodes"
           formItemProps={{ label: '最后成果形式', style: itemCss }}
           dictService={dictService}
           dictType="res-achieve-form"
           formUtils={form}
           decorator={req}
-          defaultSelectFirst
+          mode="multiple"
           readonly={readonly}
         />
         <InputField

@@ -34,16 +34,16 @@ class Topic {
     String researchTargetCode
     //立项报告附件
     AttachmentInfo initialReport
-    //成果拟形式
-    String prepareAchieveFormCode
+    //成果拟形式，多选
+    String prepareAchieveFormCodes
     String prepareFinishDay
     //课题状态
     String topicStatusCode
     Apply initialApply
 
     /*结题信息*/
-    //最后成果形式
-    String achieveFormCode
+    //最后成果形式，多选
+    String achieveFormCodes
     //主报告
     AttachmentInfo mainReport
     String finishDay
@@ -81,9 +81,10 @@ class Topic {
         originTopicCode nullable: true
         originTopicName nullable: true
         initialReport nullable: true
+        prepareAchieveFormCodes maxSize: 256
 
         mainReport nullable: true
-        achieveFormCode nullable: true
+        achieveFormCodes nullable: true, maxSize: 256
         finishDay nullable: true
         topicCert nullable: true
         finishApply nullable: true

@@ -66,4 +66,7 @@ export class FinishApplyList extends TopicList {
   getEntityForm() {
     return FinishApplyForm;
   }
+  get name() {
+    return '结题课题';
+  }
 }

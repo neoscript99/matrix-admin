@@ -29,10 +29,10 @@ export class InitialPlanForm extends EntityForm {
           disabled={readonly}
         />
         <SelectField
-          fieldId="topicCateCode"
-          formItemProps={{ label: '课题类别' }}
+          fieldId="planCateCode"
+          formItemProps={{ label: '计划类型' }}
           formUtils={form}
-          dataSource={dictService.getDict('res-topic-cate')}
+          dataSource={dictService.getDict('res-plan-cate')}
           labelProp="name"
           valueProp="code"
           decorator={{ rules: [required] }}
@@ -43,7 +43,7 @@ export class InitialPlanForm extends EntityForm {
           formItemProps={{ label: '申报开始日期' }}
           formUtils={form}
           required
-          defaultDiffDays={1}
+          defaultDiffDays={0}
           disabled={readonly}
         />
         <DatePickerField

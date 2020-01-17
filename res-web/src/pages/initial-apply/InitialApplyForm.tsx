@@ -48,7 +48,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
   async saveEntity(saveItem) {
     const {
       inputItem: {
-        initialPlan: { topicCateCode, planYear },
+        initialPlan: { planYear },
       },
     } = this.props;
     const user = { id: loginService.user!.id };
@@ -62,9 +62,9 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
     const initialApply = await applyService.save(apply);
     saveItem.initialApply = initialApply;
     saveItem.dept = { id: loginService.dept!.id };
-    saveItem.topicCateCode = topicCateCode;
     saveItem.topicStatusCode = 'created';
-    saveItem.topicCode = `${topicCateCode}-${planYear}-${day}-${StringUtil.randomString(4)}`;
+    //立项编码在审批成功后再生成
+    saveItem.topicCode = `${saveItem.topicCateCode}-${planYear}-${day}-${StringUtil.randomString(4)}`;
     return await super.saveEntity(saveItem);
   }
 
@@ -77,7 +77,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
       inputItem: { initialPlan },
     } = this.props;
     const { deptUserList, qualification } = this.state;
-    const important = initialPlan.topicCateCode === 'YZZD';
+    const important = initialPlan.planCateCode === 'YZZD';
     const req = { rules: [commonRules.required] };
     if (qualification.success)
       return (
@@ -116,6 +116,17 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             valueProp="id"
             labelProp="name"
             decorator={req}
+            readonly={readonly}
+          />
+          <DictSelectField
+            fieldId="topicCateCode"
+            formItemProps={{ label: '课题类别', style: itemCss }}
+            dictService={dictService}
+            dictType="res-topic-cate"
+            formUtils={form}
+            decorator={req}
+            defaultSelectFirst
+            parentDictCode={initialPlan.planCateCode}
             readonly={readonly}
           />
           <DictSelectField
@@ -159,7 +170,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             readonly={readonly}
           />
           <DictSelectField
-            fieldId="prepareAchieveFormCode"
+            fieldId="prepareAchieveFormCodes"
             formItemProps={{ label: '成果拟形式', style: itemCss }}
             dictService={dictService}
             dictType="res-achieve-form"
@@ -174,6 +185,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             formUtils={form}
             required={true}
             defaultDiffDays={365}
+            disabledDate={current => !!current && current.isAfter(moment(initialPlan.finishDeadline))}
             readonly={readonly}
           />
           <UploadField
@@ -190,11 +202,13 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
         <Typography>
           <Title level={3}>贵单位暂时无法申请立项，原因如下：</Title>
           <Paragraph style={{ fontSize: '1.1em' }}>
-            <ol>
+            <ul>
               {qualification.reasons.map(r => (
-                <li key={r}>{r}</li>
+                <li key={r}>
+                  <pre>{r}</pre>
+                </li>
               ))}
-            </ol>
+            </ul>
           </Paragraph>
         </Typography>
       );

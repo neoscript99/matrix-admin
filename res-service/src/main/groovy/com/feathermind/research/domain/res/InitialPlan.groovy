@@ -18,8 +18,8 @@ class InitialPlan {
     String planName
     //立项年度
     Integer planYear
-    //课题类别 字典代码
-    String topicCateCode
+    //计划类型，相当于课题大类
+    String planCateCode
     //申报开始日期
     String planBeginDay
     //申报截止日期
@@ -45,15 +45,15 @@ class InitialPlan {
         maxNumberPerDept nullable: true
     }
     static DemoPlan = new InitialPlan([planName      : '2020年教育科学规划课题申报计划',
-                                       planYear      : 2020, topicCateCode: 'YZGH',
+                                       planYear      : 2020, planCateCode: 'YZGH',
                                        planBeginDay  : '2019-12-01', planEndDay: '2020-03-10',
                                        finishDeadline: '2021-12-31'])
     static DemoPlan2 = new InitialPlan([planName      : '2020年教育科学重点课题申报计划',
-                                        planYear      : 2020, topicCateCode: 'YZZD',
+                                        planYear      : 2020, planCateCode: 'YZZD',
                                         planBeginDay  : '2019-12-01', planEndDay: '2020-01-30',
                                         finishDeadline: '2021-12-31'])
-    static DemoPlan3 = new InitialPlan([planName      : '2020年教育科学艺术课题申报计划',
-                                        planYear      : 2020, topicCateCode: 'YZYS',
+    static DemoPlan3 = new InitialPlan([planName      : '2020年教育科学幼教课题申报计划',
+                                        planYear      : 2020, planCateCode: 'YZYJ',
                                         planBeginDay  : '2019-12-01', planEndDay: '2020-03-10',
                                         finishDeadline: '2021-12-31', maxNumberPerDept: 1])
     static initList = [DemoPlan, DemoPlan2, DemoPlan3]
