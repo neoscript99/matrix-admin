@@ -3,7 +3,7 @@ import { Button, message, Transfer } from 'antd';
 import {
   Entity,
   UserFormProps,
-  UserListProps,
+  AdminPageProps,
   EntityListState,
   EntityFormProps,
   ListOptions,
@@ -16,7 +16,7 @@ import { Redirect } from 'react-router';
 interface S extends EntityListState {
   targetKeys: string[];
 }
-export class TopicMember extends ResUserList<UserListProps, S> {
+export class TopicMember extends ResUserList<AdminPageProps, S> {
   state = { targetKeys: [] as string[], dataList: [] } as S;
 
   render() {

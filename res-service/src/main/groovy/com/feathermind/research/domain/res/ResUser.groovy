@@ -1,5 +1,6 @@
 package com.feathermind.research.domain.res
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.feathermind.matrix.domain.sys.User
 import grails.gorm.annotation.Entity
 
@@ -12,6 +13,8 @@ import grails.gorm.annotation.Entity
  * 都维护到这张表
  */
 @Entity
+@JsonIgnoreProperties(value = ['password', "dirtyPropertyNames", "errors", "dirty", "attached", "version", "properties", "metaClass", "tenantId", "dbo"]
+        , allowSetters = true)
 class ResUser extends User{
     ResDept dept
     /**

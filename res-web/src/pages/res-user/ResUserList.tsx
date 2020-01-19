@@ -1,11 +1,10 @@
 import React from 'react';
-import moment from 'moment';
-import { UserList, AdminPageProps, UserSearchForm, UserListProps, EntityListState } from 'oo-rest-mobx';
+import { UserList, AdminPageProps, UserSearchForm, EntityListState } from 'oo-rest-mobx';
 import { ResUserForm } from './ResUserForm';
 import { resUserService } from '../../services';
 
 export class ResUserList<
-  P extends UserListProps = UserListProps,
+  P extends AdminPageProps = AdminPageProps,
   S extends EntityListState = EntityListState
 > extends UserList<P, S> {
   get domainService() {

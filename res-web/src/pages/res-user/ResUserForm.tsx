@@ -15,7 +15,8 @@ export class ResUserForm extends UserForm {
       services: { dictService },
     } = this.props;
     const css = this.formItemCss;
-    const req = { rules: [required] };
+    //如果是上级管理员，不做必输限制，方便管理
+    const req = { rules: this.userService.isMainManager() ? [] : [required] };
     return (
       <React.Fragment>
         <InputField
@@ -24,7 +25,7 @@ export class ResUserForm extends UserForm {
           formUtils={form}
           maxLength={18}
           decorator={{
-            rules: [required, { min: 16, max: 18, message: '格式错误' }],
+            rules: [...req.rules, { min: 16, max: 18, message: '格式错误' }],
           }}
           disabled={readonly}
         />
@@ -32,7 +33,7 @@ export class ResUserForm extends UserForm {
           fieldId="birthDay"
           formItemProps={{ label: '生日', style: css }}
           formUtils={form}
-          required
+          required={req.rules.length > 0}
           disabled={readonly}
         />
         <InputField
@@ -63,5 +64,15 @@ export class ResUserForm extends UserForm {
         />
       </React.Fragment>
     );
+  }
+
+  get hideRoles() {
+    const { hideRoles } = this.props;
+    return !this.userService.isMainManager() || hideRoles;
+  }
+
+  get justSameDept() {
+    const { justSameDept } = this.props;
+    return !this.userService.isMainManager() || justSameDept;
   }
 }

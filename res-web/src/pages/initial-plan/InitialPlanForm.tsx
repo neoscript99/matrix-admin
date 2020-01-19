@@ -48,7 +48,7 @@ export class InitialPlanForm extends EntityForm {
         />
         <DatePickerField
           fieldId="planEndDay"
-          formItemProps={{ label: '申报截止日期' }}
+          formItemProps={{ label: '申报截止日期(当天15:00截止)' }}
           formUtils={form}
           required
           defaultDiffDays={90}
@@ -56,7 +56,7 @@ export class InitialPlanForm extends EntityForm {
         />
         <DatePickerField
           fieldId="finishDeadline"
-          formItemProps={{ label: '结题截止日期' }}
+          formItemProps={{ label: '结题截止日期(当天15:00截止)' }}
           formUtils={form}
           required
           defaultDiffDays={730}

@@ -2,6 +2,9 @@ package com.feathermind.research.config.common
 
 import com.feathermind.matrix.domain.sys.Dict
 import com.feathermind.matrix.domain.sys.DictType
+import com.feathermind.matrix.domain.sys.Param
+import com.feathermind.matrix.domain.sys.ParamType
+import com.feathermind.matrix.domain.sys.User
 import com.feathermind.matrix.initializer.AbstractDataInitializer
 import com.feathermind.matrix.initializer.DataInitializer
 import org.springframework.core.annotation.Order
@@ -10,11 +13,12 @@ import org.springframework.core.annotation.Order
 class ResDictInitializer extends AbstractDataInitializer implements DataInitializer {
     @Override
     boolean isInited() {
-        DictType.get('topic-cate')
+        DictType.get('res-topic-cate')
     }
 
     @Override
     void doInit() {
+        initParam()
         topicCateDict()
         topicSourceDict()
         resContentDict()
@@ -26,6 +30,12 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         topicStatusDict()
 
         reviewTypeDict()
+    }
+
+    void initParam(){
+        new Param(code: 'ChangeInitPassword', name: '强制修改初始密码',
+                value: 'false', type: ParamType.SYSTEM, validExp: '^(true|false)$',
+                validDescribe: 'true或者false', lastUser: User.ADMIN).save()
     }
 
     void topicCateDict() {

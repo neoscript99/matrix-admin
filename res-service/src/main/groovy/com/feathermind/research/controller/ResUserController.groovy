@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+import static com.feathermind.research.config.common.InitEntity.*
+
 @RestController
 @RequestMapping("/api/resUser")
 class ResUserController extends DomainController<ResUser> {
@@ -21,6 +23,18 @@ class ResUserController extends DomainController<ResUser> {
     ResponseEntity<ResUser> saveUserWithRoles(@RequestBody Map req) {
         def resUser = resUserService.save(req.user)
         return ResponseEntity.ok(userService.saveUserWithRoles(resUser, req.roleIds))
+    }
+
+    @PostMapping("/list")
+    ResponseEntity<List<ResUser>> list(@RequestBody Map criteria) {
+        def user = this.getSessionUser(true)
+        def roles = this.getToken().roles.split(',')
+        if (!roles.contains(MAIN_MANAGER.roleCode)) {
+            if (!criteria.eq)
+                criteria.eq = []
+            criteria.eq << ['dept.id', user.dept.id]
+        }
+        return ResponseEntity.ok(domainService.list(criteria))
     }
 
     @Override

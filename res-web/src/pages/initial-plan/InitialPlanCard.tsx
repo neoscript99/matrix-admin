@@ -25,11 +25,11 @@ export class InitialPlanCard extends Component<InitialPlanCardProps> {
       </div>
     );
     return (
-      <Card style={{ width: 300, margin: '0.2rem' }} actions={[action]}>
+      <Card style={{ width: 310, margin: '0.2rem' }} actions={[action]}>
         <Card.Meta
           avatar={<Progress type="dashboard" width={50} percent={percent} />}
           title={<p style={{ whiteSpace: 'normal' }}>{plan.planName}</p>}
-          description={`${plan.planBeginDay}~${plan.planEndDay}`}
+          description={`${plan.planBeginDay}~${plan.planEndDay} 15:00`}
         />
       </Card>
     );

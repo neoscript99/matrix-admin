@@ -34,10 +34,12 @@ class TopicController extends DomainController<Topic> {
         def user = this.getSessionUser(true)
         def roles = this.getToken().roles.split(',')
         if (!roles.contains(MAIN_MANAGER.roleCode)) {
+            if (!criteria.eq)
+                criteria.eq = []
             if (roles.contains(DEPT_MANAGER.roleCode))
-                criteria.eq = [['dept.id', user.dept.id]]
+                criteria.eq << ['dept.id', user.dept.id]
             else if (roles.contains(RES_USER.roleCode))
-                criteria.eq = [['personInCharge', user]]
+                criteria.eq << ['personInCharge', user]
             else
                 throw new RuntimeException('当前用户没有权限')
         }
