@@ -18,7 +18,7 @@ export class FinishApplyOperator extends TopicOperator<P> {
   getExtraButton(): React.ReactNode {
     return (
       !this.props.topic.finishApply && (
-        <Button type="link" style={this.buttonCss} onClick={this.startFinishApply.bind(this)}>
+        <Button {...this.buttonProps} onClick={this.startFinishApply.bind(this)}>
           发起结题申请
         </Button>
       )

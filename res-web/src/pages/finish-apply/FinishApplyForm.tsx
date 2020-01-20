@@ -10,6 +10,7 @@ import {
 } from 'oo-rest-mobx';
 import { Form } from 'antd';
 import { applyService, dictService, loginService } from '../../services';
+import { config } from '../../utils';
 
 export class FinishApplyForm extends EntityForm {
   async saveEntity(saveItem) {
@@ -47,15 +48,19 @@ export class FinishApplyForm extends EntityForm {
         />
         <UploadField
           fieldId="mainReport"
+          formUtils={form}
           formItemProps={{ label: '主报告', style: itemCss }}
-          decorator={req}
+          required
           readonly={readonly}
+          serverRoot={config.serverRoot}
         />
         <UploadField
           fieldId="topicSupport"
+          formUtils={form}
           formItemProps={{ label: '支撑材料', style: itemCss }}
-          decorator={req}
           readonly={readonly}
+          required
+          serverRoot={config.serverRoot}
         />
         <DatePickerField
           fieldId="finishDay"

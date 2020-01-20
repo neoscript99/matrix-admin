@@ -76,7 +76,7 @@ abstract class AbstractService<T> {
         list(param)
     }
 
-    def save(Map map) {
+    T save(Map map) {
         log.debug("save map: {}", map)
         generalRepository.saveMap domain, map
     }

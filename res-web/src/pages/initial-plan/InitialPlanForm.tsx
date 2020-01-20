@@ -56,7 +56,7 @@ export class InitialPlanForm extends EntityForm {
         />
         <DatePickerField
           fieldId="finishDeadline"
-          formItemProps={{ label: '结题截止日期(当天15:00截止)' }}
+          formItemProps={{ label: '结题截止日期' }}
           formUtils={form}
           required
           defaultDiffDays={730}

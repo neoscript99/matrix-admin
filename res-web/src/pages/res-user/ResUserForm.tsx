@@ -15,8 +15,11 @@ export class ResUserForm extends UserForm {
       services: { dictService },
     } = this.props;
     const css = this.formItemCss;
+    const isMainManager = this.userService.isMainManager();
     //如果是上级管理员，不做必输限制，方便管理
-    const req = { rules: this.userService.isMainManager() ? [] : [required] };
+    const req = { rules: isMainManager ? [] : [required] };
+    //单位管理员不能修改身份证
+    const idCardRead: boolean = this.accountReadonly;
     return (
       <React.Fragment>
         <InputField
@@ -27,14 +30,14 @@ export class ResUserForm extends UserForm {
           decorator={{
             rules: [...req.rules, { min: 16, max: 18, message: '格式错误' }],
           }}
-          disabled={readonly}
+          readonly={idCardRead}
         />
         <DatePickerField
           fieldId="birthDay"
           formItemProps={{ label: '生日', style: css }}
           formUtils={form}
           required={req.rules.length > 0}
-          disabled={readonly}
+          readonly={readonly}
         />
         <InputField
           fieldId="title"
@@ -42,7 +45,7 @@ export class ResUserForm extends UserForm {
           formUtils={form}
           maxLength={30}
           decorator={req}
-          disabled={readonly}
+          readonly={readonly}
         />
         <InputField
           fieldId="major"
@@ -50,7 +53,7 @@ export class ResUserForm extends UserForm {
           formUtils={form}
           maxLength={30}
           decorator={req}
-          disabled={readonly}
+          readonly={readonly}
         />
         <SelectField
           fieldId="degreeCode"
@@ -60,7 +63,7 @@ export class ResUserForm extends UserForm {
           valueProp="code"
           labelProp="name"
           decorator={req}
-          disabled={readonly}
+          readonly={readonly}
         />
       </React.Fragment>
     );
@@ -74,5 +77,10 @@ export class ResUserForm extends UserForm {
   get justSameDept() {
     const { justSameDept } = this.props;
     return !this.userService.isMainManager() || justSameDept;
+  }
+  get accountReadonly() {
+    const { readonly, inputItem } = this.props;
+    const isMainManager = this.userService.isMainManager();
+    return readonly || (!!inputItem?.id && !isMainManager);
   }
 }

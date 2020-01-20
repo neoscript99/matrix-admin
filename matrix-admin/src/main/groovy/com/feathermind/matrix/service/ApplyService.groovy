@@ -12,7 +12,7 @@ class ApplyService extends AbstractService<Apply>{
     }
 
     @Override
-    def save(Map map) {
+    Apply save(Map map) {
         //todo 记录日志
         return super.save(map)
     }

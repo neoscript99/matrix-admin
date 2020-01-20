@@ -9,7 +9,6 @@ import grails.gorm.transactions.ReadOnly
 import org.apache.poi.util.IOUtils
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.support.ResourcePatternResolver
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
@@ -17,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile
 class AttachmentService extends AbstractService<AttachmentInfo> {
 
     AttachmentInfo saveWithMultipartFile(MultipartFile file, String ownerId, String ownerName) {
-        return this.saveWithByte(file.name, ownerId, ownerName, file.bytes)
+        return this.saveWithByte(file.originalFilename, ownerId, ownerName, file.bytes)
     }
 
     AttachmentInfo saveWithFile(File file, String ownerId, String ownerName) {
@@ -109,9 +108,10 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
 
 
     /**
-     * 在操作界面上，附件上传后，有可能未保存主体信息，这部分附件没有用处，可以删除
+     * 在操作界面上，附件上传后，有可能未owner信息，这部分附件没有用处，可以删除
+     * 如需执行清理，可调用本方法
      */
-    @Scheduled(cron = "0 0 * * * *")
+    //@Scheduled(cron = "0 0 * * * *")
     void cleanTemp() {
         log.info("定时删除一些没有所属对象的附件，正式环境删除一天前的临时附件")
         list([isNull: ['ownerId'],

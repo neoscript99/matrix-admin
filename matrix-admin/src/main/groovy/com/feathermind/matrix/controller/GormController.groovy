@@ -47,9 +47,9 @@ class GormController {
     }
 
     @PostMapping("upload")
-    public ResponseEntity<AttachmentInfo> handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<AttachmentInfo> handleFileUpload(@RequestParam MultipartFile file) {
 
-        def fileInfo = attachmentService.saveWithMultipartFile(file,null,null);
+        def fileInfo = attachmentService.saveWithMultipartFile(file, null, null);
 
         return ResponseEntity.ok(fileInfo)
     }

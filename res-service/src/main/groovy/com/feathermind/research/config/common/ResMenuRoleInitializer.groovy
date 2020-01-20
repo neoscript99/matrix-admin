@@ -69,16 +69,16 @@ class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInit
 
     List initTopicMenu() {
         Menu parentMenu = save(new Menu(label: '立项管理', seq: 30, parentId: rootMenu.id))
-        def subList = [
-                new Menu(label: '申报计划', app: 'InitialPlan', seq: 10, parentId: parentMenu.id, icon: 'schedule').save(),
-                new Menu(label: '立项流程', app: 'InitialApply', seq: 20, parentId: parentMenu.id, icon: 'branches').save(),
-                new Menu(label: '结题流程', app: 'FinishApply', seq: 30, parentId: parentMenu.id, icon: 'branches').save(),
+        def subList = [new Menu(label: '立项流程', app: 'InitialApply', seq: 20, parentId: parentMenu.id, icon: 'branches').save(),
+                       new Menu(label: '结题流程', app: 'FinishApply', seq: 30, parentId: parentMenu.id, icon: 'branches').save(),
         ]
-
         subList.each {
             new RoleMenu(DEPT_MANAGER, it).save()
             new RoleMenu(RES_USER, it).save()
         }
+        subList.addAll([
+                new Menu(label: '申报计划', app: 'InitialPlan', seq: 10, parentId: parentMenu.id, icon: 'schedule').save(),
+        ])
 
         return subList
     }

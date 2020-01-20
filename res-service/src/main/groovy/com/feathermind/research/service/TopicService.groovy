@@ -42,6 +42,16 @@ class TopicService extends AbstractService<Topic> {
         }
         return res
     }
+
+    @Override
+    Topic save(Map map) {
+        Topic topic = super.save(map)
+        if (map.initialReport) {
+            topic.initialReport.ownerId = topic.id
+            topic.initialReport.ownerName = topic.topicName
+        }
+        return topic
+    }
 }
 
 

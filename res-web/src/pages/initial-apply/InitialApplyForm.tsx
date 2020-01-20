@@ -12,7 +12,7 @@ import {
   SelectField,
   UploadField,
 } from 'oo-rest-mobx';
-import { Typography, Form } from 'antd';
+import { Typography, Form, Popover, Icon, Badge } from 'antd';
 import { dictService, topicService, loginService, resUserService, applyService } from '../../services';
 import moment from 'moment';
 import { config } from '../../utils';
@@ -190,10 +190,15 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
           />
           <UploadField
             fieldId="initialReport"
-            formItemProps={{ label: '申报盲评文本', style: itemCss }}
-            decorator={req}
+            formUtils={form}
+            formItemProps={{
+              label: initialReportLabel,
+              style: itemCss,
+            }}
             readonly={readonly}
-            action={`${config.serverRoot}/upload`}
+            maxNumber={1}
+            required
+            serverRoot={config.serverRoot}
           />
         </Form>
       );
@@ -214,3 +219,28 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
       );
   }
 }
+const initialReportLabelContent = (
+  <p>
+    一、选题
+    <br />
+    （一）选题背景；（二）选题意义；（三）国内外相关研究述评。 <br />
+    二、内容
+    <br />
+    （一）研究基本思路；（二）研究目标；（三）研究内容；（四）研究方法、步骤；（五）重点难点分析。
+    <br /> 三、预期价值
+    <br />
+    （一）理论创新程度或实际价值；（二）成果可能去向。
+    <br /> 四、前期准备
+    <br />
+    （一）前期准备工作（已收集的数据，进行的调查研究，完成的部分初稿等）；（二）已有与本课题相关的研究成果；（三）参考文献（以上各限填10项）。
+    <br />
+    <b>（限4000字内）</b>
+  </p>
+);
+const initialReportLabel = (
+  <Popover title={<Title level={3}>要求说明</Title>} content={initialReportLabelContent} style={{ maxWidth: 600 }}>
+    <Badge dot>
+      <span>申报盲评文本</span>
+    </Badge>
+  </Popover>
+);

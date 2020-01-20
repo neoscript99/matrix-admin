@@ -6,6 +6,7 @@ import { applyService, resUserService, topicService } from '../../services';
 import { ClickParam } from 'antd/lib/menu';
 import { ApproveDropdown } from '../../components';
 import { ApplyUtil } from '../../utils/ApplyUtil';
+import { ButtonProps } from 'antd/lib/button';
 
 export interface TopicOperatorProps extends Partial<RouteChildrenProps> {
   topic: Entity;
@@ -53,25 +54,30 @@ export abstract class TopicOperator<P extends TopicOperatorProps = TopicOperator
   getApply(): any {
     return {};
   }
-  buttonCss: React.CSSProperties = { padding: '0 2px' };
+  buttonProps: Partial<ButtonProps> = {
+    type: 'primary',
+    size: 'small',
+    style: { margin: 2 },
+  };
   render() {
-    const buttonCss = this.buttonCss;
     const editable = this.getEditable();
     const approveAble = this.getApproveAble();
     return (
-      <div className="flex-row" style={{ margin: '-10px 0' }}>
+      <div className="flex-row" style={{ margin: -10 }}>
         {this.getExtraButton()}
         {editable && (
-          <Button type="link" style={buttonCss} onClick={this.handleMember.bind(this)}>
+          <Button {...this.buttonProps} onClick={this.handleMember.bind(this)}>
             课题成员管理
           </Button>
         )}
         {editable && (
-          <Button type="link" style={buttonCss} onClick={this.submitApply.bind(this)}>
+          <Button {...this.buttonProps} onClick={this.submitApply.bind(this)}>
             提交审核
           </Button>
         )}
-        {approveAble && <ApproveDropdown onMenuClick={this.approveMenuClick.bind(this)} />}
+        {approveAble && (
+          <ApproveDropdown buttonProps={this.buttonProps} onMenuClick={this.approveMenuClick.bind(this)} />
+        )}
       </div>
     );
   }
