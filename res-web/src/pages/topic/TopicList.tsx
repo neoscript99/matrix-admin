@@ -11,7 +11,7 @@ import {
 import { ApplyUtil } from '../../utils/ApplyUtil';
 const baseColumns: EntityColumnProps[] = [
   { title: '课题名称', dataIndex: 'topicName' },
-  { title: '课题编号', dataIndex: 'topicCode' },
+  { title: '立项编号', dataIndex: 'initialCode' },
   { title: '单位', dataIndex: 'dept.name' },
   { title: '负责人', dataIndex: 'personInCharge.name' },
 ];
@@ -48,7 +48,7 @@ export class TopicList extends EntityPageList {
         or: {
           like: [
             ['topicName', `%${searchKey}%`],
-            ['topicCode', `${searchKey}%`],
+            ['initialCode', `${searchKey}%`],
           ],
         },
       };
@@ -76,5 +76,5 @@ export class TopicList extends EntityPageList {
 }
 
 export class TopicSearchForm extends SimpleSearchForm {
-  placeholder = '课题名称、编号';
+  placeholder = '课题名称、立项编号';
 }

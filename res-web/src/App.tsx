@@ -6,7 +6,6 @@ import { adminServices } from './services';
 import { config } from './utils';
 import { PageSwitch } from './pages';
 import logo from './asset/logo.png';
-
 const introRender = (
   <div>
     <p>
@@ -25,6 +24,9 @@ const loginProps: Partial<LoginFormProps> = {
   adminServices,
   title: '教育科研项目管理系统',
   introRender,
+  //https://unsplash.com/photos/asviIGR3CPE
+  backgroundImage:
+    'url(https://images.unsplash.com/photo-1517673132405-a56a62b18caf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2112)',
 };
 const homeProps = {
   adminServices,

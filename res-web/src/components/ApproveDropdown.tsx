@@ -16,7 +16,7 @@ export class ApproveDropdown extends Component<P> {
         overlay={
           <Menu onClick={onMenuClick}>
             <Menu.Item key="repair">退回修改</Menu.Item>
-            <Menu.Item key="fail">通不过</Menu.Item>
+            <Menu.Item key="fail">不通过</Menu.Item>
             <Menu.Item key="pass">通过</Menu.Item>
           </Menu>
         }

@@ -12,14 +12,17 @@ const statusRender = (code: string) => {
 };
 const columns: EntityColumnProps[] = [
   {
-    title: '立项申请状态',
-    dataIndex: 'initialApply.statusCode',
-    render: statusRender,
-  },
-  {
     title: '结题申请状态',
     dataIndex: 'finishApply.statusCode',
     render: statusRender,
+  },
+  {
+    title: '结题证书',
+    dataIndex: 'topicCert',
+  },
+  {
+    title: '结题通过日期',
+    dataIndex: 'finishDay',
   },
 ];
 

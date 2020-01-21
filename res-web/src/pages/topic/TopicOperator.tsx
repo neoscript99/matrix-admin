@@ -15,15 +15,14 @@ export interface TopicOperatorProps extends Partial<RouteChildrenProps> {
 
 export abstract class TopicOperator<P extends TopicOperatorProps = TopicOperatorProps> extends Component<P> {
   approveMenuClick({ key: statusCode }: ClickParam) {
-    const { topic } = this.props;
     const apply: any = { statusCode };
     if (statusCode === 'pass') {
       apply.passTime = new Date();
-      topicService.save({ id: topic.id, topicStatusCode: this.approvedStatus });
+      this.afterPass();
     }
     this.saveApply(apply);
   }
-  abstract get approvedStatus(): string;
+  abstract afterPass();
   fireChange() {
     const { topic, onChange } = this.props;
     message.info(`更新成功`);

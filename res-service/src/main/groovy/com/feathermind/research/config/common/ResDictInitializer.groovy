@@ -155,7 +155,7 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         new Dict(code: 'draft', name: '草稿', seq: 10, type: dictType).save();
         new Dict(code: 'wait', name: '待审核', seq: 20, type: dictType).save();
         new Dict(code: 'repair', name: '退回修改', seq: 20, type: dictType).save();
-        new Dict(code: 'fail', name: '通不过', seq: 20, type: dictType).save();
+        new Dict(code: 'fail', name: '不通过', seq: 20, type: dictType).save();
         new Dict(code: 'pass', name: '通过', seq: 20, type: dictType).save();
 
     }

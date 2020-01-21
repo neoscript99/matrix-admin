@@ -1,5 +1,6 @@
 package com.feathermind.research.service
 
+import cn.hutool.core.util.StrUtil
 import com.feathermind.matrix.service.AbstractService
 import com.feathermind.research.domain.res.InitialPlan
 import com.feathermind.research.domain.res.ResDept
@@ -50,7 +51,22 @@ class TopicService extends AbstractService<Topic> {
             topic.initialReport.ownerId = topic.id
             topic.initialReport.ownerName = topic.topicName
         }
+        if (map.topicStatusCode == 'applied' && StrUtil.isEmpty(topic.initialCode)) {
+            topic.initialCode = genNextInitialCode(topic)
+        }
         return topic
+    }
+
+    String genNextInitialCode(Topic topic) {
+        String prefix = "${topic.topicCateCode}${topic.initialPlan.planYear}"
+        String max = Topic.createCriteria().get {
+            like 'initialCode', "${prefix}%".toString()
+            projections {
+                max('initialCode')
+            }
+        }
+        def num = max ? Integer.valueOf(max.replaceFirst(prefix, '')) + 1 : 1
+        return "${prefix}${StrUtil.padPre(num.toString(), 3, '0')}".toString()
     }
 }
 

@@ -7,12 +7,11 @@ import { InitialPlanCard } from '../initial-plan';
 import { InitialApplyForm } from './InitialApplyForm';
 import { InitialApplyOperator } from './InitialApplyOperator';
 import { TopicList } from '../topic';
-import { ApplyUtil } from '../../utils/ApplyUtil';
 
 const columns: EntityColumnProps[] = [
   { title: '所属计划', dataIndex: 'initialPlan.planName' },
   {
-    title: '申请状态',
+    title: '立项申请状态',
     dataIndex: 'initialApply.statusCode',
     render: dictService.dictRender.bind(null, 'res-apply-status'),
   },

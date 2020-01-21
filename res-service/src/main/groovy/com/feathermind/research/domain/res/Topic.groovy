@@ -40,6 +40,8 @@ class Topic {
     //课题状态
     String topicStatusCode
     Apply initialApply
+    //立项编号，审批通过后生成，topicCateCode+year+001
+    String initialCode
 
     /*结题信息*/
     //最后成果形式，多选
@@ -48,7 +50,7 @@ class Topic {
     AttachmentInfo mainReport
     String finishDay
     //结题证书编号
-    //灰色，审核者填写
+    //灰色，审核者填写；先不显示，可以根据从立项编号生成
     String topicCert
     Apply finishApply
 
@@ -82,6 +84,7 @@ class Topic {
         originTopicName nullable: true
         initialReport nullable: true
         prepareAchieveFormCodes maxSize: 256
+        initialCode nullable: true
 
         mainReport nullable: true
         achieveFormCodes nullable: true, maxSize: 256

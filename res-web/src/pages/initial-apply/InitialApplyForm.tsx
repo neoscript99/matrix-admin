@@ -13,9 +13,8 @@ import {
   UploadField,
 } from 'oo-rest-mobx';
 import { Typography, Form, Popover, Icon, Badge } from 'antd';
-import { dictService, topicService, loginService, resUserService, applyService } from '../../services';
+import { dictService, topicService, loginService, resUserService, applyService, adminServices } from '../../services';
 import moment from 'moment';
-import { config } from '../../utils';
 
 const { Title, Paragraph } = Typography;
 
@@ -197,8 +196,9 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             }}
             readonly={readonly}
             maxNumber={1}
+            maxSizeMB={2}
             required
-            serverRoot={config.serverRoot}
+            attachmentService={adminServices.attachmentService}
           />
         </Form>
       );
