@@ -6,6 +6,7 @@ import com.feathermind.research.domain.res.InitialPlan
 import com.feathermind.research.domain.res.ResDept
 import groovy.transform.CompileStatic
 import groovy.transform.TypeCheckingMode
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import com.feathermind.research.domain.res.Topic
 
@@ -14,6 +15,9 @@ import java.time.LocalDate
 @Service
 @CompileStatic(TypeCheckingMode.SKIP)
 class TopicService extends AbstractService<Topic> {
+    @Autowired
+    TopicSupportService topicSupportService
+
     QualificationCheckResult checkQualification(InitialPlan plan, ResDept dept) {
         def res = new QualificationCheckResult()
         def planLimit = (plan.maxNumberPerDept && plan.maxNumberPerDept < dept.maxApplyNum)
@@ -53,6 +57,10 @@ class TopicService extends AbstractService<Topic> {
         }
         if (map.topicStatusCode == 'applied' && StrUtil.isEmpty(topic.initialCode)) {
             topic.initialCode = genNextInitialCode(topic)
+        }
+        //更新支撑材料列表
+        if (map.supports) {
+            topicSupportService.saveTopicSupports(topic, map.supports)
         }
         return topic
     }

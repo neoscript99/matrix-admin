@@ -1,8 +1,6 @@
 package com.feathermind.research.controller
 
 import com.feathermind.matrix.controller.DomainController
-import com.feathermind.matrix.service.AbstractService
-import com.feathermind.research.domain.res.ResDept
 import com.feathermind.research.domain.res.TopicMember
 import com.feathermind.research.service.TopicMemberService
 import org.springframework.beans.factory.annotation.Autowired

@@ -21,6 +21,7 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-use-before-define": "off",
     "react/display-name": "off",
+    "react/jsx-no-target-blank": "off",
   },
   settings: {
     react: {
