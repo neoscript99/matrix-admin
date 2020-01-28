@@ -5,6 +5,7 @@ import { ResDeptService } from './ResDeptService';
 import { InitialPlanService } from './InitialPlanService';
 import { TopicService } from './TopicService';
 import { TopicMemberService } from './TopicMemberService';
+import { TopicSupportService } from './TopicSupportService';
 
 function afterLogin(loginInfo: LoginInfo) {
   if (!loginInfo.token) throw 'token不能为空';
@@ -33,6 +34,7 @@ export const initialApplyService = new TopicService(restClient);
 //独立store
 export const finishApplyService = new TopicService(restClient);
 export const topicMemberService = new TopicMemberService(restClient);
+export const topicSupportService = new TopicSupportService(restClient);
 export const applyService = new DomainService({ domain: 'apply', restClient, storeClass });
 
 export const loginService = adminServices.loginService;

@@ -224,6 +224,12 @@ class GormRepository implements GeneralRepository {
     def flush() {
         sessionFactory.currentSession.flush()
     }
+    /**
+     * @see GeneralRepository#clear
+     */
+    def clear() {
+        sessionFactory.currentSession.clear()
+    }
 
     /**
      * @see GeneralRepository#executeUpdate

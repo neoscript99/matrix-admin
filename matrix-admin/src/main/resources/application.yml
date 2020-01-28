@@ -48,6 +48,8 @@ logging:
     ns.gflex: DEBUG
     org.springframework.transaction: DEBUG
     grails.gorm.transactions: DEBUG
+    org.grails.orm.hibernate.transaction: DEBUG
+    org.springframework.orm.jpa: DEBUG
     org.grails.gorm.graphql: DEBUG
     graphql.GraphQL: DEBUG
     com.oembedler: DEBUG

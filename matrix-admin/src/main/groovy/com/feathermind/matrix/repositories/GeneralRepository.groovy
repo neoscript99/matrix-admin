@@ -140,6 +140,12 @@ interface GeneralRepository {
     def flush()
 
     /**
+     * 清空session缓存,部分操作失败时清理
+     * @return
+     */
+    def clear()
+
+    /**
      * 执行语句
      * <p>可以是sql、hql、jpql
      * @param ql

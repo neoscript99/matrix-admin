@@ -1,5 +1,5 @@
 import React from 'react';
-import { dictService, topicService } from '../../services';
+import { dictService, topicService, topicSupportService } from '../../services';
 import {
   EntityColumnProps,
   EntityPageList,
@@ -7,6 +7,8 @@ import {
   SimpleSearchForm,
   ListOptions,
   StringUtil,
+  EntityFormProps,
+  Entity,
 } from 'oo-rest-mobx';
 import { ApplyUtil } from '../../utils/ApplyUtil';
 const baseColumns: EntityColumnProps[] = [
@@ -55,6 +57,16 @@ export class TopicList extends EntityPageList {
     }
     return param;
   }
+
+  async handleView() {
+    const item = this.getSelectItem();
+    if (item) {
+      item.supports = await topicSupportService.getTopicSupports(item.id!);
+      const formProps = this.genFormProps('查看', item, { readonly: true });
+      this.setState({ formProps });
+    }
+  }
+
   get domainService(): DomainService {
     return topicService;
   }

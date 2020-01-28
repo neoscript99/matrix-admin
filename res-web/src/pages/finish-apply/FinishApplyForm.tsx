@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  EntityForm,
-  StyleUtil,
-  DictSelectField,
-  UploadField,
-  commonRules,
-} from 'oo-rest-mobx';
+import { EntityForm, StyleUtil, DictSelectField, UploadField, commonRules } from 'oo-rest-mobx';
 import { Form } from 'antd';
 import { adminServices, applyService, dictService, loginService } from '../../services';
 

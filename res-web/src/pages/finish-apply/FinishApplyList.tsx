@@ -1,6 +1,6 @@
 import React from 'react';
-import { EntityColumnProps } from 'oo-rest-mobx';
-import { dictService, finishApplyService } from '../../services';
+import { EntityColumnProps, Entity, EntityFormProps } from 'oo-rest-mobx';
+import { dictService, finishApplyService, topicSupportService } from '../../services';
 import { observer } from 'mobx-react';
 import { TopicList } from '../topic';
 import { FinishApplyOperator } from './FinishApplyOperator';
@@ -46,9 +46,20 @@ export class FinishApplyList extends TopicList {
       formProps: this.genFormProps('结题申请', topic),
     });
   }
-  genFormProps(action: string, item?: any) {
-    const props = super.genFormProps(action, item);
-    return { ...props, modalProps: { title: `${item.topicName}${action}` } };
+
+  async handleUpdate() {
+    const item = this.getSelectItem();
+    if (item) {
+      item.supports = await topicSupportService.getTopicSupports(item.id!);
+      this.setState({
+        formProps: this.genFormProps('修改', item),
+      });
+    }
+  }
+
+  genFormProps(action: string, item?: Entity, exProps?: Partial<EntityFormProps>) {
+    const props = super.genFormProps(action, item, exProps);
+    return { ...props, modalProps: { title: `${item?.topicName}${action}` } };
   }
 
   get domainService() {
