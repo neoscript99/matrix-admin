@@ -7,7 +7,6 @@ server:
   servlet.session:
     cookie.name: GormSessionId
     tracking-modes: cookie
-
 spring:
   h2.console:
     enabled: true
@@ -18,6 +17,9 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password:
+  servlet:
+    multipart.max-file-size: 100MB
+    multipart.max-request-size: 100MB
 
 #org.grails.orm.hibernate.connections.HibernateConnectionSourceSettings
 hibernate:

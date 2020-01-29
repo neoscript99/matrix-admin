@@ -27,6 +27,7 @@ export const adminServices = new AdminServices(restClient, afterLogin, {
   userService: resUserService,
 });
 export const dictService = adminServices.dictService;
+export const paramService = adminServices.paramService;
 export const initialPlanService = new InitialPlanService(restClient);
 export const topicService = new TopicService(restClient);
 //独立store

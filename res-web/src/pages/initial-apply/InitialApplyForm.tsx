@@ -196,7 +196,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             }}
             readonly={readonly}
             maxNumber={1}
-            maxSizeMB={2}
+            maxSizeMB={10}
             required
             attachmentService={adminServices.attachmentService}
           />

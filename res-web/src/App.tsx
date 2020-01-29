@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import './App.css';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { Login, LoginFormProps, Home } from 'oo-rest-mobx';
-import { adminServices } from './services';
+import { adminServices, paramService } from './services';
 import { config } from './utils';
 import { PageSwitch } from './pages';
 import logo from './asset/logo.png';
+import { observer } from 'mobx-react';
 const introRender = (
   <div>
     <p>
@@ -20,7 +21,11 @@ const introRender = (
   </div>
 );
 const loginPath = '/login/';
-const loginProps: Partial<LoginFormProps> = {
+const demoUsers = [
+  { name: '系统管理员', username: 'sys-admin', password: 'abc000' },
+  { name: '单位管理员', username: 'dept-admin', password: 'abc000' },
+];
+const loginProps: LoginFormProps = {
   adminServices,
   title: '教育科研项目管理系统',
   introRender,
@@ -49,12 +54,17 @@ const homeProps = {
   ),
 };
 
+@observer
 class App extends Component {
   render() {
+    //console.debug('依赖paramService.store.allList：', paramService.store.allList);
+    const profiles = paramService.getByCode('EnvironmentProfiles')?.value;
+    console.debug('EnvironmentProfiles: ', profiles);
+    const users = profiles === 'dev' ? demoUsers : undefined;
     return (
       <HashRouter>
         <Switch>
-          <Route path={loginPath} render={props => <Login {...props} {...loginProps} />} />
+          <Route path={loginPath} render={props => <Login {...props} {...loginProps} demoUsers={users} />} />
           <Route render={props => <Home {...props} {...homeProps} />} />
         </Switch>
       </HashRouter>

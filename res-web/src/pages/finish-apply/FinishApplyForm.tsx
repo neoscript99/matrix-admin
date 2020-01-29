@@ -16,11 +16,11 @@ export class FinishApplyForm extends EntityForm {
     return await super.saveEntity(saveItem);
   }
   getForm() {
-    const itemCss: React.CSSProperties = { width: '22em', marginBottom: '10px' };
+    const itemCss: React.CSSProperties = { marginBottom: '10px' };
     const { form, readonly } = this.props;
     const req = { rules: [commonRules.required] };
     return (
-      <Form style={StyleUtil.flexForm()}>
+      <Form>
         <DictSelectField
           fieldId="achieveFormCodes"
           formItemProps={{ label: '最后成果形式', style: itemCss }}
@@ -46,6 +46,7 @@ export class FinishApplyForm extends EntityForm {
           formItemProps={{ label: '支撑材料', style: itemCss }}
           readonly={readonly}
           required
+          listType="picture-card"
           maxNumber={4}
           attachmentService={adminServices.attachmentService}
         />

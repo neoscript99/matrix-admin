@@ -11,33 +11,35 @@ import {
   Entity,
 } from 'oo-rest-mobx';
 import { ApplyUtil } from '../../utils/ApplyUtil';
-const baseColumns: EntityColumnProps[] = [
-  { title: '课题名称', dataIndex: 'topicName' },
-  { title: '立项编号', dataIndex: 'initialCode' },
-  { title: '单位', dataIndex: 'dept.name' },
-  { title: '负责人', dataIndex: 'personInCharge.name' },
-];
-const exColumns: EntityColumnProps[] = [
-  {
-    title: '课题状态',
-    dataIndex: 'topicStatusCode',
-    render: dictService.dictRender.bind(null, 'res-topic-status'),
-  },
-];
+import { Button } from 'antd';
 
 export class TopicList extends EntityPageList {
   getBaseColumns(): EntityColumnProps[] {
-    return baseColumns;
+    return [
+      {
+        title: '课题名称',
+        dataIndex: 'topicName',
+        render: (text, topic) => (
+          <Button type="link" onClick={this.showTopic.bind(this, topic)}>
+            {text}
+          </Button>
+        ),
+      },
+      { title: '立项编号', dataIndex: 'initialCode' },
+      { title: '单位', dataIndex: 'dept.name' },
+      { title: '负责人', dataIndex: 'personInCharge.name' },
+    ];
   }
 
   get columns(): EntityColumnProps[] {
-    return [...baseColumns, ...exColumns];
-  }
-
-  render(): JSX.Element {
-    //依赖dictService.store.allList
-    console.log('WorkPlanList.render: ', dictService.store.allList.length);
-    return super.render();
+    return [
+      ...this.getBaseColumns(),
+      {
+        title: '课题状态',
+        dataIndex: 'topicStatusCode',
+        render: dictService.dictRender.bind(null, 'res-topic-status'),
+      },
+    ];
   }
 
   getQueryParam(): ListOptions {
@@ -58,11 +60,15 @@ export class TopicList extends EntityPageList {
     return param;
   }
 
-  async handleView() {
+  handleView() {
     const item = this.getSelectItem();
-    if (item) {
-      item.supports = await topicSupportService.getTopicSupports(item.id!);
-      const formProps = this.genFormProps('查看', item, { readonly: true });
+    this.showTopic(item);
+  }
+
+  async showTopic(topic) {
+    if (topic && topic.id) {
+      topic.supports = await topicSupportService.getTopicSupports(topic.id!);
+      const formProps = this.genFormProps('查看', topic, { readonly: true });
       this.setState({ formProps });
     }
   }
