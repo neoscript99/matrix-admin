@@ -46,7 +46,7 @@ export class FinishApplyForm extends EntityForm {
           formItemProps={{ label: '支撑材料', style: itemCss }}
           readonly={readonly}
           required
-          listType="picture-card"
+          listType="picture"
           maxNumber={4}
           attachmentService={adminServices.attachmentService}
         />
