@@ -1,5 +1,5 @@
 import React from 'react';
-import { dictService, topicService, topicSupportService } from '../../services';
+import { dictService, topicMemberService, topicService, topicSupportService } from '../../services';
 import {
   EntityColumnProps,
   EntityPageList,
@@ -7,11 +7,12 @@ import {
   SimpleSearchForm,
   ListOptions,
   StringUtil,
+  EntityForm,
   EntityFormProps,
-  Entity,
 } from 'oo-rest-mobx';
 import { ApplyUtil } from '../../utils/ApplyUtil';
 import { Button } from 'antd';
+import { TopicView } from './TopicView';
 
 export class TopicList extends EntityPageList {
   getBaseColumns(): EntityColumnProps[] {
@@ -67,8 +68,14 @@ export class TopicList extends EntityPageList {
 
   async showTopic(topic) {
     if (topic && topic.id) {
-      topic.supports = await topicSupportService.getTopicSupports(topic.id!);
-      const formProps = this.genFormProps('查看', topic, { readonly: true });
+      topic.supports = await topicSupportService.getSupports(topic.id!);
+      topic.members = await topicMemberService.getMembers(topic.id!);
+      const formProps = {
+        ...this.genFormProps('查看', topic),
+        readonly: true,
+        title: '课题详情',
+        modalProps: { width: '75em' },
+      };
       this.setState({ formProps });
     }
   }
@@ -90,6 +97,12 @@ export class TopicList extends EntityPageList {
   //结题流程的申请对应：finishApply
   getApply(): any {
     return null;
+  }
+  getEntityFormPop(formProps?: EntityFormProps) {
+    if (formProps && formProps.readonly) {
+      return <TopicView {...formProps} />;
+    }
+    return super.getEntityFormPop(formProps);
   }
 }
 

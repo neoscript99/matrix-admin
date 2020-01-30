@@ -70,7 +70,7 @@ export class InitialApplyList extends TopicList {
     return InitialApplyForm;
   }
   getOperatorVisible() {
-    return { update: true, delete: true, view: true };
+    return { update: true, delete: true };
   }
   getApply(): any {
     const item = this.getSelectItem();

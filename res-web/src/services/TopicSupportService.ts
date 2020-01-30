@@ -5,7 +5,7 @@ export class TopicSupportService extends DomainService {
     super({ domain: 'topicSupport', storeClass: MobxDomainStore, restClient });
   }
 
-  getTopicSupports(topicId: string) {
+  getSupports(topicId: string) {
     return this.list({ criteria: { eq: [['topic.id', topicId]] } }).then(res => res.results.map(v => v.support));
   }
 }

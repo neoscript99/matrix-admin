@@ -12,3 +12,7 @@
     justify-content: space-between;
     flex-wrap: wrap;
 }
+
+div.ant-descriptions-title {
+    margin-bottom: 0.5rem;
+}

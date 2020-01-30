@@ -64,9 +64,7 @@ export class TopicMember extends ResUserList<AdminPageProps, S> {
    */
   async componentDidMount() {
     const { currentItem: topic } = topicService.store;
-    const targetKeys = await topicMemberService
-      .listAll({ criteria: { eq: [['topic.id', topic.id]] } })
-      .then(res => res.results.map(tm => tm.member.id));
+    const targetKeys = await topicMemberService.getMembers(topic.id!).then(members => members.map(member => member.id));
     this.query();
     this.setState({ targetKeys });
   }

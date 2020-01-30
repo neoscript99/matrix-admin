@@ -17,7 +17,7 @@ class Topic {
     /*立项信息*/
     InitialPlan initialPlan
     //仅限申报重点课题填写
-    String originTopicCode
+    String originInitialCode
     String originTopicName
     ResDept dept
     ResUser personInCharge
@@ -80,7 +80,7 @@ class Topic {
         duplicateCheck fetch: 'join', lazy: false
     }
     static constraints = {
-        originTopicCode nullable: true
+        originInitialCode nullable: true
         originTopicName nullable: true
         initialReport nullable: true
         prepareAchieveFormCodes maxSize: 256

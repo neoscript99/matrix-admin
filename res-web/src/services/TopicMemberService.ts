@@ -7,4 +7,7 @@ export class TopicMemberService extends DomainService {
   saveMembers(topicId: string, memberIds: string[]): Promise<number> {
     return this.postApi('saveMembers', { topicId, memberIds });
   }
+  getMembers(topicId: string) {
+    return this.listAll({ criteria: { eq: [['topic.id', topicId]] } }).then(res => res.results.map(tm => tm.member));
+  }
 }

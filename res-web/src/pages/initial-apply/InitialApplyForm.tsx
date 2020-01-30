@@ -100,8 +100,8 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
           )}
           {important && (
             <InputField
-              fieldId="originTopicCode"
-              formItemProps={{ label: '原课题编号', style: itemCss }}
+              fieldId="originInitialCode"
+              formItemProps={{ label: '原立项编号', style: itemCss }}
               formUtils={form}
               maxLength={36}
               readonly={readonly}

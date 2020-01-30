@@ -50,7 +50,7 @@ export class FinishApplyList extends TopicList {
   async handleUpdate() {
     const item = this.getSelectItem();
     if (item) {
-      item.supports = await topicSupportService.getTopicSupports(item.id!);
+      item.supports = await topicSupportService.getSupports(item.id!);
       this.setState({
         formProps: this.genFormProps('修改', item),
       });
@@ -66,7 +66,7 @@ export class FinishApplyList extends TopicList {
     return finishApplyService;
   }
   getOperatorVisible() {
-    return { update: true, view: true };
+    return { update: true };
   }
   getApply(): any {
     const item = this.getSelectItem();
