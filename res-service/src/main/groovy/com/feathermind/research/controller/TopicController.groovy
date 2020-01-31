@@ -2,7 +2,6 @@ package com.feathermind.research.controller
 
 import com.feathermind.matrix.controller.DomainController
 import com.feathermind.matrix.service.AbstractService
-import com.feathermind.research.domain.wf.TopicFinishApply
 import com.feathermind.research.service.InitialPlanService
 import com.feathermind.research.service.QualificationCheckResult
 import com.feathermind.research.service.ResDeptService
@@ -30,7 +29,7 @@ class TopicController extends DomainController<Topic> {
     ResDeptService resDeptService
 
     @PostMapping("/list")
-    ResponseEntity<List<TopicFinishApply>> list(@RequestBody Map criteria) {
+    ResponseEntity<List<Topic>> list(@RequestBody Map criteria) {
         def user = this.getSessionUser(true)
         def roles = this.getToken().roles.split(',')
         if (!roles.contains(MAIN_MANAGER.roleCode)) {

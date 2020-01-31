@@ -12,9 +12,10 @@ import {
   SelectField,
   UploadField,
 } from 'oo-rest-mobx';
-import { Typography, Form, Popover, Icon, Badge } from 'antd';
+import { Typography, Form, Popover } from 'antd';
 import { dictService, topicService, loginService, resUserService, applyService, adminServices } from '../../services';
 import moment from 'moment';
+import { InfoIcon } from '../../components';
 
 const { Title, Paragraph } = Typography;
 
@@ -36,7 +37,8 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
   async componentDidMount() {
     const { inputItem } = this.props;
     const dept = loginService.dept!;
-    const deptUserList = await resUserService.getDeptUsers(dept);
+    //只能选择有身份证的用户
+    const deptUserList = (await resUserService.getDeptUsers(dept)).filter(user => !!user.idCard);
     const qualification: QualificationCheckResult =
       inputItem && inputItem.id
         ? { success: true, reasons: [] }
@@ -239,8 +241,7 @@ const initialReportLabelContent = (
 );
 const initialReportLabel = (
   <Popover title={<Title level={3}>要求说明</Title>} content={initialReportLabelContent} style={{ maxWidth: 600 }}>
-    <Badge dot>
-      <span>申报盲评文本</span>
-    </Badge>
+    <span>申报盲评文本</span>
+    <InfoIcon />
   </Popover>
 );

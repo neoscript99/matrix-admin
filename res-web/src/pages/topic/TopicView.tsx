@@ -44,12 +44,16 @@ export class TopicView extends EntityForm {
         </Descriptions>
         <Descriptions title="课题成员" {...descProps}>
           <Col label="负责人">{personInCharge.name}</Col>
-          <Col label="性别">{personInCharge.sexCode}</Col>
+          <Col label="性别">
+            <DictViewer dictType="pub_sex" dictCode={personInCharge.sexCode} />
+          </Col>
           <Col label="身份证号码">{personInCharge.idCard}</Col>
           <Col label="出生日期">{personInCharge.birthDay}</Col>
           <Col label="职务职称">{personInCharge.title}</Col>
           <Col label="专业">{personInCharge.major}</Col>
-          <Col label="最后学历">{personInCharge.degreeCode}</Col>
+          <Col label="最后学历">
+            <DictViewer dictType="pub_degree" dictCode={personInCharge.degreeCode} />
+          </Col>
           <Col label="其他成员">
             <div>
               {members.map(m => (

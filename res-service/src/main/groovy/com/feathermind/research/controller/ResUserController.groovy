@@ -37,6 +37,11 @@ class ResUserController extends DomainController<ResUser> {
         return ResponseEntity.ok(domainService.list(criteria))
     }
 
+    @PostMapping("/idCardCheck")
+    ResponseEntity<Boolean> idCardCheck(@RequestBody Map req) {
+        return ResponseEntity.ok(resUserService.checkIdCardUnique(req.id, req.dept?.id, req.idCard))
+    }
+
     @Override
     AbstractService<ResUser> getDomainService() {
         return resUserService

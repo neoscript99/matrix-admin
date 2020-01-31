@@ -18,7 +18,18 @@ interface S extends EntityListState {
 }
 export class TopicMember extends ResUserList<AdminPageProps, S> {
   state = { targetKeys: [] as string[], dataList: [] } as S;
-
+  /**
+   * 忽略EntityList处理
+   *
+   * Transfer数据源为同部门下所有用户
+   * 原来已选择的用户，存放到state.targetKeys
+   */
+  async componentDidMount() {
+    const { currentItem: topic } = topicService.store;
+    const targetKeys = await topicMemberService.getMembers(topic.id!).then(members => members.map(member => member.id));
+    this.query();
+    this.setState({ targetKeys });
+  }
   render() {
     const { currentItem: topic } = topicService.store;
     if (!topic || !topic.id) return <Redirect to="/" />;
@@ -55,19 +66,6 @@ export class TopicMember extends ResUserList<AdminPageProps, S> {
   get domainService(): ResUserService {
     return resTopicUserService;
   }
-
-  /**
-   * 忽略EntityList处理
-   *
-   * Transfer数据源为同部门下所有用户
-   * 原来已选择的用户，存放到state.targetKeys
-   */
-  async componentDidMount() {
-    const { currentItem: topic } = topicService.store;
-    const targetKeys = await topicMemberService.getMembers(topic.id!).then(members => members.map(member => member.id));
-    this.query();
-    this.setState({ targetKeys });
-  }
   query(): Promise<ListResult> {
     return this.domainService
       .listAll(this.getQueryParam())
@@ -75,7 +73,7 @@ export class TopicMember extends ResUserList<AdminPageProps, S> {
   }
   getQueryParam(): ListOptions {
     return {
-      criteria: { eq: [['dept.id', loginService.store.loginInfo.user!.dept.id]] },
+      criteria: { eq: [['dept.id', loginService.store.loginInfo.user!.dept.id]], isNotNull: [['idCard']] },
       orders: ['name'],
     };
   }
