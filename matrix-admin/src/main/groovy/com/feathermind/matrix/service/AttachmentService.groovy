@@ -126,7 +126,7 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
      * 根据本身系统指定依赖策略
      * 如果本身就不设置owner，那本方法逻辑不适用
      */
-    @Scheduled(cron = "0 0 * * * *")
+    //@Scheduled(cron = "0 0 * * * *")
     void cleanTemp() {
         def deleteDate = paramService.profiles.equals('dev') ? DateUtil.offsetMinute(DateUtil.date(), -2) : DateUtil.yesterday()
         log.info("定时删除一些没有owner的附件，删除${deleteDate.toString()}之前的临时附件")

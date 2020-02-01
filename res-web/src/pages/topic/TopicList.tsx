@@ -4,15 +4,15 @@ import {
   EntityColumnProps,
   EntityPageList,
   DomainService,
-  SimpleSearchForm,
   ListOptions,
   StringUtil,
-  EntityForm,
   EntityFormProps,
+  Criteria,
 } from 'oo-rest-mobx';
 import { ApplyUtil } from '../../utils/ApplyUtil';
 import { Button } from 'antd';
 import { TopicView } from './TopicView';
+import { TopicSearchForm } from './TopicSearchForm';
 
 export class TopicList extends EntityPageList {
   getBaseColumns(): EntityColumnProps[] {
@@ -46,19 +46,14 @@ export class TopicList extends EntityPageList {
   getQueryParam(): ListOptions {
     const param = super.getQueryParam();
     const {
-      searchParam: { searchKey },
+      searchParam: { topicName, initialCode, planYear, deptName },
     } = this.domainService.store;
-    if (StringUtil.isNotBlank(searchKey)) {
-      param.criteria = {
-        or: {
-          like: [
-            ['topicName', `%${searchKey}%`],
-            ['initialCode', `${searchKey}%`],
-          ],
-        },
-      };
-    }
-    return param;
+    const criteria: Criteria = { like: [] };
+    if (StringUtil.isNotBlank(topicName)) criteria.like!.push(['topicName', `%${topicName}%`]);
+    if (StringUtil.isNotBlank(initialCode)) criteria.like!.push(['initialCode', `${initialCode}%`]);
+    if (StringUtil.isNotBlank(deptName)) criteria.dept = { like: [['name', `%${deptName}%`]] };
+    if (planYear) criteria.initialPlan = { eq: [['planYear', planYear]] };
+    return { ...param, criteria };
   }
 
   handleView() {
@@ -104,8 +99,4 @@ export class TopicList extends EntityPageList {
     }
     return super.getEntityFormPop(formProps);
   }
-}
-
-export class TopicSearchForm extends SimpleSearchForm {
-  placeholder = '课题名称、立项编号';
 }

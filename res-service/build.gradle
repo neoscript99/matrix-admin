@@ -13,7 +13,7 @@ plugins {
 }
 
 group = 'com.feathermind.research'
-version = '1.0'
+version = projectVersion
 sourceCompatibility = '1.8'
 
 repositories {
