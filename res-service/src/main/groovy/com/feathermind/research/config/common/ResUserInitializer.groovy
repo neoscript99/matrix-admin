@@ -1,10 +1,11 @@
 package com.feathermind.research.config.common
 
+import cn.hutool.core.util.StrUtil
 import com.feathermind.matrix.domain.sys.UserRole
 import com.feathermind.matrix.initializer.AbstractDataInitializer
 import com.feathermind.matrix.initializer.DataInitializer
 import com.feathermind.matrix.util.EncoderUtil
-import com.feathermind.research.domain.res.ResUser
+import com.feathermind.research.domain.res.*
 import groovy.transform.CompileStatic
 import groovy.transform.TypeCheckingMode
 import org.springframework.core.annotation.Order
@@ -20,7 +21,7 @@ class ResUserInitializer extends AbstractDataInitializer implements DataInitiali
 
     @Override
     boolean isInited() {
-        return ResUser.list()
+        return ResUser.findByAccount('sys-admin')
     }
 
     @Override
@@ -30,24 +31,37 @@ class ResUserInitializer extends AbstractDataInitializer implements DataInitiali
 
 
     static ResUser resManagerUser = new ResUser(name: '科研系统管理员', account: 'sys-admin', phoneNumber: '88121117', dept: headDept, password: DEFAULT_PASS)
-    static ResUser demoSchoolUser = new ResUser(name: '单位管理员', account: 'dept-admin', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS)
-    static ResUser expertUser = new ResUser(name: '评审专家', account: 'expert', phoneNumber: '88888888', dept: expertDept, password: DEFAULT_PASS)
 
     def initUser() {
         resManagerUser.save()
-        demoSchoolUser.save()
-        expertUser.save()
         new UserRole(resManagerUser, MAIN_MANAGER).save()
         new UserRole(resManagerUser, RES_USER).save()
-        new UserRole(demoSchoolUser, DEPT_MANAGER).save()
-        new UserRole(demoSchoolUser, RES_USER).save()
-        new UserRole(expertUser, EXPERT).save()
-        initDemoSchoolMember()
+        initDeptUser().each {
+            new UserRole(it, InitEntity.DEPT_MANAGER).save()
+        }
+        initExportUser()
     }
 
-    def initDemoSchoolMember() {
-        new ResUser(name: '成员1', account: '高级中学管理员01', idCard: '333000199012126661', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
-        new ResUser(name: '成员2', account: '高级中学管理员02', idCard: '333000199012126662', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
-        new ResUser(name: '成员3', account: '高级中学管理员03', idCard: '333000199012126663', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
+    List<ResUser> initDeptUser() {
+        List<ResUser> allUser = []
+        def cateList = generalRepository.list(ResDeptType, [ne: [['code', 'external_agency']], order: ['seq']]).groupBy { it.cateCode }
+        cateList.each { k, v ->
+            def index = 0;
+            generalRepository.list(ResDept, [inList: [['type', v]], order: ['seq']]).each {
+                index++
+                def account = k + StrUtil.padPre(index.toString(), 3, '0')
+                def user = new ResUser(name: account, account: account, dept: it, password: DEFAULT_PASS).save()
+                allUser.add(user)
+            }
+        }
+        return allUser
+    }
+
+    def initExportUser() {
+        (1..30).each {
+            def index = StrUtil.padPre(it.toString(), 3, '0')
+            def user = new ResUser(name: '评审专家' + index, account: 'EXP' + index, dept: expertDept, password: DEFAULT_PASS).save()
+            new UserRole(user, InitEntity.EXPERT).save()
+        }
     }
 }
