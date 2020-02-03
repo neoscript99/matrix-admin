@@ -28,8 +28,7 @@ class TopicController extends DomainController<Topic> {
     @Autowired
     ResDeptService resDeptService
 
-    @PostMapping("/list")
-    ResponseEntity<List<Topic>> list(@RequestBody Map criteria) {
+    Map preList(Map criteria) {
         def user = this.getSessionUser(true)
         def roles = this.getToken().roles.split(',')
         if (!roles.contains(MAIN_MANAGER.roleCode)) {
@@ -42,7 +41,7 @@ class TopicController extends DomainController<Topic> {
             else
                 throw new RuntimeException('当前用户没有权限')
         }
-        return ResponseEntity.ok(domainService.list(criteria))
+        return criteria
     }
 
     @PostMapping("/checkQualification")

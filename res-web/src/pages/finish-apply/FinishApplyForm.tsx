@@ -16,14 +16,13 @@ export class FinishApplyForm extends EntityForm {
     return await super.saveEntity(saveItem);
   }
   getForm() {
-    const itemCss: React.CSSProperties = { marginBottom: '10px' };
     const { form, readonly } = this.props;
     const req = { rules: [commonRules.required] };
     return (
       <Form>
         <DictSelectField
           fieldId="achieveFormCodes"
-          formItemProps={{ label: '最后成果形式', style: itemCss }}
+          formItemProps={{ label: '最后成果形式' }}
           dictService={dictService}
           dictType="res-achieve-form"
           formUtils={form}
@@ -34,7 +33,7 @@ export class FinishApplyForm extends EntityForm {
         <UploadField
           fieldId="mainReport"
           formUtils={form}
-          formItemProps={{ label: '主报告', style: itemCss }}
+          formItemProps={{ label: '主报告' }}
           required
           readonly={readonly}
           maxNumber={1}
@@ -43,7 +42,7 @@ export class FinishApplyForm extends EntityForm {
         <UploadField
           fieldId="supports"
           formUtils={form}
-          formItemProps={{ label: '支撑材料', style: itemCss }}
+          formItemProps={{ label: '支撑材料' }}
           readonly={readonly}
           required
           listType="picture"

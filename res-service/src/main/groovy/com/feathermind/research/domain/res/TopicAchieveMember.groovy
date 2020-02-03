@@ -15,9 +15,6 @@ class TopicAchieveMember {
 
     TopicAchieve topicAchieve
     ResUser member
-    Boolean enabled = true
-    //成员删除原因
-    String disableReason
 
     Date dateCreated
     Date lastUpdated
@@ -25,9 +22,5 @@ class TopicAchieveMember {
     static mapping = {
         topicAchieve fetch: 'join', lazy: false
         member fetch: 'join', lazy: false
-    }
-
-    static constraints = {
-        disableReason nullable: true
     }
 }

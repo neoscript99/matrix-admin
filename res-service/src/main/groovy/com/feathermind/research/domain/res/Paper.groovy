@@ -33,8 +33,6 @@ class Paper {
         duplicateCheck fetch: 'join', lazy: false
     }
     static constraints = {
-        paperFile nullable: true
-        reviewPlan nullable: true
         duplicateCheck nullable: true
     }
 }

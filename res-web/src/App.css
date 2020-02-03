@@ -13,6 +13,14 @@
     flex-wrap: wrap;
 }
 
-div.ant-descriptions-title {
+.ant-descriptions-title {
     margin-bottom: 0.5rem;
+}
+
+.ant-form-item-label {
+    line-height: 30px;
+}
+
+.ant-form-item {
+    margin-bottom: 5px;
 }

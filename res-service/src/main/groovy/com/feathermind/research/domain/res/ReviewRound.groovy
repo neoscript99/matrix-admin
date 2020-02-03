@@ -16,10 +16,12 @@ class ReviewRound {
     String name
     Integer seq
     BigDecimal passRate
-    //对不通过本轮的成果按分数分段，得出更详细的等级结果
-    Integer failClassifyNumber = 1
+    //本轮分数分段
+    Integer classifyNumber = 2
     String beginDay
     String endDay
+    //上级轮次，依赖上级结果
+    ReviewRound parentRound
 
     Date dateCreated
     Date lastUpdated

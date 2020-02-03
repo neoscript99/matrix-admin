@@ -25,8 +25,7 @@ class ResUserController extends DomainController<ResUser> {
         return ResponseEntity.ok(userService.saveUserWithRoles(resUser, req.roleIds))
     }
 
-    @PostMapping("/list")
-    ResponseEntity<List<ResUser>> list(@RequestBody Map criteria) {
+    Map preList(Map criteria) {
         def user = this.getSessionUser(true)
         def roles = this.getToken().roles.split(',')
         if (!roles.contains(MAIN_MANAGER.roleCode)) {
@@ -34,7 +33,7 @@ class ResUserController extends DomainController<ResUser> {
                 criteria.eq = []
             criteria.eq << ['dept.id', user.dept.id]
         }
-        return ResponseEntity.ok(domainService.list(criteria))
+        return criteria
     }
 
     @PostMapping("/idCardCheck")

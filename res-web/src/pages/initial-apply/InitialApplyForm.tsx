@@ -71,7 +71,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
 
   getForm() {
     if (!this.state) return null;
-    const itemCss: React.CSSProperties = { width: '22em', marginBottom: '10px' };
+    const itemCss: React.CSSProperties = { width: '22em' };
     const {
       form,
       readonly,

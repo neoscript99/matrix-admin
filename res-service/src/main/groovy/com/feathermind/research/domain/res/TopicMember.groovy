@@ -15,9 +15,6 @@ class TopicMember {
 
     Topic topic
     ResUser member
-    Boolean enabled = true
-    //成员删除原因
-    String disableReason
 
     Date dateCreated
     Date lastUpdated
@@ -25,9 +22,5 @@ class TopicMember {
     static mapping = {
         topic fetch: 'join', lazy: false
         member fetch: 'join', lazy: false
-    }
-
-    static constraints = {
-        disableReason nullable: true
     }
 }

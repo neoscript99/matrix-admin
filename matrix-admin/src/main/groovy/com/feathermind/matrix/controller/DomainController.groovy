@@ -60,12 +60,16 @@ abstract class DomainController<T> {
 
     @PostMapping("/list")
     ResponseEntity<List<T>> list(@RequestBody Map criteria) {
-        return ResponseEntity.ok(domainService.list(criteria))
+        return ResponseEntity.ok(domainService.list(preList(criteria)))
     }
 
     @PostMapping("/count")
     ResponseEntity<Integer> count(@RequestBody Map criteria) {
-        return ResponseEntity.ok(domainService.count(criteria))
+        return ResponseEntity.ok(domainService.count(preList(criteria)))
+    }
+
+    Map preList(Map criteria) {
+        return criteria
     }
 
     protected User getSessionUser(boolean isNeed = false) {
