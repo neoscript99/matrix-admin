@@ -29,8 +29,8 @@ class ResDevUserInitializer extends AbstractDataInitializer implements DataIniti
     }
 
 
-    static ResUser demoSchoolUser = new ResUser(name: '单位管理员', account: 'dept-admin', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS)
-    static ResUser expertUser = new ResUser(name: '评审专家', account: 'expert', phoneNumber: '88888888', dept: expertDept, password: DEFAULT_PASS)
+    static ResUser demoSchoolUser = new ResUser(name: '单位管理员', account: 'dept-admin', cellPhone: '88888888', dept: demoSchool, password: DEFAULT_PASS)
+    static ResUser expertUser = new ResUser(name: '评审专家', account: 'expert', cellPhone: '88888888', dept: expertDept, password: DEFAULT_PASS)
 
     def initUser() {
         demoSchoolUser.save()
@@ -42,8 +42,8 @@ class ResDevUserInitializer extends AbstractDataInitializer implements DataIniti
     }
 
     def initDemoSchoolMember() {
-        new ResUser(name: '成员1', account: '高级中学管理员01', idCard: '333000199012126661', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
-        new ResUser(name: '成员2', account: '高级中学管理员02', idCard: '333000199012126662', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
-        new ResUser(name: '成员3', account: '高级中学管理员03', idCard: '333000199012126663', phoneNumber: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
+        new ResUser(name: '成员1', account: '高级中学管理员01', idCard: '333000199012126661', cellPhone: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
+        new ResUser(name: '成员2', account: '高级中学管理员02', idCard: '333000199012126662', cellPhone: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
+        new ResUser(name: '成员3', account: '高级中学管理员03', idCard: '333000199012126663', cellPhone: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
     }
 }

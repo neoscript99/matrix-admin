@@ -29,6 +29,7 @@ export const adminServices = new AdminServices(restClient, afterLogin, {
 export const dictService = adminServices.dictService;
 export const paramService = adminServices.paramService;
 export const attachmentService = adminServices.attachmentService;
+export const deptService = adminServices.deptService;
 export const initialPlanService = new InitialPlanService(restClient);
 export const topicService = new TopicService(restClient);
 //独立store

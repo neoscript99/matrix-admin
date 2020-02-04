@@ -29,7 +29,7 @@ class User {
 
     Department dept
 
-    String phoneNumber
+    String cellPhone
     String email
     String sexCode
 
@@ -42,7 +42,7 @@ class User {
     static constraints = {
         account unique: true
         password maxSize: 80
-        phoneNumber nullable: true
+        cellPhone nullable: true
         email nullable: true
         sexCode nullable: true
     }

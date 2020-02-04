@@ -16,6 +16,7 @@ import { Typography, Form, Popover } from 'antd';
 import { dictService, topicService, loginService, resUserService, applyService, adminServices } from '../../services';
 import moment from 'moment';
 import { InfoIcon } from '../../components';
+import { config } from '../../utils';
 
 const { Title, Paragraph } = Typography;
 
@@ -34,18 +35,25 @@ interface QualificationCheckResult {
 }
 
 export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
+  state = { qualification: { success: true, reasons: [] } } as S;
   async componentDidMount() {
     const { inputItem } = this.props;
     const dept = loginService.dept!;
     //只能选择有身份证的用户
     const deptUserList = (await resUserService.getDeptUsers(dept)).filter(user => !!user.idCard);
-    const qualification: QualificationCheckResult =
-      inputItem && inputItem.id
-        ? { success: true, reasons: [] }
-        : await topicService.checkQualification(this.props.inputItem.initialPlan.id, dept.id);
-    this.setState({ deptUserList, qualification });
+    //新增需做校验，修改时不用
+    if (!inputItem?.id) {
+      const qualification = await topicService.checkQualification(this.props.inputItem.initialPlan.id, dept.id);
+      this.setState({ deptUserList, qualification });
+    } else this.setState({ deptUserList });
   }
 
+  getContainerProps() {
+    const props = super.getContainerProps();
+    const footer = this.state.qualification.success ? undefined : null;
+    props.modalProps = { ...props.modalProps, maskClosable: true, footer };
+    return props;
+  }
   async saveEntity(saveItem) {
     const {
       inputItem: {
@@ -70,7 +78,6 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
   }
 
   getForm() {
-    if (!this.state) return null;
     const itemCss: React.CSSProperties = { width: '22em' };
     const {
       form,
@@ -80,6 +87,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
     const { deptUserList, qualification } = this.state;
     const important = initialPlan.planCateCode === 'YZZD';
     const req = { rules: [commonRules.required] };
+    const isDev = config.isDev();
     if (qualification.success)
       return (
         <Form style={StyleUtil.flexForm()}>
@@ -126,7 +134,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             dictType="res-topic-cate"
             formUtils={form}
             decorator={req}
-            defaultSelectFirst
+            defaultSelectFirst={isDev}
             parentDictCode={initialPlan.planCateCode}
             readonly={readonly}
           />
@@ -137,7 +145,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             dictType="res-topic-source"
             formUtils={form}
             decorator={req}
-            defaultSelectFirst
+            defaultSelectFirst={isDev}
             readonly={readonly}
           />
           <DictSelectField
@@ -147,7 +155,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             dictType="res-content"
             formUtils={form}
             decorator={req}
-            defaultSelectFirst
+            defaultSelectFirst={isDev}
             readonly={readonly}
           />
           <DictSelectField
@@ -157,7 +165,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             dictType="res-subject"
             formUtils={form}
             decorator={req}
-            defaultSelectFirst
+            defaultSelectFirst={isDev}
             readonly={readonly}
           />
           <DictSelectField
@@ -167,7 +175,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             dictType="res-target"
             formUtils={form}
             decorator={req}
-            defaultSelectFirst
+            defaultSelectFirst={isDev}
             readonly={readonly}
           />
           <DictSelectField
@@ -179,6 +187,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             decorator={req}
             mode="multiple"
             readonly={readonly}
+            defaultSelectFirst={isDev}
           />
           <DatePickerField
             fieldId="prepareFinishDay"

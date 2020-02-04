@@ -1,5 +1,5 @@
 import React from 'react';
-import { DeptList, AdminPageProps } from 'oo-rest-mobx';
+import { DeptList, AdminPageProps, commonColumns } from 'oo-rest-mobx';
 import { ResDeptForm } from './ResDeptForm';
 import { message } from 'antd';
 
@@ -11,6 +11,14 @@ export class ResDeptList extends DeptList {
     return this.props.services.deptService;
   }
 
+  get columns() {
+    return [
+      { title: '序号', dataIndex: 'seq' },
+      { title: '机构名', dataIndex: 'name' },
+      ...this.getExtraColumns(),
+      commonColumns.enabled,
+    ];
+  }
   getExtraColumns() {
     return [
       { title: '机构类型', dataIndex: 'type.name' },

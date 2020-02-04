@@ -2,8 +2,6 @@ import React from 'react';
 import { DeptForm, commonRules, InputField, InputNumberField, SelectField } from 'oo-rest-mobx';
 import { resDeptTypeService } from '../../services';
 
-const { required, email, numberRule } = commonRules;
-
 export class ResDeptForm extends DeptForm {
   getExtraFormItem() {
     const { form, readonly } = this.props;

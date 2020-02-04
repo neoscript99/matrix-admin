@@ -16,10 +16,16 @@ export class ResUserForm extends UserForm {
     return resUserService;
   }
   async saveEntity(saveItem: Entity) {
-    if (!(await resUserService.idCardCheck({ ...this.props.inputItem, ...saveItem }))) throw '身份证已存在，请检查';
+    //系统管理员可以不输入身份证，不做检查
+    if (saveItem.idCard && !(await resUserService.idCardCheck({ ...this.props.inputItem, ...saveItem })))
+      throw '身份证已存在，请检查';
     const result = CommonValidators.idCard(saveItem.idCard);
-    saveItem.birthDay = result.info.birthDay;
-    saveItem.sexCode = result.info.sex === '男' ? 'male' : 'female';
+    if (result.success) {
+      saveItem.birthDay = result.info.birthDay;
+      saveItem.sexCode = result.info.sex === '男' ? 'male' : 'female';
+    } else {
+      console.warn('ResUserForm.saveEntity: 身份证校验失败，', result);
+    }
     return await super.saveEntity(saveItem);
   }
   getExtraFormItem() {

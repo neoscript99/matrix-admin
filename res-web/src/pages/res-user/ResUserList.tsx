@@ -13,7 +13,7 @@ export class ResUserList<
   getExtraColumns() {
     return [
       { title: '职务职称', dataIndex: 'title' },
-      { title: '联系电话', dataIndex: 'phoneNumber' },
+      { title: '手机号码', dataIndex: 'cellPhone' },
     ];
   }
   getEntityForm() {

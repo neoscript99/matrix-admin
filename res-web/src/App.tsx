@@ -7,6 +7,8 @@ import { config } from './utils';
 import { PageSwitch } from './pages';
 import logo from './asset/logo.png';
 import { observer } from 'mobx-react';
+import { ConfigProvider } from 'antd';
+import zhCN from 'antd/lib/locale/zh_CN';
 const introRender = (
   <div>
     <p>
@@ -62,12 +64,14 @@ class App extends Component {
     console.debug('EnvironmentProfiles: ', profiles);
     const users = profiles === 'dev' ? demoUsers : undefined;
     return (
-      <HashRouter>
-        <Switch>
-          <Route path={loginPath} render={props => <Login {...props} {...loginProps} demoUsers={users} />} />
-          <Route render={props => <Home {...props} {...homeProps} />} />
-        </Switch>
-      </HashRouter>
+      <ConfigProvider locale={zhCN}>
+        <HashRouter>
+          <Switch>
+            <Route path={loginPath} render={props => <Login {...props} {...loginProps} demoUsers={users} />} />
+            <Route render={props => <Home {...props} {...homeProps} />} />
+          </Switch>
+        </HashRouter>
+      </ConfigProvider>
     );
   }
 }

@@ -9,18 +9,23 @@ task yarnBuild(type: YarnTask) {
     args = ['build']
     doLast {
         copy {
-            from "src/utils/config.dev.ts"
+            from("src/utils/tmp/index.tmp") {
+                filter(ReplaceTokens, tokens: [classname: 'DevConfig'])
+            }
             into "src/utils/"
-            rename 'config.dev.ts', 'config.ts'
+            rename 'index.tmp', 'index.ts'
         }
     }
 }
 
-task copyProdConfig(type: Copy) {
-    from "src/utils/config.prod.ts"
-    into "src/utils/"
+import org.apache.tools.ant.filters.ReplaceTokens
 
-    rename 'config.prod.ts', 'config.ts'
+task copyProdConfig(type: Copy) {
+    from("src/utils/tmp/index.tmp") {
+        filter(ReplaceTokens, tokens: [classname: 'ProdConfig'])
+    }
+    into "src/utils/"
+    rename 'index.tmp', 'index.ts'
 }
 
 yarnBuild.dependsOn(copyProdConfig)

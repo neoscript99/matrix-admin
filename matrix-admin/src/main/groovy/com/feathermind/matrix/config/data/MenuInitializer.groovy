@@ -38,10 +38,10 @@ class MenuInitializer extends AbstractDataInitializer implements DataInitializer
     }
 
     private List initAdminMenu(def rootId) {
-        def sys = save(new Menu(label: '系统设置', seq: 90, parentId: rootId))
+        def sys = save(new Menu(label: '系统设置', seq: 90, parentId: rootId, icon: 'control'))
 
         [
-                new Menu(label: '用户管理', app: 'User', seq: 33, parentId: sys.id, icon: 'user'),
+                new Menu(label: '用户管理', app: 'User', seq: 33, parentId: sys.id, icon: 'usergroup-delete'),
                 new Menu(label: '用户角色', app: 'UserRole', seq: 44, parentId: sys.id, icon: 'deployment-unit'),
                 new Menu(label: '角色管理', app: 'Role', seq: 11, parentId: sys.id, icon: 'deployment-unit'),
                 new Menu(label: '机构管理', app: 'Dept', seq: 22, parentId: sys.id, icon: 'apartment'),
@@ -53,7 +53,7 @@ class MenuInitializer extends AbstractDataInitializer implements DataInitializer
     private List initNormalUsersMenu(def rootId) {
 
         [
-                new Menu(label: '个人设置', app: 'Profile', seq: 99, parentId: rootId, icon: 'edit')
+                new Menu(label: '个人设置', app: 'Profile', seq: 99, parentId: rootId, icon: 'user')
         ]
     }
 

@@ -46,12 +46,12 @@ export class TopicList extends EntityPageList {
   getQueryParam(): ListOptions {
     const param = super.getQueryParam();
     const {
-      searchParam: { topicName, initialCode, planYear, deptName },
+      searchParam: { topicName, initialCode, planYear, deptId },
     } = this.domainService.store;
     const criteria: Criteria = { like: [] };
     if (StringUtil.isNotBlank(topicName)) criteria.like!.push(['topicName', `%${topicName}%`]);
     if (StringUtil.isNotBlank(initialCode)) criteria.like!.push(['initialCode', `${initialCode}%`]);
-    if (StringUtil.isNotBlank(deptName)) criteria.dept = { like: [['name', `%${deptName}%`]] };
+    if (deptId) criteria.dept = { eq: [['id', deptId]] };
     if (planYear) criteria.initialPlan = { eq: [['planYear', planYear]] };
     return { ...param, criteria };
   }

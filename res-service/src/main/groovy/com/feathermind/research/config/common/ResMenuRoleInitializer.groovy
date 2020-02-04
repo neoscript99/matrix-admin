@@ -55,20 +55,20 @@ class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInit
     }
 
     List initBaseMenu() {
-        Menu parentMenu = save(new Menu(label: '基础信息', seq: 20, parentId: rootMenu.id))
+        Menu parentMenu = save(new Menu(label: '基础信息', seq: 20, parentId: rootMenu.id, icon: 'global'))
         def subList = [
                 new Menu(label: '课题查询', app: 'Topic', seq: 30, parentId: parentMenu.id, icon: 'book').save(),
                 //new Menu(label: '论文查询', app: 'Paper', seq: 40, parentId: parentMenu.id, icon: 'solution').save(),
         ]
         subList.each { new RoleMenu(RES_USER, it).save() }
-        subList << new Menu(label: '用户管理', app: 'ResUser', seq: 10, parentId: parentMenu.id, icon: 'user').save()
+        subList << new Menu(label: '用户管理', app: 'ResUser', seq: 10, parentId: parentMenu.id, icon: 'usergroup-delete').save()
         subList.each { new RoleMenu(DEPT_MANAGER, it).save() }
         subList << new Menu(label: '单位管理', app: 'ResDept', seq: 20, parentId: parentMenu.id, icon: 'apartment').save()
         return subList
     }
 
     List initTopicMenu() {
-        Menu parentMenu = save(new Menu(label: '立项管理', seq: 30, parentId: rootMenu.id))
+        Menu parentMenu = save(new Menu(label: '立项管理', seq: 30, parentId: rootMenu.id, icon: 'project'))
         def subList = [new Menu(label: '立项流程', app: 'InitialApply', seq: 20, parentId: parentMenu.id, icon: 'branches').save(),
                        new Menu(label: '结题流程', app: 'FinishApply', seq: 30, parentId: parentMenu.id, icon: 'branches').save(),
         ]
@@ -84,7 +84,7 @@ class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInit
     }
 
     List initReviewMenu() {
-        Menu parentMenu = save(new Menu(label: '评比管理', seq: 40, parentId: rootMenu.id))
+        Menu parentMenu = save(new Menu(label: '评比管理', seq: 40, parentId: rootMenu.id, icon: 'radar-chart'))
         def subList = [
                 new Menu(label: '成果评比', app: 'TopicReview', seq: 20, parentId: parentMenu.id, icon: 'area-chart').save(),
                 new Menu(label: '论文评比', app: 'PaperReview', seq: 30, parentId: parentMenu.id, icon: 'line-chart').save(),
