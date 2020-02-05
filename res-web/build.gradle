@@ -5,27 +5,28 @@ node {
     download = false
 }
 
-task yarnBuild(type: YarnTask) {
-    args = ['build']
-    doLast {
-        copy {
-            from("src/utils/tmp/index.tmp") {
-                filter(ReplaceTokens, tokens: [classname: 'DevConfig'])
-            }
-            into "src/utils/"
-            rename 'index.tmp', 'index.ts'
-        }
-    }
-}
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
-task copyProdConfig(type: Copy) {
-    from("src/utils/tmp/index.tmp") {
-        filter(ReplaceTokens, tokens: [classname: 'ProdConfig'])
+def copyConfig = { classname ->
+    copy {
+        from("src/utils/tmp/index.tmp") {
+            filter(ReplaceTokens, tokens: [classname: classname])
+        }
+        into "src/utils/"
+        rename 'index.tmp', 'index.ts'
     }
-    into "src/utils/"
-    rename 'index.tmp', 'index.ts'
+}
+
+task yarnBuild(type: YarnTask) {
+    args = ['build']
+    doLast {
+        copyConfig('DevConfig')
+    }
+}
+
+task copyProdConfig(type: Copy) {
+    copyConfig('ProdConfig')
 }
 
 yarnBuild.dependsOn(copyProdConfig)

@@ -15,5 +15,3 @@ out/
 .classpath
 .history/
 .idea/*
-!.idea/dictionaries
-!.idea/httpRequests/http-requests-log.http

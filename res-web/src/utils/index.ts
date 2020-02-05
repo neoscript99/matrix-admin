@@ -1,4 +1,4 @@
-import { DevConfig, ProdConfig } from './Config';
+import { DevConfig } from './Config';
 export * from './ApplyUtil';
 
 export const config = new DevConfig();

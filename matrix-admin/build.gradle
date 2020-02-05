@@ -29,6 +29,7 @@ repositories {
     mavenCentral()
     jcenter()
     maven { url "https://repo.grails.org/grails/core" }
+    maven { url "https://repo.gradle.org/gradle/libs-releases-local/" }
 }
 
 dependencies {
@@ -50,6 +51,14 @@ dependencies {
     api 'cn.hutool:hutool-core:5.0.3'
     api 'cn.hutool:hutool-crypto:5.0.3'
     implementation 'org.apache.poi:poi-ooxml:3.16'
+
+    def gradleVersion = '5.6.4'
+    testImplementation group: 'org.gradle', name: 'gradle-core', version: gradleVersion
+    testImplementation group: 'org.gradle', name: 'gradle-core-api', version: gradleVersion
+    testImplementation group: 'org.gradle', name: 'gradle-tooling-api', version: gradleVersion
+    testImplementation group: 'org.gradle', name: 'gradle-plugins', version: gradleVersion
+    testImplementation group: 'org.gradle', name: 'gradle-base-services', version: gradleVersion
+    testImplementation group: 'org.gradle', name: 'gradle-base-services-groovy', version: gradleVersion
 
     testImplementation("org.spockframework:spock-spring:$spockVersion")
     testImplementation('org.springframework.boot:spring-boot-starter-test') {

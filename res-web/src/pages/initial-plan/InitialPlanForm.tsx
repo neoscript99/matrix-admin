@@ -3,7 +3,7 @@ import { Form } from 'antd';
 import { EntityForm, commonRules, InputField, InputNumberField, SelectField, DatePickerField } from 'oo-rest-mobx';
 import moment from 'moment';
 import { dictService } from '../../services';
-const { required, numberRule } = commonRules;
+const { required, number } = commonRules;
 
 export class InitialPlanForm extends EntityForm {
   getForm() {
@@ -17,7 +17,7 @@ export class InitialPlanForm extends EntityForm {
           formUtils={form}
           maxLength={36}
           decorator={{ rules: [required] }}
-          disabled={readonly}
+          readonly={readonly}
         />
         <InputNumberField
           fieldId="planYear"
@@ -25,8 +25,8 @@ export class InitialPlanForm extends EntityForm {
           formUtils={form}
           min={1900}
           max={9999}
-          decorator={{ initialValue: year, rules: [numberRule] }}
-          disabled={readonly}
+          decorator={{ initialValue: year, rules: [number] }}
+          readonly={readonly}
         />
         <SelectField
           fieldId="planCateCode"
@@ -36,7 +36,7 @@ export class InitialPlanForm extends EntityForm {
           labelProp="name"
           valueProp="code"
           decorator={{ rules: [required] }}
-          disabled={readonly}
+          readonly={readonly}
         />
         <DatePickerField
           fieldId="planBeginDay"
@@ -44,7 +44,7 @@ export class InitialPlanForm extends EntityForm {
           formUtils={form}
           required
           defaultDiffDays={0}
-          disabled={readonly}
+          readonly={readonly}
         />
         <DatePickerField
           fieldId="planEndDay"
@@ -52,7 +52,7 @@ export class InitialPlanForm extends EntityForm {
           formUtils={form}
           required
           defaultDiffDays={90}
-          disabled={readonly}
+          readonly={readonly}
         />
         <DatePickerField
           fieldId="finishDeadline"
@@ -60,7 +60,7 @@ export class InitialPlanForm extends EntityForm {
           formUtils={form}
           required
           defaultDiffDays={730}
-          disabled={readonly}
+          readonly={readonly}
         />
         <InputNumberField
           fieldId="maxNumberPerDept"
@@ -69,7 +69,7 @@ export class InitialPlanForm extends EntityForm {
           min={0}
           max={99}
           title="本设置项和单位本身申报数，取最小值"
-          disabled={readonly}
+          readonly={readonly}
         />
       </Form>
     );
