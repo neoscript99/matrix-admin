@@ -3,7 +3,7 @@ import { EntityColumnProps, EntityFormProps } from 'oo-rest-mobx';
 import { dictService, initialApplyService, initialPlanService } from '../../services';
 import { observer } from 'mobx-react';
 import { Collapse } from 'antd';
-import { InitialPlanCard } from '../initial-plan';
+import { PlanCard } from '../../components';
 import { InitialApplyForm } from './InitialApplyForm';
 import { InitialApplyOperator } from './InitialApplyOperator';
 import { TopicList } from '../topic';
@@ -53,7 +53,7 @@ export class InitialApplyList extends TopicList {
             <Collapse.Panel header="进行中的立项申报计划" key="1">
               <div className="flex-row">
                 {planList.map(plan => (
-                  <InitialPlanCard key={plan.id} plan={plan} onApply={this.handleApply} />
+                  <PlanCard key={plan.id} plan={plan} onApply={this.handleApply} />
                 ))}
               </div>
             </Collapse.Panel>

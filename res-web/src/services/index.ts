@@ -39,6 +39,7 @@ export const finishApplyService = new TopicService(restClient);
 export const topicMemberService = new TopicMemberService(restClient);
 export const topicSupportService = new TopicSupportService(restClient);
 export const applyService = new DomainService({ domain: 'apply', restClient, storeClass });
+export const reviewPlanService = new DomainService({ domain: 'reviewPlan', restClient, storeClass });
 
 export const loginService = adminServices.loginService;
 //session登录不成功的话，尝试本地保存的用户密码登录

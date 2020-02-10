@@ -170,10 +170,10 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
     }
 
     void reviewTypeDict() {
-        def dictType = new DictType(id: 'res-review-type', name: '评审类型').save()
+        def dictType = new DictType(id: 'res-review-type', name: '评比类型').save()
 
-        new Dict(code: 'topic', name: '课题成果评审', seq: 10, type: dictType).save();
-        new Dict(code: 'paper', name: '论文评审', seq: 20, type: dictType).save();
+        new Dict(code: 'topic', name: '课题成果评比', seq: 10, type: dictType).save();
+        new Dict(code: 'paper', name: '论文评比', seq: 20, type: dictType).save();
     }
 
 

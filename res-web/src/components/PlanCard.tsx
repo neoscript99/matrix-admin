@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Card, Progress, Button } from 'antd';
 import { Entity } from 'oo-rest-mobx';
 import moment from 'moment';
-export interface InitialPlanCardProps {
+export interface PlanCardProps {
   plan: Entity;
   onApply: (plan: Entity) => void;
 }
-export class InitialPlanCard extends Component<InitialPlanCardProps> {
+export class PlanCard extends Component<PlanCardProps> {
   handleApply() {
     const { plan, onApply } = this.props;
     onApply(plan);

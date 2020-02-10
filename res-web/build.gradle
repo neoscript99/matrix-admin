@@ -9,6 +9,7 @@ node {
 import org.apache.tools.ant.filters.ReplaceTokens
 
 def copyConfig = { classname ->
+    println "copy $classname"
     copy {
         from("src/utils/tmp/index.tmp") {
             filter(ReplaceTokens, tokens: [classname: classname])
@@ -19,14 +20,14 @@ def copyConfig = { classname ->
 }
 
 task yarnBuild(type: YarnTask) {
-    args = ['build']
+    args = ['install']
     doLast {
         copyConfig('DevConfig')
     }
 }
 
 task copyProdConfig(type: Copy) {
-    copyConfig('ProdConfig')
+    doFirst { copyConfig('ProdConfig') }
 }
 
 yarnBuild.dependsOn(copyProdConfig)

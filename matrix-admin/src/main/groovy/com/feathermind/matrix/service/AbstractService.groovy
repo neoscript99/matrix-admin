@@ -20,7 +20,7 @@ abstract class AbstractService<T> {
     GeneralRepository generalRepository
 
     protected Logger log = LoggerFactory.getLogger(this.getClass())
-    private Class<T> domain;
+    Class<T> domain;
 
     public AbstractService() {
         Type genType = getClass().getGenericSuperclass();

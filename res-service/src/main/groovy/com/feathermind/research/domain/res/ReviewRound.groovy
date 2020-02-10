@@ -5,7 +5,7 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 /**
- * 课题成果、论文评审轮次
+ * 课题成果、论文评比轮次
  */
 @Entity
 @ToString(includePackage = false, includeNames = true, includes = 'plan,name')
