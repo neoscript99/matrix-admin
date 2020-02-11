@@ -11,7 +11,6 @@ import org.grails.datastore.gorm.GormEnhancer
 import org.grails.datastore.gorm.GormEntity
 import org.hibernate.SessionFactory
 import org.hibernate.criterion.CriteriaSpecification
-import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
@@ -31,7 +30,6 @@ class GormRepository implements GeneralRepository {
     @Autowired
     SessionFactory sessionFactory
 
-    static String[] PROPERTY_NOT_COPY = ['id', 'version', 'metaClass', 'lastUpdated', 'dateCreated'].toArray(new String[0])
     /**
      * @see GeneralRepository#get
      */
@@ -68,13 +66,17 @@ class GormRepository implements GeneralRepository {
     public <T> T saveMap(Class<T> domain, Map map) {
         GormEntity newEntity = JsonUtil.mapToBean(map, domain)
         if (newEntity.ident()) {
-            //支持部分属性更新,不能直接用bean做copy是因为bean会有初始话的值
             GormEntity updateEntity = get(domain, newEntity.ident())
-            BeanUtil.fillBeanWithMap(map, updateEntity, CopyOptions.create().setIgnoreProperties(PROPERTY_NOT_COPY))
+            //支持部分属性更新,用map做copy,不能直接用bean做copy是因为bean会有初始话的值
+            // Spring和common-beanUtils不支持嵌套属性
+            // hutool不支持trait属性，因为trait生成的field名带了前缀，而HuTools是根据field来copy的，不根据property
+            BeanUtil.fillBeanWithMap(map, updateEntity, PROPERTY_NOT_COPY)
             saveEntity(updateEntity)
         } else
             saveEntity(JsonUtil.mapToBean(map, domain))
     }
+
+    static CopyOptions PROPERTY_NOT_COPY = CopyOptions.create().setIgnoreProperties('id', 'version', 'metaClass', 'lastUpdated', 'dateCreated')
 
     /**
      * @see GeneralRepository#saveTransietEntity
@@ -88,7 +90,7 @@ class GormRepository implements GeneralRepository {
             if (attachedEntity.hasProperty('version'))
                 log.debug("old version is $attachedEntity.version")
 
-            BeanUtils.copyProperties(transietEntity, attachedEntity, PROPERTY_NOT_COPY)
+            BeanUtil.copyProperties(transietEntity, attachedEntity, PROPERTY_NOT_COPY)
             saveEntity(attachedEntity)
         } else //insert
             saveEntity(transietEntity)

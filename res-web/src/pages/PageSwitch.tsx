@@ -19,6 +19,8 @@ import { InitialApplyList } from './initial-apply';
 import { TopicList, TopicMember } from './topic';
 import { FinishApplyList } from './finish-apply';
 import { ReviewPlanList } from './review-plan';
+import { PaperList } from './review-apply';
+import { TopicAchieveList } from './review-apply/TopicAchieveList';
 
 const allOp: OperatorSwitch = { create: true, update: true, delete: true, view: true };
 export class PageSwitch extends Component<PageSwitchProps> {
@@ -57,6 +59,8 @@ export class PageSwitch extends Component<PageSwitchProps> {
         <Route path={`${pathPrefix}TopicMember/`}>{props => <TopicMember {...props} services={adminServices} />}</Route>
         <Route path={`${pathPrefix}FinishApply/`} component={FinishApplyList} />
         <Route path={`${pathPrefix}ReviewPlan/`} component={ReviewPlanList} />
+        <Route path={`${pathPrefix}PaperReview/`} component={PaperList} />
+        <Route path={`${pathPrefix}TopicReview/`} component={TopicAchieveList} />
         <Route render={() => <Welcome />} />
       </Switch>
     );

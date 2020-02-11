@@ -2,6 +2,7 @@ package com.feathermind.research.domain.res
 
 import com.feathermind.matrix.domain.sys.AttachmentInfo
 import com.feathermind.matrix.domain.wf.Apply
+import com.feathermind.matrix.trait.AutoTime
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -10,17 +11,18 @@ import groovy.transform.ToString
  * 课题成果
  * “成果名称、负责人、团队成员”都可能和课题不一样
  * 团队成员
- * @see TopicAchieveMember
  */
 @Entity
 @ToString(includePackage = false, includeNames = true, includes = 'achieveName')
 @EqualsAndHashCode(includes = 'id')
-class TopicAchieve {
+class TopicAchieve implements AutoTime{
     String id
     //成果名称
     String achieveName
     //成果负责人姓名
     ResUser personInCharge
+    //课题组成员, 0-4人
+    String members
     //成果类别
     String achieveCateCode
     //立项情况
@@ -44,5 +46,6 @@ class TopicAchieve {
     }
     static constraints = {
         duplicateCheck nullable: true
+        members nullable: true, maxSize: 512
     }
 }

@@ -176,6 +176,24 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         new Dict(code: 'paper', name: '论文评比', seq: 20, type: dictType).save();
     }
 
+    /**
+     * 暂不需要，根据评比申报是否截止，决定能否修改论文和成果的基本信息
+     */
+    void reviewStatusDict() {
+        def dictType = new DictType(id: 'res-review-status', name: '评比状态').save()
+
+        new Dict(code: 'created', name: '新建', seq: 10, type: dictType).save();
+        new Dict(code: 'reviewing', name: '已评审', seq: 20, type: dictType).save();
+        new Dict(code: 'reviewed', name: '评审完成', seq: 30, type: dictType).save();
+    }
+
+    void planStatusDict() {
+        def dictType = new DictType(id: 'res-plan-status', name: '计划状态').save()
+
+        new Dict(code: '未开始', name: 'before', seq: 10, type: dictType).save();
+        new Dict(code: '进行中', name: 'going', seq: 20, type: dictType).save();
+        new Dict(code: '已完成', name: 'done', seq: 30, type: dictType).save();
+    }
 
     void projectLevelDict() {
         def dictType = new DictType(id: 'res-project-level', name: '立项情况').save()

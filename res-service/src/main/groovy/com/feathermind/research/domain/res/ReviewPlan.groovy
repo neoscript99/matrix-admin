@@ -12,7 +12,7 @@ import groovy.transform.ToString
 @ToString(includePackage = false, includeNames = true, includes = 'planName')
 @EqualsAndHashCode(includes = 'id')
 @InitializeDomain(profiles = 'dev')
-class ReviewPlan {
+class ReviewPlan implements PlanTrait {
     String id
     //评比类型：成果或论文
     String reviewTypeCode

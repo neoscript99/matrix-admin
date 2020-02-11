@@ -1,13 +1,12 @@
 package com.feathermind.research.domain.res
 
-import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 /**
  * 课题成果团队成员信息
+ * 直接放到主表中，逗号分隔id
  */
-@Entity
 @ToString(includePackage = false, includeNames = true, includes = 'topicAchieve,member')
 @EqualsAndHashCode(includes = 'id')
 class TopicAchieveMember {

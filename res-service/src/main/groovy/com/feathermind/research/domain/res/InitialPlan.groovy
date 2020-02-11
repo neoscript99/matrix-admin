@@ -13,7 +13,7 @@ import groovy.transform.ToString
 @ToString(includePackage = false, includeNames = true, includes = 'planName')
 @EqualsAndHashCode(includes = 'id')
 @InitializeDomain(profiles = 'dev')
-class InitialPlan {
+class InitialPlan implements PlanTrait{
     String id
     String planName
     //立项年度
@@ -28,19 +28,7 @@ class InitialPlan {
     String finishDeadline
     //每个单位最多可申报数
     Integer maxNumberPerDept
-    /**
-     * 单位申报数比例设置
-     * 单位申报数*比例 计算取整方式：1、上浮 ceil 2、四舍五入 round 3、截断 floor
-     * 可增加字典项，暂时不做处理
-     */
-    //String deptNumberRate
-    //String roundMethod
 
-    Date dateCreated
-    Date lastUpdated
-
-    static mapping = {
-    }
     static constraints = {
         maxNumberPerDept nullable: true
     }

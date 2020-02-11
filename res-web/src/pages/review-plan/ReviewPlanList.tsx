@@ -10,6 +10,7 @@ import {
 } from 'oo-rest-mobx';
 import { dictService, reviewPlanService } from '../../services';
 import { observer } from 'mobx-react';
+import { ReviewPlanForm } from './ReviewPlanForm';
 const columns: EntityColumnProps[] = [
   { title: '计划标题', dataIndex: 'planName' },
   { title: '立项年度', dataIndex: 'planYear' },
@@ -27,7 +28,7 @@ export class ReviewPlanList extends EntityPageList {
     return columns;
   }
   getQueryParam(): ListOptions {
-    const param = { order: [['planBeginDay', 'desc']] } as ListOptions;
+    const param = super.getQueryParam();
     const { searchKey } = this.domainService.store.searchParam;
     if (StringUtil.isNotBlank(searchKey)) {
       param.criteria = { like: [['planName', `%${searchKey}%`]] };
@@ -36,6 +37,9 @@ export class ReviewPlanList extends EntityPageList {
   }
   get name() {
     return '评比计划';
+  }
+  getEntityForm() {
+    return ReviewPlanForm;
   }
   getSearchForm() {
     return ReviewPlanSearchForm;

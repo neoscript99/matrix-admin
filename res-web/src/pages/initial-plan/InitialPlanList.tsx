@@ -14,12 +14,6 @@ const columns: EntityColumnProps[] = [
 
 @observer
 export class InitialPlanList extends EntityPageList {
-  render() {
-    //依赖dictService.store.allList
-    console.log('WorkPlanList.render: ', dictService.store.allList.length);
-    return super.render();
-  }
-
   get columns() {
     return columns;
   }
@@ -36,9 +30,9 @@ export class InitialPlanList extends EntityPageList {
   }
   getQueryParam(): ListOptions {
     const param = super.getQueryParam();
-    const { searchParam } = this.domainService.store;
-    if (searchParam && StringUtil.isNotBlank(searchParam.searchKey)) {
-      const key = `%${searchParam.searchKey}%`;
+    const { searchKey } = this.domainService.store.searchParam;
+    if (StringUtil.isNotBlank(searchKey)) {
+      const key = `%${searchKey}%`;
       param.criteria = { like: [['planName', key]] };
     }
     return param;
@@ -46,5 +40,5 @@ export class InitialPlanList extends EntityPageList {
 }
 
 export class InitialPlanSearchForm extends SimpleSearchForm {
-  placeholder = '计划标题';
+  placeholder = '标题';
 }
