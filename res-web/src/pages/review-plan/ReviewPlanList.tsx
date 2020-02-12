@@ -17,6 +17,11 @@ const columns: EntityColumnProps[] = [
   { title: '评比类型', dataIndex: 'reviewTypeCode', render: dictService.dictRender.bind(null, 'res-review-type') },
   { title: '申报开始日期', dataIndex: 'planBeginDay' },
   { title: '申报截止日期', dataIndex: 'planEndDay' },
+  {
+    title: '评比状态',
+    dataIndex: 'planStatusCode',
+    render: dictService.dictRender.bind(null, 'res-plan-status'),
+  },
 ];
 
 @observer

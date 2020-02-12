@@ -1,11 +1,11 @@
 import { ReviewApplyList } from './ReviewApplyList';
 import { EntityColumnProps, DomainService } from 'oo-rest-mobx';
 import { dictService, paperService } from '../../services';
+import { PaperForm } from './PaperForm';
 const columns: EntityColumnProps[] = [
   { title: '论文题目', dataIndex: 'title' },
   { title: '论文作者', dataIndex: 'author.name' },
-  { title: '所属计划', dataIndex: 'reviewPlan.planName' },
-  { title: '论文状态', dataIndex: 'reviewStatusCode', render: dictService.dictRender.bind(null, 'res-review-status') },
+  ...ReviewApplyList.planColumns,
 ];
 
 export class PaperList extends ReviewApplyList {
@@ -19,5 +19,13 @@ export class PaperList extends ReviewApplyList {
 
   get reviewTypeCode(): string {
     return 'paper';
+  }
+
+  getEntityForm() {
+    return PaperForm;
+  }
+
+  get name() {
+    return '论文';
   }
 }

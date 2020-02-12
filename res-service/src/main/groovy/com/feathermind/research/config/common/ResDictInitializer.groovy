@@ -28,11 +28,12 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         resAchieveCateDict()
         applyStatusDict()
         topicStatusDict()
-
+        planStatusDict()
         reviewTypeDict()
+        projectLevelDict()
     }
 
-    void initParam(){
+    void initParam() {
         new Param(code: 'ChangeInitPassword', name: '强制修改初始密码',
                 value: 'false', type: ParamType.SYSTEM, validExp: '^(true|false)$',
                 validDescribe: 'true或者false', lastUser: User.ADMIN).save()
@@ -190,9 +191,9 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
     void planStatusDict() {
         def dictType = new DictType(id: 'res-plan-status', name: '计划状态').save()
 
-        new Dict(code: '未开始', name: 'before', seq: 10, type: dictType).save();
-        new Dict(code: '进行中', name: 'going', seq: 20, type: dictType).save();
-        new Dict(code: '已完成', name: 'done', seq: 30, type: dictType).save();
+        new Dict(code: 'before', name: '未开始', seq: 10, type: dictType).save();
+        new Dict(code: 'going', name: '材料上报', seq: 20, type: dictType).save();
+        new Dict(code: 'done', name: '评分统计', seq: 30, type: dictType).save();
     }
 
     void projectLevelDict() {

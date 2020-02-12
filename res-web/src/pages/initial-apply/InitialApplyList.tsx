@@ -48,7 +48,7 @@ export class InitialApplyList extends TopicList {
     return (
       <React.Fragment>
         {super.render()}
-        {planList && (
+        {planList && planList.length > 0 && (
           <Collapse style={{ marginTop: '1em' }} defaultActiveKey="1">
             <Collapse.Panel header="进行中的立项申报计划" key="1">
               <div className="flex-row">

@@ -1,7 +1,6 @@
 package com.feathermind.research.domain.res
 
 import com.feathermind.matrix.domain.sys.AttachmentInfo
-import com.feathermind.matrix.domain.wf.Apply
 import com.feathermind.matrix.trait.AutoTime
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
@@ -34,14 +33,13 @@ class TopicAchieve implements AutoTime{
     AttachmentInfo mainReport
 
     ReviewPlan reviewPlan
-    Apply reviewApply
     CheckResult duplicateCheck
 
     static mapping = {
         personInCharge fetch: 'join', lazy: false
+        summary fetch: 'join', lazy: false
         mainReport fetch: 'join', lazy: false
         reviewPlan fetch: 'join', lazy: false
-        reviewApply fetch: 'join', lazy: false
         duplicateCheck fetch: 'join', lazy: false
     }
     static constraints = {

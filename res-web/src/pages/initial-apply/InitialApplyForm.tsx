@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  EntityForm,
+  InfoIcon,
   StyleUtil,
   InputField,
   commonRules,
@@ -15,7 +15,7 @@ import {
 import { Typography, Form, Popover } from 'antd';
 import { dictService, topicService, loginService, resUserService, applyService, adminServices } from '../../services';
 import moment from 'moment';
-import { InfoIcon } from '../../components';
+import { DeptUserForm, DeptUserFormState } from '../../components';
 import { config } from '../../utils';
 
 const { Title, Paragraph } = Typography;
@@ -24,8 +24,7 @@ export interface InitialApplyFormProps extends EntityFormProps {
   inputItem: Entity;
 }
 
-interface S {
-  deptUserList?: any[];
+interface S extends DeptUserFormState {
   qualification: QualificationCheckResult;
 }
 
@@ -34,18 +33,19 @@ interface QualificationCheckResult {
   reasons: string[];
 }
 
-export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
+export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
   state = { qualification: { success: true, reasons: [] } } as S;
   async componentDidMount() {
+    await super.componentDidMount();
     const { inputItem } = this.props;
-    const dept = loginService.dept!;
-    //只能选择有身份证的用户
-    const deptUserList = (await resUserService.getDeptUsers(dept)).filter(user => !!user.idCard);
     //新增需做校验，修改时不用
     if (!inputItem?.id) {
-      const qualification = await topicService.checkQualification(this.props.inputItem.initialPlan.id, dept.id);
-      this.setState({ deptUserList, qualification });
-    } else this.setState({ deptUserList });
+      const qualification = await topicService.checkQualification(
+        this.props.inputItem.initialPlan.id,
+        loginService.dept!.id,
+      );
+      this.setState({ qualification });
+    }
   }
 
   getContainerProps() {
@@ -124,6 +124,7 @@ export class InitialApplyForm extends EntityForm<InitialApplyFormProps, S> {
             dataSource={deptUserList}
             valueProp="id"
             labelProp="name"
+            showSearch
             decorator={req}
             readonly={readonly}
           />

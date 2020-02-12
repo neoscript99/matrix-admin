@@ -1,16 +1,19 @@
 import React from 'react';
-import { UserForm, commonRules, CommonValidators, InputField, SelectField, StringUtil, Entity } from 'oo-rest-mobx';
+import {
+  UserForm,
+  commonRules,
+  TooltipLabel,
+  CommonValidators,
+  InputField,
+  SelectField,
+  StringUtil,
+  Entity,
+} from 'oo-rest-mobx';
 import { resUserService } from '../../services';
-import { InfoIcon } from '../../components';
-import { Tooltip } from 'antd';
+import { config } from '../../utils';
 const { required } = commonRules;
 
-const idCardLabel = (
-  <Tooltip title="单位管理员录入身份证后不能修改，请仔细核对">
-    <span>身份证</span>
-    <InfoIcon />
-  </Tooltip>
-);
+const idCardLabel = <TooltipLabel tooltip="单位管理员录入身份证后不能修改，请仔细核对" label="身份证" />;
 export class ResUserForm extends UserForm {
   get userService() {
     return resUserService;
@@ -49,7 +52,7 @@ export class ResUserForm extends UserForm {
           formUtils={form}
           maxLength={18}
           decorator={{
-            rules: [...req.rules, commonRules.idCard],
+            rules: [...req.rules, config.isDev() ? commonRules.idCardSimple : commonRules.idCard],
           }}
           readonly={readonly || idCardRead}
         />

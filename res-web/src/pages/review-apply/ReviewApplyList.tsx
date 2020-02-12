@@ -1,10 +1,18 @@
 import React from 'react';
-import { EntityPageList } from 'oo-rest-mobx';
-import { reviewPlanService } from '../../services';
+import { EntityPageList, EntityColumnProps } from 'oo-rest-mobx';
+import { dictService, reviewPlanService } from '../../services';
 import { Collapse } from 'antd';
 import { PlanCard } from '../../components';
 
 export abstract class ReviewApplyList extends EntityPageList {
+  static planColumns: EntityColumnProps[] = [
+    { title: '评比计划', dataIndex: 'reviewPlan.planName' },
+    {
+      title: '评比状态',
+      dataIndex: 'reviewPlan.planStatusCode',
+      render: dictService.dictRender.bind(null, 'res-plan-status'),
+    },
+  ];
   abstract get reviewTypeCode(): string;
   render() {
     const { startedList } = reviewPlanService.store;
@@ -12,7 +20,7 @@ export abstract class ReviewApplyList extends EntityPageList {
     return (
       <React.Fragment>
         {super.render()}
-        {planList && (
+        {planList && planList.length > 0 && (
           <Collapse style={{ marginTop: '1em' }} defaultActiveKey="1">
             <Collapse.Panel header="进行中的评比计划" key="1">
               <div className="flex-row">
