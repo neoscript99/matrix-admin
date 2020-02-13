@@ -22,4 +22,16 @@ export class ResUserList<
   getSearchForm() {
     return UserSearchForm;
   }
+  handleFormSuccess(item: any): void {
+    //用户新增或修改后，清除部门用户缓存
+    resUserService.clearCurrentDeptUsers();
+    super.handleFormSuccess(item);
+  }
+  handleDelete(): Promise<any> {
+    return super.handleDelete().then(res => {
+      //用户删除后，清除部门用户缓存
+      resUserService.clearCurrentDeptUsers();
+      return res;
+    });
+  }
 }

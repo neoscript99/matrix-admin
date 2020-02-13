@@ -8,4 +8,8 @@ export class TopicService extends DomainService {
   checkQualification(initialPlanId, deptId) {
     return this.postApi('checkQualification', { initialPlanId, deptId });
   }
+
+  findByStatus(status: string) {
+    return this.list({ criteria: { eq: [['topicStatusCode', status]] }, orders: ['topicName'] });
+  }
 }

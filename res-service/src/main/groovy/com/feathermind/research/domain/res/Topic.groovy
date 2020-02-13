@@ -85,6 +85,7 @@ class Topic {
         initialReport nullable: true
         prepareAchieveFormCodes maxSize: 256
         initialCode nullable: true
+        researchSubjectCode nullable: true
 
         mainReport nullable: true
         achieveFormCodes nullable: true, maxSize: 256

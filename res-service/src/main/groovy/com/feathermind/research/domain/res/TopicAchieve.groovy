@@ -34,6 +34,8 @@ class TopicAchieve implements AutoTime{
 
     ReviewPlan reviewPlan
     CheckResult duplicateCheck
+    Topic topic
+    ResDept dept
 
     static mapping = {
         personInCharge fetch: 'join', lazy: false
@@ -41,6 +43,8 @@ class TopicAchieve implements AutoTime{
         mainReport fetch: 'join', lazy: false
         reviewPlan fetch: 'join', lazy: false
         duplicateCheck fetch: 'join', lazy: false
+        topic fetch: 'join', lazy: false
+        dept fetch: 'join', lazy: false
     }
     static constraints = {
         duplicateCheck nullable: true

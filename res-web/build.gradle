@@ -20,13 +20,13 @@ def copyConfig = { classname ->
 }
 
 task yarnBuild(type: YarnTask) {
-    args = ['install']
+    args = ['build']
     doLast {
         copyConfig('DevConfig')
     }
 }
 
-task copyProdConfig(type: Copy) {
+task copyProdConfig {
     doFirst { copyConfig('ProdConfig') }
 }
 

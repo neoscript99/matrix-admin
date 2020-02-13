@@ -21,4 +21,8 @@ export class ResUserService extends UserService {
   async getDeptUsersWithIdCard() {
     return loginService.dept && (await this.getDeptUsers(loginService.dept)).filter(user => !!user.idCard);
   }
+
+  clearCurrentDeptUsers() {
+    loginService.dept && this.clearDeptUsers(loginService.dept);
+  }
 }

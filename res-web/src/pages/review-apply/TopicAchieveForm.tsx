@@ -1,11 +1,38 @@
 import React from 'react';
-import { InputField, commonRules, TooltipLabel, UploadField, SelectField, DictSelectField } from 'oo-rest-mobx';
+import {
+  InputField,
+  commonRules,
+  TooltipLabel,
+  UploadField,
+  SelectField,
+  DictSelectField,
+  Entity,
+  EntityFormProps,
+} from 'oo-rest-mobx';
 import { Form } from 'antd';
-import { adminServices, dictService } from '../../services';
-import { DeptUserForm } from '../../components';
+import { adminServices, dictService, loginService, topicService } from '../../services';
+import { DeptUserForm, DeptUserFormState } from '../../components';
 import { config } from '../../utils';
 
-export class TopicAchieveForm extends DeptUserForm {
+interface S extends DeptUserFormState {
+  finishedTopicList?: Entity[];
+}
+export class TopicAchieveForm extends DeptUserForm<EntityFormProps, S> {
+  state = {} as S;
+  async componentDidMount() {
+    await super.componentDidMount();
+    //查找结题的课题
+    const finishedTopicList = (await topicService.findByStatus('finished')).results;
+    const { inputItem } = this.props;
+    //原来选择的课题已变为reviewed，但需加入
+    if (inputItem?.topic) finishedTopicList.unshift(inputItem.topic);
+    this.setState({ finishedTopicList });
+  }
+  saveEntity(saveItem: Entity) {
+    saveItem.dept = { id: loginService.dept!.id };
+    return super.saveEntity(saveItem);
+  }
+
   getForm() {
     const { form, readonly } = this.props;
     const req = { rules: [commonRules.required] };
@@ -21,6 +48,18 @@ export class TopicAchieveForm extends DeptUserForm {
           readonly={readonly}
         />
         <SelectField
+          fieldId="topic.id"
+          formItemProps={{ label: '课题' }}
+          formUtils={form}
+          dataSource={this.state.finishedTopicList}
+          valueProp="id"
+          labelProp="topicName"
+          decorator={req}
+          showSearch={true}
+          defaultSelectFirst={isDev}
+          readonly={readonly}
+        />
+        <SelectField
           fieldId="personInCharge.id"
           formItemProps={{ label: '成果负责人' }}
           formUtils={form}
@@ -29,6 +68,7 @@ export class TopicAchieveForm extends DeptUserForm {
           labelProp="name"
           decorator={req}
           showSearch={true}
+          defaultSelectFirst={isDev}
           readonly={readonly}
         />
         <SelectField
@@ -40,6 +80,7 @@ export class TopicAchieveForm extends DeptUserForm {
           labelProp="name"
           decorator={req}
           showSearch={true}
+          defaultSelectFirst={isDev}
           mode="multiple"
           readonly={readonly}
         />

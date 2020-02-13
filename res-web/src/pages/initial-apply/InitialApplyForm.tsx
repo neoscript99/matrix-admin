@@ -11,9 +11,10 @@ import {
   DictSelectField,
   SelectField,
   UploadField,
+  TooltipLabel,
 } from 'oo-rest-mobx';
 import { Typography, Form, Popover } from 'antd';
-import { dictService, topicService, loginService, resUserService, applyService, adminServices } from '../../services';
+import { dictService, topicService, loginService, applyService, adminServices } from '../../services';
 import moment from 'moment';
 import { DeptUserForm, DeptUserFormState } from '../../components';
 import { config } from '../../utils';
@@ -88,6 +89,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
     const important = initialPlan.planCateCode === 'YZZD';
     const req = { rules: [commonRules.required] };
     const isDev = config.isDev();
+    const isCourseMethod = form?.getFieldValue('researchContentCode') === 'course-material-method';
     if (qualification.success)
       return (
         <Form style={StyleUtil.flexForm()}>
@@ -119,7 +121,10 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
           )}
           <SelectField
             fieldId="personInCharge.id"
-            formItemProps={{ label: '课题负责人', style: itemCss }}
+            formItemProps={{
+              label: <TooltipLabel label="课题负责人" tooltip="可先在‘基础信息>>用户管理’中添加" />,
+              style: itemCss,
+            }}
             formUtils={form}
             dataSource={deptUserList}
             valueProp="id"
@@ -150,6 +155,16 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
             readonly={readonly}
           />
           <DictSelectField
+            fieldId="researchTargetCode"
+            formItemProps={{ label: '研究对象', style: itemCss }}
+            dictService={dictService}
+            dictType="res-target"
+            formUtils={form}
+            decorator={req}
+            defaultSelectFirst={isDev}
+            readonly={readonly}
+          />
+          <DictSelectField
             fieldId="researchContentCode"
             formItemProps={{ label: '研究内容', style: itemCss }}
             dictService={dictService}
@@ -161,23 +176,15 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
           />
           <DictSelectField
             fieldId="researchSubjectCode"
-            formItemProps={{ label: '涉及学科', style: itemCss }}
+            formItemProps={{
+              label: <TooltipLabel label="涉及学科" tooltip="选择‘课程教材教法’时需设置" />,
+              style: itemCss,
+            }}
             dictService={dictService}
             dictType="res-subject"
             formUtils={form}
-            decorator={req}
-            defaultSelectFirst={isDev}
-            readonly={readonly}
-          />
-          <DictSelectField
-            fieldId="researchTargetCode"
-            formItemProps={{ label: '研究对象', style: itemCss }}
-            dictService={dictService}
-            dictType="res-target"
-            formUtils={form}
-            decorator={req}
-            defaultSelectFirst={isDev}
-            readonly={readonly}
+            decorator={isCourseMethod ? req : undefined}
+            readonly={readonly || !isCourseMethod}
           />
           <DictSelectField
             fieldId="prepareAchieveFormCodes"

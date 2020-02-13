@@ -5,6 +5,7 @@ import com.feathermind.matrix.service.AbstractService
 import com.feathermind.research.service.InitialPlanService
 import com.feathermind.research.service.QualificationCheckResult
 import com.feathermind.research.service.ResDeptService
+import com.feathermind.research.trait.ListByRole
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,35 +15,15 @@ import org.springframework.web.bind.annotation.RestController
 import com.feathermind.research.domain.res.Topic
 import com.feathermind.research.service.TopicService
 
-import static com.feathermind.research.config.common.InitEntity.DEPT_MANAGER
-import static com.feathermind.research.config.common.InitEntity.MAIN_MANAGER
-import static com.feathermind.research.config.common.InitEntity.RES_USER
-
 @RestController
 @RequestMapping("/api/topic")
-class TopicController extends DomainController<Topic> {
+class TopicController extends DomainController<Topic> implements ListByRole {
     @Autowired
     TopicService topicService
     @Autowired
     InitialPlanService initialPlanService
     @Autowired
     ResDeptService resDeptService
-
-    Map preList(Map criteria) {
-        def user = this.getSessionUser(true)
-        def roles = this.getToken().roles.split(',')
-        if (!roles.contains(MAIN_MANAGER.roleCode)) {
-            if (!criteria.eq)
-                criteria.eq = []
-            if (roles.contains(DEPT_MANAGER.roleCode))
-                criteria.eq << ['dept.id', user.dept.id]
-            else if (roles.contains(RES_USER.roleCode))
-                criteria.eq << ['personInCharge', user]
-            else
-                throw new RuntimeException('当前用户没有权限')
-        }
-        return criteria
-    }
 
     @PostMapping("/checkQualification")
     ResponseEntity<QualificationCheckResult> checkQualification(@RequestBody Map req) {

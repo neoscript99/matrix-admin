@@ -1,5 +1,5 @@
 import React from 'react';
-import { EntityPageList, EntityColumnProps } from 'oo-rest-mobx';
+import { EntityPageList, EntityColumnProps, ListOptions, StringUtil, TooltipLabel } from 'oo-rest-mobx';
 import { dictService, reviewPlanService } from '../../services';
 import { Collapse } from 'antd';
 import { PlanCard } from '../../components';
@@ -8,7 +8,7 @@ export abstract class ReviewApplyList extends EntityPageList {
   static planColumns: EntityColumnProps[] = [
     { title: '评比计划', dataIndex: 'reviewPlan.planName' },
     {
-      title: '评比状态',
+      title: <TooltipLabel label="评比状态" tooltip="开始评分统计后的记录不能删除或修改" />,
       dataIndex: 'reviewPlan.planStatusCode',
       render: dictService.dictRender.bind(null, 'res-plan-status'),
     },
@@ -39,4 +39,25 @@ export abstract class ReviewApplyList extends EntityPageList {
     const formProps = this.genFormProps('提交', item);
     this.setState({ formProps });
   };
+  getOperatorVisible() {
+    return { update: true, view: true, delete: true };
+  }
+  getOperatorEnable() {
+    const { selectedRowKeys } = this.state;
+    const selectedNum = selectedRowKeys ? selectedRowKeys.length : 0;
+    const editable = selectedNum === 1 && this.getSelectItem()?.reviewPlan.planStatusCode === 'going';
+    return { update: editable, view: selectedNum === 1, delete: editable };
+  }
+
+  getQueryParam(): ListOptions {
+    const param = super.getQueryParam();
+    const { searchKey } = this.domainService.store.searchParam;
+    if (StringUtil.isNotBlank(searchKey)) {
+      const key = `%${searchKey}%`;
+      param.criteria = {
+        or: { like: [[this.columns[0].dataIndex as string, key]], reviewPlan: { like: [['planName', key]] } },
+      };
+    }
+    return param;
+  }
 }

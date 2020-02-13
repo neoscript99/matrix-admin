@@ -43,10 +43,10 @@ class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInit
         allList.addAll(initTopicMenu())
         allList.addAll(initReviewMenu())
         allList.each {
-            new RoleMenu(role: Role.ADMINISTRATORS, menu: it).save()
+            //new RoleMenu(role: Role.ADMINISTRATORS, menu: it).save()
             new RoleMenu(role: MAIN_MANAGER, menu: it).save()
         }
-        RoleMenu.findAllByRole(Role.NORMAL_USERS).each {
+        RoleMenu.findAllByRole(Role.PUBLIC).each {
             new RoleMenu(RES_USER, it.menu).save()
             new RoleMenu(DEPT_MANAGER, it.menu).save()
             new RoleMenu(EXPERT, it.menu).save()
@@ -57,8 +57,7 @@ class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInit
     List initBaseMenu() {
         Menu parentMenu = save(new Menu(label: '基础信息', seq: 20, parentId: rootMenu.id, icon: 'global'))
         def subList = [
-                new Menu(label: '课题查询', app: 'Topic', seq: 30, parentId: parentMenu.id, icon: 'book').save(),
-                //new Menu(label: '论文查询', app: 'Paper', seq: 40, parentId: parentMenu.id, icon: 'solution').save(),
+                new Menu(label: '个人设置', app: 'Profile', seq: 30, parentId: parentMenu.id, icon: 'user').save()
         ]
         subList.each { new RoleMenu(RES_USER, it).save() }
         subList << new Menu(label: '用户管理', app: 'ResUser', seq: 10, parentId: parentMenu.id, icon: 'usergroup-delete').save()
@@ -68,9 +67,12 @@ class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInit
     }
 
     List initTopicMenu() {
-        Menu parentMenu = save(new Menu(label: '立项管理', seq: 30, parentId: rootMenu.id, icon: 'project'))
-        def subList = [new Menu(label: '立项流程', app: 'InitialApply', seq: 20, parentId: parentMenu.id, icon: 'branches').save(),
-                       new Menu(label: '结题流程', app: 'FinishApply', seq: 30, parentId: parentMenu.id, icon: 'branches').save(),
+        Menu parentMenu = save(new Menu(label: '课题管理', seq: 30, parentId: rootMenu.id, icon: 'project'))
+        def subList = [
+                new Menu(label: '课题查询', app: 'Topic', seq: 10, parentId: parentMenu.id, icon: 'book').save(),
+                //new Menu(label: '论文查询', app: 'Paper', seq: 40, parentId: parentMenu.id, icon: 'solution').save(),
+                new Menu(label: '立项', app: 'InitialApply', seq: 20, parentId: parentMenu.id, icon: 'branches').save(),
+                new Menu(label: '结题', app: 'FinishApply', seq: 30, parentId: parentMenu.id, icon: 'branches').save(),
         ]
         subList.each {
             new RoleMenu(DEPT_MANAGER, it).save()
@@ -89,19 +91,15 @@ class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInit
                 new Menu(label: '成果评比', app: 'TopicReview', seq: 20, parentId: parentMenu.id, icon: 'area-chart').save(),
                 new Menu(label: '论文评比', app: 'PaperReview', seq: 30, parentId: parentMenu.id, icon: 'line-chart').save(),
         ]
-
         subList.each {
+            new RoleMenu(DEPT_MANAGER, it).save()
+            new RoleMenu(RES_USER, it).save()
             new RoleMenu(EXPERT, it).save()
         }
         subList.addAll([
                 new Menu(label: '评比计划', app: 'ReviewPlan', seq: 10, parentId: parentMenu.id, icon: 'schedule').save(),
-                new Menu(label: '结果查询', app: 'PaperReview', seq: 40, parentId: parentMenu.id, icon: 'table').save(),
+                new Menu(label: '结果查询', app: 'ReviewResult', seq: 40, parentId: parentMenu.id, icon: 'table').save(),
         ])
-
-        /*subList.each {
-            new RoleMenu(DEPT_MANAGER, it).save()
-            new RoleMenu(RES_USER, it).save()
-        }*/
 
         return subList
     }

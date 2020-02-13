@@ -2,6 +2,7 @@ import React from 'react';
 import { EntityForm, StyleUtil, DictSelectField, UploadField, commonRules } from 'oo-rest-mobx';
 import { Form } from 'antd';
 import { adminServices, applyService, dictService, loginService } from '../../services';
+import { config } from '../../utils';
 
 export class FinishApplyForm extends EntityForm {
   async saveEntity(saveItem) {
@@ -28,6 +29,7 @@ export class FinishApplyForm extends EntityForm {
           formUtils={form}
           decorator={req}
           mode="multiple"
+          defaultSelectFirst={config.isDev()}
           readonly={readonly}
         />
         <UploadField
