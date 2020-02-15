@@ -1,10 +1,21 @@
 import React from 'react';
-import { EntityPageList, EntityColumnProps, ListOptions, StringUtil, TooltipLabel } from 'oo-rest-mobx';
+import {
+  EntityPageList,
+  EntityColumnProps,
+  ListOptions,
+  StringUtil,
+  TooltipLabel,
+  EntityListProps,
+  EntityListState,
+} from 'oo-rest-mobx';
 import { dictService, reviewPlanService } from '../../services';
 import { Collapse } from 'antd';
 import { PlanCard } from '../../components';
 
-export abstract class ReviewApplyList extends EntityPageList {
+export abstract class ReviewApplyList<
+  P extends EntityListProps = EntityListProps,
+  S extends EntityListState = EntityListState
+> extends EntityPageList<P, S> {
   static planColumns: EntityColumnProps[] = [
     { title: '评比计划', dataIndex: 'reviewPlan.planName' },
     {

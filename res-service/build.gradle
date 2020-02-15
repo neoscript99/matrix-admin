@@ -30,6 +30,12 @@ dependencies {
     }
 }
 
+bootRun {
+    jvmArgs('-Dspring.output.ansi.enabled=always')
+    systemProperty 'spring.profiles.active', 'dev'
+    systemProperty 'init', 'true'
+    systemProperties System.properties
+}
 
 task copyReact(type: Copy) {
     from('../res-web/build/') {

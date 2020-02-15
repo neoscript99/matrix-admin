@@ -63,16 +63,22 @@ export class TopicList extends EntityPageList {
 
   async showTopic(topic) {
     if (topic && topic.id) {
-      topic.supports = await topicSupportService.getSupports(topic.id!);
-      topic.members = await topicMemberService.getMembers(topic.id!);
-      const formProps = {
-        ...this.genFormProps('查看', topic),
-        readonly: true,
-        title: '课题详情',
-        modalProps: { width: '75em' },
-      };
+      const formProps = await TopicList.genTopicViewProps(topic, this.genFormProps('查看', topic));
       this.setState({ formProps });
     }
+  }
+
+  static async genTopicViewProps(topic, props: Partial<EntityFormProps>): Promise<EntityFormProps> {
+    topic.supports = await topicSupportService.getSupports(topic.id);
+    topic.members = await topicMemberService.getMembers(topic.id);
+    return {
+      ...props,
+      modalProps: { width: '75em' },
+      domainService: topicService,
+      readonly: true,
+      title: '课题详情',
+      inputItem: topic,
+    };
   }
 
   get domainService(): DomainService {

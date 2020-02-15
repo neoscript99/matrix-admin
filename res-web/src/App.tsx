@@ -47,7 +47,7 @@ const homeProps = {
       <span>鄞州教育 ©2020</span>
       <span>
         &nbsp;(
-        <a target="_blank" href="http://www.feathermind.cn/">
+        <a target="_blank" href="http://site.feathermind.cn/">
           宁波羽意软件
         </a>
         &nbsp;技术支持)
