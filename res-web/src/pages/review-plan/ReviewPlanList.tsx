@@ -11,6 +11,7 @@ import {
 import { dictService, reviewPlanService } from '../../services';
 import { observer } from 'mobx-react';
 import { ReviewPlanForm } from './ReviewPlanForm';
+import { ReviewRoundList } from '../review-round';
 const columns: EntityColumnProps[] = [
   { title: '计划标题', dataIndex: 'planName' },
   { title: '立项年度', dataIndex: 'planYear' },
@@ -26,6 +27,15 @@ const columns: EntityColumnProps[] = [
 
 @observer
 export class ReviewPlanList extends EntityPageList {
+  constructor(props, context) {
+    super(props, context);
+    this.tableProps.expandRowByClick = true;
+    this.tableProps.expandedRowRender = record => <ReviewRoundList plan={record} />;
+    this.tableProps.onExpand = (expanded, record) => {
+      this.tableProps.expandedRowKeys = expanded ? [record.id as string] : [];
+      this.forceUpdate();
+    };
+  }
   get domainService(): DomainService {
     return reviewPlanService;
   }
