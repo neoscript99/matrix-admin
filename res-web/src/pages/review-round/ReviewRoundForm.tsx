@@ -1,54 +1,66 @@
 import React from 'react';
 import { Form } from 'antd';
-import { EntityForm, commonRules, InputField, InputNumberField, SelectField, DatePickerField } from 'oo-rest-mobx';
-import moment from 'moment';
+import {
+  EntityForm,
+  commonRules,
+  InputField,
+  InputNumberField,
+  SelectField,
+  DatePickerField,
+  TooltipLabel,
+  DictSelectField,
+} from 'oo-rest-mobx';
 import { dictService } from '../../services';
 const { required, number } = commonRules;
 
 export class ReviewRoundForm extends EntityForm {
   getForm() {
-    const { form, readonly } = this.props;
-    const year = moment().year();
+    const { form, readonly, inputItem } = this.props;
     return (
       <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
         <InputField
           fieldId="planName"
-          formItemProps={{ label: '计划标题' }}
+          formItemProps={{ label: '评比计划' }}
+          value={inputItem?.plan.planName}
+          readonly={true}
+        />
+        <InputField
+          fieldId="name"
+          formItemProps={{ label: <TooltipLabel tooltip="例如：第一轮、第二轮" label="轮次名" /> }}
           formUtils={form}
-          maxLength={36}
-          decorator={{ rules: [required] }}
           readonly={readonly}
         />
         <InputNumberField
-          fieldId="planYear"
-          formItemProps={{ label: '立项年度' }}
+          fieldId="grades"
+          formItemProps={{
+            label: <TooltipLabel tooltip="专家评分后，计算得分并根据这里的配置分多个等级" label="等级数" />,
+          }}
           formUtils={form}
-          min={1900}
-          max={9999}
-          decorator={{ initialValue: year, rules: [number] }}
+          min={1}
+          max={100}
+          decorator={{ initialValue: 4, rules: [required, number] }}
           readonly={readonly}
         />
-        <SelectField
-          fieldId="reviewTypeCode"
-          formItemProps={{ label: '评比类型' }}
+        <DictSelectField
+          fieldId="avgAlgorithmCode"
+          formItemProps={{ label: '平均分算法' }}
           formUtils={form}
-          dataSource={dictService.getDict('res-review-type')}
-          labelProp="name"
-          valueProp="code"
+          dictService={dictService}
+          dictType="res-avg-algorithm"
           decorator={{ rules: [required] }}
           readonly={readonly}
         />
         <DatePickerField
-          fieldId="planBeginDay"
-          formItemProps={{ label: '申报开始日期' }}
+          fieldId="beginDay"
+          formItemProps={{ label: '评分开始日期' }}
           formUtils={form}
           required
           defaultDiffDays={0}
           readonly={readonly}
         />
         <DatePickerField
-          fieldId="planEndDay"
-          formItemProps={{ label: '申报截止日期(当天15:00截止)' }}
+          fieldId="endDay"
+          formItemProps={{ label: '评分截止日期' }}
           formUtils={form}
           required
           defaultDiffDays={90}

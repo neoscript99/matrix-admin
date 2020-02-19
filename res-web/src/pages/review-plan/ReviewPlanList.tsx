@@ -7,11 +7,14 @@ import {
   ListOptions,
   StringUtil,
   Consts,
+  EntityListState,
+  EntityListProps,
 } from 'oo-rest-mobx';
 import { dictService, reviewPlanService } from '../../services';
 import { observer } from 'mobx-react';
 import { ReviewPlanForm } from './ReviewPlanForm';
 import { ReviewRoundList } from '../review-round';
+import { Button } from 'antd';
 const columns: EntityColumnProps[] = [
   { title: '计划标题', dataIndex: 'planName' },
   { title: '立项年度', dataIndex: 'planYear' },
@@ -24,23 +27,48 @@ const columns: EntityColumnProps[] = [
     render: dictService.dictRender.bind(null, 'res-plan-status'),
   },
 ];
-
+interface S extends EntityListState {
+  showRoundForm?: boolean;
+  expandedRowKeys?: string[];
+}
 @observer
-export class ReviewPlanList extends EntityPageList {
+export class ReviewPlanList extends EntityPageList<EntityListProps, S> {
   constructor(props, context) {
     super(props, context);
+    this.state.expandedRowKeys = [];
     this.tableProps.expandRowByClick = true;
-    this.tableProps.expandedRowRender = record => <ReviewRoundList plan={record} />;
+    this.tableProps.expandedRowRender = record => (
+      <ReviewRoundList plan={record} showForm={this.state.showRoundForm} onFormClose={this.handleRoundFormClose} />
+    );
     this.tableProps.onExpand = (expanded, record) => {
-      this.tableProps.expandedRowKeys = expanded ? [record.id as string] : [];
-      this.forceUpdate();
+      const expandedRowKeys = expanded ? [record.id as string] : [];
+      this.setState({ expandedRowKeys });
     };
+  }
+  handleRoundFormClose = () => this.setState({ showRoundForm: false });
+  handleRoundCreate(plan, e) {
+    e.stopPropagation();
+    this.setState({ expandedRowKeys: [plan.id as string], showRoundForm: true });
+  }
+  render() {
+    this.tableProps.expandedRowKeys = this.state.expandedRowKeys;
+    return super.render();
   }
   get domainService(): DomainService {
     return reviewPlanService;
   }
   get columns(): EntityColumnProps[] {
-    return columns;
+    return [
+      ...columns,
+      {
+        title: '操作',
+        render: (text, item) => (
+          <Button size="small" type="primary" onClick={this.handleRoundCreate.bind(this, item)}>
+            新增专家评分轮次
+          </Button>
+        ),
+      },
+    ];
   }
   getQueryParam(): ListOptions {
     const param = super.getQueryParam();
@@ -60,7 +88,7 @@ export class ReviewPlanList extends EntityPageList {
     return ReviewPlanSearchForm;
   }
   getOperatorVisible() {
-    return Consts.AllOperator;
+    return Consts.allOperator;
   }
 }
 

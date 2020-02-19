@@ -3,10 +3,11 @@ import { TopicOperator, TopicOperatorProps } from '../topic';
 import { Button } from 'antd';
 import { topicService } from '../../services';
 import moment from 'moment';
-import { DatePickerField } from 'oo-rest-mobx';
+import { DatePickerField, Consts } from 'oo-rest-mobx';
 interface P extends TopicOperatorProps {
   onStartFinishApply: (topic: any) => void;
 }
+const { tdButtonProps } = Consts.commonProps;;
 export class FinishApplyOperator extends TopicOperator<P> {
   afterPass() {
     const { topic } = this.props;
@@ -27,7 +28,7 @@ export class FinishApplyOperator extends TopicOperator<P> {
   getExtraButton(): React.ReactNode {
     return (
       !this.props.topic.finishApply && (
-        <Button {...this.buttonProps} onClick={this.startFinishApply.bind(this)}>
+        <Button {...tdButtonProps} onClick={this.startFinishApply.bind(this)}>
           发起结题申请
         </Button>
       )

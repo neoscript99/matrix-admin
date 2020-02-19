@@ -1,6 +1,7 @@
 package com.feathermind.research.domain.res
 
 import com.feathermind.matrix.initializer.InitializeDomain
+import com.feathermind.matrix.util.DateUtil
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -27,9 +28,9 @@ class ReviewPlan implements PlanTrait {
 
     static DemoPlan1 = new ReviewPlan([planName    : '2020年教育科学幼教课题评比计划',
                                        planYear    : 2020, reviewTypeCode: 'topic',
-                                       planBeginDay: '2020-02-01', planEndDay: '2020-05-10'])
+                                       planBeginDay: DateUtil.dayStr(-10), planEndDay: DateUtil.dayStr(90)])
     static DemoPlan2 = new ReviewPlan([planName    : '2020年教育科学论文评比计划',
                                        planYear    : 2020, reviewTypeCode: 'paper',
-                                       planBeginDay: '2020-02-01', planEndDay: '2020-04-10'])
+                                       planBeginDay: DateUtil.dayStr(-5), planEndDay: DateUtil.dayStr(110)])
     static initList = [DemoPlan1, DemoPlan2]
 }

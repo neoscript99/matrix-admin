@@ -1,42 +1,103 @@
-import React, { CSSProperties } from 'react';
-import { EntityList, EntityColumnProps, DomainService, ListOptions, Entity, EntityListProps } from 'oo-rest-mobx';
+import React from 'react';
+import {
+  EntityList,
+  EntityColumnProps,
+  DomainService,
+  ListOptions,
+  Entity,
+  EntityListProps,
+  Consts,
+} from 'oo-rest-mobx';
 import { dictService, reviewRoundService } from '../../services';
-import { observer } from 'mobx-react';
 import { ReviewRoundForm } from './ReviewRoundForm';
-import { Table } from 'antd';
+import { Button, Popconfirm, Table } from 'antd';
 const columns: EntityColumnProps[] = [
   { title: '评分轮次', dataIndex: 'name' },
   { title: '开始日期', dataIndex: 'beginDay' },
   { title: '截止日期', dataIndex: 'endDay' },
+  {
+    title: '平均分算法',
+    dataIndex: 'avgAlgorithmCode',
+    render: dictService.dictRender.bind(null, 'res-avg-algorithm'),
+  },
 ];
+const { tdButtonProps } = Consts.commonProps;
 interface P extends EntityListProps {
   plan: Entity;
+  showForm?: boolean;
+  onFormClose: () => void;
 }
-@observer
 export class ReviewRoundList extends EntityList<P> {
   constructor(props, context) {
     super(props, context);
     this.tableProps.pagination = { hideOnSinglePage: true, pageSize: 999 };
     this.tableProps.rowSelection = undefined;
   }
+
+  componentDidMount(): void {
+    this.query();
+  }
   render() {
-    const { dataList } = this.state;
-    return <Table dataSource={dataList} columns={this.columns} {...this.tableProps}></Table>;
+    const { showForm } = this.props;
+    const { dataList, formProps } = this.state;
+    const newProps = formProps || (showForm ? this.genFormProps('新增') : undefined);
+    return (
+      <React.Fragment>
+        <Table dataSource={dataList} columns={this.columns} {...this.tableProps} />
+        {this.getEntityFormPop(newProps)}
+      </React.Fragment>
+    );
   }
   get domainService(): DomainService {
     return reviewRoundService;
   }
   get columns(): EntityColumnProps[] {
-    return columns;
+    return [
+      ...columns,
+      {
+        title: '操作',
+        render: (text, item) => (
+          <div>
+            <Button {...tdButtonProps} onClick={this.handleUpdate.bind(this, item)}>
+              修改
+            </Button>
+            <Popconfirm
+              title="确定删除所选记录吗?"
+              onConfirm={this.handleDelete.bind(this, [item.id])}
+              okText="确定"
+              cancelText="取消"
+            >
+              <Button {...tdButtonProps}>删除</Button>
+            </Popconfirm>
+          </div>
+        ),
+      },
+    ];
   }
   getQueryParam(): ListOptions {
     const { plan } = this.props;
     return { criteria: { eq: [['plan.id', plan.id]] } };
+  }
+  _selectItem = null;
+  getSelectItem() {
+    return this._selectItem;
+  }
+  getInitItem() {
+    const { plan } = this.props;
+    return { plan };
   }
   get name() {
     return '专家评分轮次';
   }
   getEntityForm() {
     return ReviewRoundForm;
+  }
+  handleFormCancel(): void {
+    super.handleFormCancel();
+    this.props.onFormClose();
+  }
+  handleFormSuccess(item: Entity): void {
+    super.handleFormSuccess(item);
+    this.props.onFormClose();
   }
 }

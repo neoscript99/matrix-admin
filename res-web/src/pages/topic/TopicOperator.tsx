@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Button, message } from 'antd';
-import { Entity } from 'oo-rest-mobx';
+import { Entity, Consts } from 'oo-rest-mobx';
 import { RouteChildrenProps } from 'react-router';
 import { applyService, resUserService, topicService } from '../../services';
 import { ClickParam } from 'antd/lib/menu';
 import { ApproveDropdown } from '../../components';
 import { ApplyUtil } from '../../utils/ApplyUtil';
-import { ButtonProps } from 'antd/lib/button';
 
+const { tdButtonProps } = Consts.commonProps;;
 export interface TopicOperatorProps extends Partial<RouteChildrenProps> {
   topic: Entity;
   onChange?: (item: Entity) => void;
@@ -53,11 +53,6 @@ export abstract class TopicOperator<P extends TopicOperatorProps = TopicOperator
   getApply(): any {
     return {};
   }
-  buttonProps: Partial<ButtonProps> = {
-    type: 'primary',
-    size: 'small',
-    style: { margin: 2 },
-  };
   render() {
     const editable = this.getEditable();
     const approveAble = this.getApproveAble();
@@ -65,18 +60,16 @@ export abstract class TopicOperator<P extends TopicOperatorProps = TopicOperator
       <div className="flex-row" style={{ margin: -10 }}>
         {this.getExtraButton()}
         {editable && (
-          <Button {...this.buttonProps} onClick={this.handleMember.bind(this)}>
+          <Button {...tdButtonProps} onClick={this.handleMember.bind(this)}>
             课题成员管理
           </Button>
         )}
         {editable && (
-          <Button {...this.buttonProps} onClick={this.submitApply.bind(this)}>
+          <Button {...tdButtonProps} onClick={this.submitApply.bind(this)}>
             提交审核
           </Button>
         )}
-        {approveAble && (
-          <ApproveDropdown buttonProps={this.buttonProps} onMenuClick={this.approveMenuClick.bind(this)} />
-        )}
+        {approveAble && <ApproveDropdown buttonProps={tdButtonProps} onMenuClick={this.approveMenuClick.bind(this)} />}
       </div>
     );
   }

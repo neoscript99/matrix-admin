@@ -25,7 +25,7 @@ export class ReviewPlanForm extends EntityForm {
           formUtils={form}
           min={1900}
           max={9999}
-          decorator={{ initialValue: year, rules: [number] }}
+          decorator={{ initialValue: year, rules: [required,number] }}
           readonly={readonly}
         />
         <SelectField

@@ -1,5 +1,7 @@
 package com.feathermind.research.domain.res
 
+import com.feathermind.matrix.initializer.InitializeDomain
+import com.feathermind.matrix.util.DateUtil
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -10,6 +12,7 @@ import groovy.transform.ToString
 @Entity
 @ToString(includePackage = false, includeNames = true, includes = 'plan,name')
 @EqualsAndHashCode(includes = 'id')
+@InitializeDomain(profiles = 'dev', depends = ReviewPlan)
 class ReviewRound {
     String id
     ReviewPlan plan
@@ -37,4 +40,12 @@ class ReviewRound {
         parentRound nullable: true
         passGrades nullable: true
     }
+    static initList = [
+            new ReviewRound(plan: ReviewPlan.DemoPlan1, name: '第一轮',
+                    grades: 3, avgAlgorithmCode: 'normal',
+                    beginDay: DateUtil.dayStr(-20), endDay: DateUtil.dayStr(10)),
+            new ReviewRound(plan: ReviewPlan.DemoPlan2, name: '第一轮',
+                    grades: 4, avgAlgorithmCode: 'ignore-max-min',
+                    beginDay: DateUtil.dayStr(-30), endDay: DateUtil.dayStr(210)),
+    ]
 }

@@ -31,6 +31,7 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         planStatusDict()
         reviewTypeDict()
         projectLevelDict()
+        avgAlgorithmDict()
     }
 
     void initParam() {
@@ -203,6 +204,13 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         new Dict(code: 'city', name: '市级规划立项', seq: 20, type: dictType).save();
         new Dict(code: 'district', name: '区级规划立项', seq: 30, type: dictType).save();
         new Dict(code: 'none', name: '无各级规划立项', seq: 40, type: dictType).save();
+    }
+
+    void avgAlgorithmDict() {
+        def dictType = new DictType(id: 'res-avg-algorithm', name: '平均分算法').save()
+
+        new Dict(code: 'normal', name: '所有打分平均', seq: 10, type: dictType).save();
+        new Dict(code: 'ignore-max-min', name: '忽略最高分最低分', seq: 20, type: dictType).save();
     }
 
 }
