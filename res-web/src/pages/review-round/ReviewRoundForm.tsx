@@ -5,17 +5,37 @@ import {
   commonRules,
   InputField,
   InputNumberField,
-  SelectField,
   DatePickerField,
   TooltipLabel,
   DictSelectField,
+  EntityFormProps,
+  DeptEntity,
+  SelectField,
 } from 'oo-rest-mobx';
-import { dictService } from '../../services';
-const { required, number } = commonRules;
+import { dictService, resUserService, reviewRoundExpertService } from '../../services';
+import { config } from '../../utils';
+const { required, number, array } = commonRules;
+interface S {
+  expertIds?: any[];
+  expertListAll: DeptEntity[];
+}
+export class ReviewRoundForm extends EntityForm<EntityFormProps, S> {
+  state = { expertListAll: [] } as S;
+  componentDidMount(): void {
+    const { form, inputItem } = this.props;
+    resUserService
+      .list({ criteria: { dept: { eq: [['seq', 66666]] } } })
+      .then(res => this.setState({ expertListAll: res.results as DeptEntity[] }));
+    if (inputItem?.id)
+      reviewRoundExpertService
+        .list({ criteria: { eq: [['round.id', inputItem?.id]] } })
+        .then(res => form?.setFieldsValue({ experts: res.results.map(re => re.expert.id) }));
+  }
 
-export class ReviewRoundForm extends EntityForm {
   getForm() {
     const { form, readonly, inputItem } = this.props;
+    const isDev = config.isDev();
+    const req = { rules: [required] };
     return (
       <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
         <InputField
@@ -28,6 +48,7 @@ export class ReviewRoundForm extends EntityForm {
           fieldId="name"
           formItemProps={{ label: <TooltipLabel tooltip="例如：第一轮、第二轮" label="轮次名" /> }}
           formUtils={form}
+          decorator={req}
           readonly={readonly}
         />
         <InputNumberField
@@ -38,16 +59,17 @@ export class ReviewRoundForm extends EntityForm {
           formUtils={form}
           min={1}
           max={100}
-          decorator={{ initialValue: 4, rules: [required, number] }}
+          decorator={{ initialValue: 4, rules: [number] }}
           readonly={readonly}
         />
         <DictSelectField
           fieldId="avgAlgorithmCode"
           formItemProps={{ label: '平均分算法' }}
+          defaultSelectFirst={isDev}
           formUtils={form}
           dictService={dictService}
           dictType="res-avg-algorithm"
-          decorator={{ rules: [required] }}
+          decorator={req}
           readonly={readonly}
         />
         <DatePickerField
@@ -65,6 +87,18 @@ export class ReviewRoundForm extends EntityForm {
           required
           defaultDiffDays={90}
           readonly={readonly}
+        />
+        <SelectField
+          fieldId="experts"
+          dataSource={this.state.expertListAll}
+          originValueType="array"
+          formItemProps={{ label: '邀请专家' }}
+          defaultSelectFirst={isDev}
+          formUtils={form}
+          valueProp="id"
+          labelProp="name"
+          decorator={{ rules: [array] }}
+          mode="multiple"
         />
       </Form>
     );

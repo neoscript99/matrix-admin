@@ -14,6 +14,7 @@ class ReviewRoundExpert {
     String id
     ReviewRound round
     ResUser expert
+    Integer seq
     //可以设置专家评分权重
     //BigDecimal weight
 
@@ -23,5 +24,6 @@ class ReviewRoundExpert {
     static mapping = {
         expert fetch: 'join', lazy: false
         round fetch: 'join', lazy: false
+        sort 'seq'
     }
 }

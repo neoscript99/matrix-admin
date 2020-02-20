@@ -44,7 +44,7 @@ class ResDept extends Department {
 
 
     static ResDept headDept = new ResDept(name: '教育科学研究室', seq: 10, contact: '鲍老师', telephone: '88121117', type: directAgency)
-    static ResDept expertDept = new ResDept(name: '专家组', seq: 20, contact: '专家', telephone: '88888888', type: externalAgency)
+    static ResDept expertDept = new ResDept(name: '专家组', seq: 66666, contact: '专家', telephone: '88888888', type: externalAgency)
     static ResDept demoSchool = new ResDept(name: '鄞州区青少年宫', classNumber: null, seq: 100, maxApplyNum: 3, note: '', type: directAgency)
 
     static initList = [headDept, expertDept, demoSchool,

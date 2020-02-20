@@ -41,11 +41,12 @@ export class ReviewRoundList extends EntityList<P> {
     const { showForm } = this.props;
     const { dataList, formProps } = this.state;
     const newProps = formProps || (showForm ? this.genFormProps('新增') : undefined);
+    //如果用React.Fragment，table会到第一个，margin会消除，antd功能
     return (
-      <React.Fragment>
+      <div>
         <Table dataSource={dataList} columns={this.columns} {...this.tableProps} />
         {this.getEntityFormPop(newProps)}
-      </React.Fragment>
+      </div>
     );
   }
   get domainService(): DomainService {
@@ -58,12 +59,12 @@ export class ReviewRoundList extends EntityList<P> {
         title: '操作',
         render: (text, item) => (
           <div>
-            <Button {...tdButtonProps} onClick={this.handleUpdate.bind(this, item)}>
+            <Button {...tdButtonProps} onClick={this.doUpdate.bind(this, item)}>
               修改
             </Button>
             <Popconfirm
               title="确定删除所选记录吗?"
-              onConfirm={this.handleDelete.bind(this, [item.id])}
+              onConfirm={this.doDelete.bind(this, [item.id])}
               okText="确定"
               cancelText="取消"
             >
@@ -78,7 +79,7 @@ export class ReviewRoundList extends EntityList<P> {
     const { plan } = this.props;
     return { criteria: { eq: [['plan.id', plan.id]] } };
   }
-  _selectItem = null;
+  _selectItem;
   getSelectItem() {
     return this._selectItem;
   }

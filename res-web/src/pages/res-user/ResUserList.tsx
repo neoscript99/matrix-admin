@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserList, AdminPageProps, UserSearchForm, EntityListState } from 'oo-rest-mobx';
+import { UserList, AdminPageProps, EntityListState } from 'oo-rest-mobx';
 import { ResUserForm } from './ResUserForm';
 import { resUserService } from '../../services';
 
@@ -18,9 +18,6 @@ export class ResUserList<
   }
   getEntityForm() {
     return ResUserForm;
-  }
-  getSearchForm() {
-    return UserSearchForm;
   }
   handleFormSuccess(item: any): void {
     //用户新增或修改后，清除部门用户缓存

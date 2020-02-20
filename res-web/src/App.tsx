@@ -6,6 +6,7 @@ import { adminServices, paramService } from './services';
 import { config } from './utils';
 import { PageSwitch } from './pages';
 import logo from './asset/logo.png';
+import mainBG from './asset/main_bg.jpg';
 import { observer } from 'mobx-react';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
@@ -32,8 +33,7 @@ const loginProps: LoginFormProps = {
   title: '教育科研项目管理系统',
   introRender,
   //https://unsplash.com/photos/asviIGR3CPE
-  backgroundImage:
-    'url(https://images.unsplash.com/photo-1517673132405-a56a62b18caf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2112)',
+  backgroundImage: `url(${mainBG})`,
 };
 const homeProps = {
   adminServices,

@@ -3,6 +3,7 @@ import { Form } from 'antd';
 import { EntityForm, commonRules, InputField, InputNumberField, SelectField, DatePickerField } from 'oo-rest-mobx';
 import moment from 'moment';
 import { dictService } from '../../services';
+import { config } from '../../utils';
 const { required, number } = commonRules;
 
 export class ReviewPlanForm extends EntityForm {
@@ -25,7 +26,7 @@ export class ReviewPlanForm extends EntityForm {
           formUtils={form}
           min={1900}
           max={9999}
-          decorator={{ initialValue: year, rules: [required,number] }}
+          decorator={{ initialValue: year, rules: [number] }}
           readonly={readonly}
         />
         <SelectField
@@ -36,6 +37,7 @@ export class ReviewPlanForm extends EntityForm {
           labelProp="name"
           valueProp="code"
           decorator={{ rules: [required] }}
+          defaultSelectFirst={config.isDev()}
           readonly={readonly}
         />
         <DatePickerField
