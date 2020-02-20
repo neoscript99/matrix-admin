@@ -1,7 +1,7 @@
 import React from 'react';
-import { UserList, AdminPageProps, EntityListState } from 'oo-rest-mobx';
+import { UserList, AdminPageProps, EntityListState, SearchFormProps, UserSearchForm } from 'oo-rest-mobx';
 import { ResUserForm } from './ResUserForm';
-import { resUserService } from '../../services';
+import { deptService, resUserService } from '../../services';
 
 export class ResUserList<
   P extends AdminPageProps = AdminPageProps,
@@ -18,6 +18,10 @@ export class ResUserList<
   }
   getEntityForm() {
     return ResUserForm;
+  }
+  searchFormRender(props: SearchFormProps): React.ReactNode {
+    const deptList = resUserService.isMainManager() ? deptService.store.enabledList : undefined;
+    return <UserSearchForm {...props} deptList={deptList} />;
   }
   handleFormSuccess(item: any): void {
     //用户新增或修改后，清除部门用户缓存
