@@ -17,7 +17,9 @@ export class ResUserService extends UserService {
   idCardCheck(resUser: Entity): Promise<boolean> {
     return this.postApi('idCardCheck', resUser);
   }
-
+  getAvailableExperts(): Promise<Entity[]> {
+    return this.postApi('getAvailableExperts');
+  }
   async getDeptUsersWithIdCard() {
     return loginService.dept && (await this.getDeptUsers(loginService.dept)).filter(user => !!user.idCard);
   }

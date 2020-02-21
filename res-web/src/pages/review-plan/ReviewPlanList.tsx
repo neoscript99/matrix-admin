@@ -29,7 +29,7 @@ const columns: EntityColumnProps[] = [
 ];
 interface S extends EntityListState {
   showRoundForm?: boolean;
-  expandedRowKeys?: string[];
+  expandedRowKeys: string[];
 }
 @observer
 export class ReviewPlanList extends EntityPageList<EntityListProps, S> {
@@ -37,9 +37,16 @@ export class ReviewPlanList extends EntityPageList<EntityListProps, S> {
     super(props, context);
     this.state.expandedRowKeys = [];
     this.tableProps.expandRowByClick = true;
-    this.tableProps.expandedRowRender = record => (
-      <ReviewRoundList plan={record} showForm={this.state.showRoundForm} onFormClose={this.handleRoundFormClose} />
-    );
+    this.tableProps.expandedRowRender = plan => {
+      const { expandedRowKeys, showRoundForm } = this.state;
+      return (
+        <ReviewRoundList
+          plan={plan}
+          showForm={showRoundForm && expandedRowKeys.includes(plan.id as string)}
+          onFormClose={this.handleRoundFormClose}
+        />
+      );
+    };
     this.tableProps.onExpand = (expanded, record) => {
       const expandedRowKeys = expanded ? [record.id as string] : [];
       this.setState({ expandedRowKeys });

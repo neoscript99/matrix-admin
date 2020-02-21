@@ -1,10 +1,10 @@
 package com.feathermind.research.config.common
 
 import cn.hutool.core.util.StrUtil
+import com.feathermind.matrix.domain.sys.User
 import com.feathermind.matrix.domain.sys.UserRole
 import com.feathermind.matrix.initializer.AbstractDataInitializer
 import com.feathermind.matrix.initializer.DataInitializer
-import com.feathermind.matrix.util.EncoderUtil
 import com.feathermind.research.domain.res.*
 import groovy.transform.CompileStatic
 import groovy.transform.TypeCheckingMode
@@ -17,7 +17,7 @@ import static com.feathermind.research.domain.res.ResDept.*
 @CompileStatic(TypeCheckingMode.SKIP)
 class ResUserInitializer extends AbstractDataInitializer implements DataInitializer {
 
-    static final String DEFAULT_PASS = EncoderUtil.sha256('abc000')
+    static final String DEFAULT_PASS = User.encodePassword('abc000')
 
     @Override
     boolean isInited() {

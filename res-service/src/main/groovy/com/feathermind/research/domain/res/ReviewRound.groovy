@@ -20,12 +20,14 @@ class ReviewRound {
     //本轮等级数
     Integer grades
     String avgAlgorithmCode
-    String beginDay
+    //暂时不需要开始日期，新建后直接算开始
+    //String beginDay
     String endDay
+    String expertPassword = 'abc000'
     //上级轮次，依赖上级结果
     ReviewRound parentRound
     //通过等级数，设置上轮的情况下需要设置
-    BigDecimal passGrades
+    Integer parentPassGrades
 
     Date dateCreated
     Date lastUpdated
@@ -38,14 +40,14 @@ class ReviewRound {
 
     static constraints = {
         parentRound nullable: true
-        passGrades nullable: true
+        parentPassGrades nullable: true
     }
     static initList = [
             new ReviewRound(plan: ReviewPlan.DemoPlan1, name: '第一轮',
                     grades: 3, avgAlgorithmCode: 'normal',
-                    beginDay: DateUtil.dayStr(-20), endDay: DateUtil.dayStr(10)),
+                    endDay: DateUtil.dayStr(10)),
             new ReviewRound(plan: ReviewPlan.DemoPlan2, name: '第一轮',
-                    grades: 4, avgAlgorithmCode: 'ignore-max-min',
-                    beginDay: DateUtil.dayStr(-30), endDay: DateUtil.dayStr(210)),
+                    grades: 5, avgAlgorithmCode: 'ignore-max-min',
+                    endDay: DateUtil.dayStr(210)),
     ]
 }

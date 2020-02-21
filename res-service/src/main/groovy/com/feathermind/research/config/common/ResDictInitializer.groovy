@@ -209,8 +209,8 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
     void avgAlgorithmDict() {
         def dictType = new DictType(id: 'res-avg-algorithm', name: '平均分算法').save()
 
-        new Dict(code: 'normal', name: '所有打分平均', seq: 10, type: dictType).save();
-        new Dict(code: 'ignore-max-min', name: '忽略最高分最低分', seq: 20, type: dictType).save();
+        new Dict(code: 'normal', name: '全部分数平均', seq: 10, type: dictType).save();
+        new Dict(code: 'ignore-max-min', name: '去除最高最低', seq: 20, type: dictType).save();
     }
 
 }

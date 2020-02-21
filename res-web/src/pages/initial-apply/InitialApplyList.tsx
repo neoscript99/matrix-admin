@@ -1,5 +1,5 @@
 import React from 'react';
-import { EntityColumnProps, EntityFormProps } from 'oo-rest-mobx';
+import { EntityColumnProps, EntityFormProps, Consts } from 'oo-rest-mobx';
 import { dictService, initialApplyService, initialPlanService } from '../../services';
 import { observer } from 'mobx-react';
 import { Collapse } from 'antd';
@@ -40,7 +40,7 @@ export class InitialApplyList extends TopicList {
 
   genFormProps(action: string, item?: any, exProps?: Partial<EntityFormProps>): EntityFormProps {
     const props = super.genFormProps(action, item, exProps);
-    return { ...props, modalProps: { width: '48em', title: item.initialPlan.planName } };
+    return { ...props, modalProps: { ...Consts.commonProps.twoColModalProps, title: item.initialPlan.planName } };
   }
 
   render() {

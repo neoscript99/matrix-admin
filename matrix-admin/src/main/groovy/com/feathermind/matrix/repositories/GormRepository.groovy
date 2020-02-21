@@ -73,7 +73,7 @@ class GormRepository implements GeneralRepository {
             BeanUtil.fillBeanWithMap(map, updateEntity, PROPERTY_NOT_COPY)
             saveEntity(updateEntity)
         } else
-            saveEntity(JsonUtil.mapToBean(map, domain))
+            saveEntity(newEntity)
     }
 
     static CopyOptions PROPERTY_NOT_COPY = CopyOptions.create().setIgnoreProperties('id', 'version', 'metaClass', 'lastUpdated', 'dateCreated')

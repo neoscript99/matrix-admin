@@ -20,9 +20,13 @@ import com.feathermind.matrix.initializer.InitializeDomain
  * sys包下都是管理后台相关domain
  */
 class User {
+    static encodePassword(String password) {
+        return EncoderUtil.sha256(password)
+    }
+
     String id
     String account
-    String password = EncoderUtil.sha256('anonymous')
+    String password = encodePassword('anonymous')
     String name
     Boolean editable = true
     Boolean enabled = true

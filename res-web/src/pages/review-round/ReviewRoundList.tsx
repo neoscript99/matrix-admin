@@ -9,11 +9,10 @@ import {
   Consts,
 } from 'oo-rest-mobx';
 import { dictService, reviewRoundService } from '../../services';
-import { ReviewRoundForm } from './ReviewRoundForm';
+import { ReviewRoundForm, ReviewRoundFormProps } from './ReviewRoundForm';
 import { Button, Popconfirm, Table } from 'antd';
 const columns: EntityColumnProps[] = [
   { title: '评分轮次', dataIndex: 'name' },
-  { title: '开始日期', dataIndex: 'beginDay' },
   { title: '截止日期', dataIndex: 'endDay' },
   {
     title: '平均分算法',
@@ -21,7 +20,7 @@ const columns: EntityColumnProps[] = [
     render: dictService.dictRender.bind(null, 'res-avg-algorithm'),
   },
 ];
-const { tdButtonProps } = Consts.commonProps;
+const { tdButtonProps, twoColModalProps } = Consts.commonProps;
 interface P extends EntityListProps {
   plan: Entity;
   showForm?: boolean;
@@ -49,6 +48,15 @@ export class ReviewRoundList extends EntityList<P> {
       </div>
     );
   }
+  genFormProps(action: string, item?: any, exProps?): ReviewRoundFormProps {
+    const { dataList } = this.state;
+    const props = super.genFormProps(action, item, exProps);
+    return {
+      ...props,
+      modalProps: { ...props.modalProps, ...twoColModalProps },
+      parentList: item ? dataList.filter(p => p.dateCreated! < item.dateCreated) : dataList,
+    };
+  }
   get domainService(): DomainService {
     return reviewRoundService;
   }
@@ -63,7 +71,7 @@ export class ReviewRoundList extends EntityList<P> {
               修改
             </Button>
             <Popconfirm
-              title="确定删除所选记录吗?"
+              title="确定删除本轮评分的所有信息(包括专家评分记录)?"
               onConfirm={this.doDelete.bind(this, [item.id])}
               okText="确定"
               cancelText="取消"
@@ -78,10 +86,6 @@ export class ReviewRoundList extends EntityList<P> {
   getQueryParam(): ListOptions {
     const { plan } = this.props;
     return { criteria: { eq: [['plan.id', plan.id]] } };
-  }
-  _selectItem;
-  getSelectItem() {
-    return this._selectItem;
   }
   getInitItem() {
     const { plan } = this.props;
@@ -100,5 +104,8 @@ export class ReviewRoundList extends EntityList<P> {
   handleFormSuccess(item: Entity): void {
     super.handleFormSuccess(item);
     this.props.onFormClose();
+  }
+  handleDeleteError(err, msg?: string) {
+    super.handleDeleteError(err, '删除失败，可能存在其它轮次依赖本轮');
   }
 }

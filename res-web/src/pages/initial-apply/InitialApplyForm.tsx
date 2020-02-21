@@ -33,6 +33,7 @@ interface QualificationCheckResult {
   success: boolean;
   reasons: string[];
 }
+const { flexFormCss, oneSpanFormItemCss, twoSpanFormItemCss } = StyleUtil.commonStyle;
 
 export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
   state = { qualification: { success: true, reasons: [] } } as S;
@@ -79,7 +80,6 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
   }
 
   getForm() {
-    const itemCss: React.CSSProperties = { width: '22em' };
     const {
       form,
       readonly,
@@ -92,10 +92,10 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
     const isCourseMethod = form?.getFieldValue('researchContentCode') === 'course-material-method';
     if (qualification.success)
       return (
-        <Form style={StyleUtil.flexForm()}>
+        <Form style={flexFormCss}>
           <InputField
             fieldId="topicName"
-            formItemProps={{ label: '课题名', style: { ...itemCss, width: '44em' } }}
+            formItemProps={{ label: '课题名', style: twoSpanFormItemCss }}
             formUtils={form}
             maxLength={30}
             decorator={req}
@@ -104,7 +104,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
           {important && (
             <InputField
               fieldId="originTopicName"
-              formItemProps={{ label: '原课题名', style: { ...itemCss, width: '44em' } }}
+              formItemProps={{ label: '原课题名', style: twoSpanFormItemCss }}
               formUtils={form}
               maxLength={36}
               readonly={readonly}
@@ -113,7 +113,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
           {important && (
             <InputField
               fieldId="originInitialCode"
-              formItemProps={{ label: '原立项编号', style: itemCss }}
+              formItemProps={{ label: '原立项编号', style: oneSpanFormItemCss }}
               formUtils={form}
               maxLength={36}
               readonly={readonly}
@@ -123,7 +123,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
             fieldId="personInCharge.id"
             formItemProps={{
               label: <TooltipLabel label="课题负责人" tooltip="可先在‘基础信息>>用户管理’中添加" />,
-              style: itemCss,
+              style: oneSpanFormItemCss,
             }}
             formUtils={form}
             dataSource={deptUserList}
@@ -135,7 +135,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
           />
           <DictSelectField
             fieldId="topicCateCode"
-            formItemProps={{ label: '课题类别', style: itemCss }}
+            formItemProps={{ label: '课题类别', style: oneSpanFormItemCss }}
             dictService={dictService}
             dictType="res-topic-cate"
             formUtils={form}
@@ -146,7 +146,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
           />
           <DictSelectField
             fieldId="topicSourceCode"
-            formItemProps={{ label: '课题来源', style: itemCss }}
+            formItemProps={{ label: '课题来源', style: oneSpanFormItemCss }}
             dictService={dictService}
             dictType="res-topic-source"
             formUtils={form}
@@ -156,7 +156,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
           />
           <DictSelectField
             fieldId="researchTargetCode"
-            formItemProps={{ label: '研究对象', style: itemCss }}
+            formItemProps={{ label: '研究对象', style: oneSpanFormItemCss }}
             dictService={dictService}
             dictType="res-target"
             formUtils={form}
@@ -166,7 +166,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
           />
           <DictSelectField
             fieldId="researchContentCode"
-            formItemProps={{ label: '研究内容', style: itemCss }}
+            formItemProps={{ label: '研究内容', style: oneSpanFormItemCss }}
             dictService={dictService}
             dictType="res-content"
             formUtils={form}
@@ -178,7 +178,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
             fieldId="researchSubjectCode"
             formItemProps={{
               label: <TooltipLabel label="涉及学科" tooltip="选择‘课程教材教法’时需设置" />,
-              style: itemCss,
+              style: oneSpanFormItemCss,
             }}
             dictService={dictService}
             dictType="res-subject"
@@ -188,7 +188,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
           />
           <DictSelectField
             fieldId="prepareAchieveFormCodes"
-            formItemProps={{ label: '成果拟形式', style: itemCss }}
+            formItemProps={{ label: '成果拟形式', style: oneSpanFormItemCss }}
             dictService={dictService}
             dictType="res-achieve-form"
             formUtils={form}
@@ -199,7 +199,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
           />
           <DatePickerField
             fieldId="prepareFinishDay"
-            formItemProps={{ label: '计划完成时间', style: itemCss }}
+            formItemProps={{ label: '计划完成时间', style: oneSpanFormItemCss }}
             formUtils={form}
             required={true}
             defaultDiffDays={365}
@@ -211,7 +211,7 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
             formUtils={form}
             formItemProps={{
               label: initialReportLabel,
-              style: itemCss,
+              style: oneSpanFormItemCss,
             }}
             readonly={readonly}
             maxNumber={1}

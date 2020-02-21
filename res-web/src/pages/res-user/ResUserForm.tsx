@@ -8,11 +8,13 @@ import {
   SelectField,
   StringUtil,
   Entity,
+  StyleUtil,
 } from 'oo-rest-mobx';
 import { resUserService } from '../../services';
 import { config } from '../../utils';
 const { required } = commonRules;
 
+const { oneSpanFormItemCss: css, twoSpanFormItemCss } = StyleUtil.commonStyle;
 const idCardLabel = <TooltipLabel tooltip="单位管理员录入身份证后不能修改，请仔细核对" label="身份证" />;
 export class ResUserForm extends UserForm {
   get userService() {
@@ -38,7 +40,6 @@ export class ResUserForm extends UserForm {
       inputItem,
       services: { dictService },
     } = this.props;
-    const css = this.formItemCss;
     const isMainManager = this.userService.isMainManager();
     //如果是上级管理员，不做必输限制，方便管理
     const req = { rules: isMainManager ? [] : [required] };
