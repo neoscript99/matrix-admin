@@ -51,6 +51,14 @@ class TopicService extends AbstractService<Topic> {
     @Override
     Topic save(Map map) {
         Topic topic = super.save(map)
+        if(topic.initialReport){
+            topic.initialReport.ownerId = topic.id
+            topic.initialReport.ownerName = topic.topicName
+        }
+        if(topic.mainReport){
+            topic.initialReport.ownerId = topic.id
+            topic.initialReport.ownerName = topic.topicName
+        }
         if (map.topicStatusCode == 'applied' && StrUtil.isEmpty(topic.initialCode)) {
             topic.initialCode = genNextInitialCode(topic)
         }

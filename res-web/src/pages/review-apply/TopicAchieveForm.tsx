@@ -49,7 +49,7 @@ export class TopicAchieveForm extends DeptUserForm<EntityFormProps, S> {
         />
         <SelectField
           fieldId="topic.id"
-          formItemProps={{ label: '课题' }}
+          formItemProps={{ label: '参评课题' }}
           formUtils={form}
           dataSource={this.state.finishedTopicList}
           valueProp="id"

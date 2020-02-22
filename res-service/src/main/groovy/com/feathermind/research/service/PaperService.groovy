@@ -6,4 +6,11 @@ import org.springframework.stereotype.Service
 
 @Service
 class PaperService extends AbstractService<Paper> {
+    @Override
+    Paper save(Map map) {
+        Paper entity = super.save(map)
+        entity.paperFile.ownerId = entity.id
+        entity.paperFile.ownerName = entity.title
+        return entity;
+    }
 }

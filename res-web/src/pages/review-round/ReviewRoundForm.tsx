@@ -119,7 +119,7 @@ export class ReviewRoundForm extends EntityForm<ReviewRoundFormProps, S> {
           defaultSelectFirst={isDev}
           formUtils={form}
           valueProp="id"
-          labelProp="name"
+          labelRender={(item)=>`${item.name}(${item.account})`}
           decorator={{ rules: [array] }}
           mode="multiple"
         />

@@ -11,7 +11,9 @@ class TopicSupportService extends AbstractService<TopicSupport> {
     void saveTopicSupports(Topic topic, List<Map> supports) {
         deleteMatch(eq: [['topic', topic]])
         supports.eachWithIndex { item, i ->
-            new TopicSupport(topic: topic, support: [id: item.id], seq: i).save()
+            def ts = saveEntity(new TopicSupport(topic: topic, support: [id: item.id], seq: i))
+            ts.support.ownerId = ts.id
+            ts.support.ownerName = ts.topic.topicName
         }
     }
 

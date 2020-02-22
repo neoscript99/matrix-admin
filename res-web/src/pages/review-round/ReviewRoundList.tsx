@@ -14,6 +14,7 @@ import { Button, Popconfirm, Table } from 'antd';
 const columns: EntityColumnProps[] = [
   { title: '评分轮次', dataIndex: 'name' },
   { title: '截止日期', dataIndex: 'endDay' },
+  { title: '等级数', dataIndex: 'grades' },
   {
     title: '平均分算法',
     dataIndex: 'avgAlgorithmCode',
