@@ -17,7 +17,7 @@ export class PaperForm extends DeptUserForm {
     return (
       <Form>
         <InputField
-          fieldId="title"
+          fieldId="name"
           formItemProps={{ label: '论文题目' }}
           formUtils={form}
           decorator={req}

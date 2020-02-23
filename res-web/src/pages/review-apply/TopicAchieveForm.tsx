@@ -40,7 +40,7 @@ export class TopicAchieveForm extends DeptUserForm<EntityFormProps, S> {
     return (
       <Form>
         <InputField
-          fieldId="achieveName"
+          fieldId="name"
           formItemProps={{ label: '成果名称' }}
           formUtils={form}
           decorator={req}

@@ -3,7 +3,7 @@ import { EntityColumnProps, SimpleSearchForm } from 'oo-rest-mobx';
 import { paperService } from '../../services';
 import { PaperForm } from './PaperForm';
 const columns: EntityColumnProps[] = [
-  { title: '论文题目', dataIndex: 'title' },
+  { title: '论文题目', dataIndex: 'name' },
   { title: '论文作者', dataIndex: 'personInCharge.name' },
   ...ReviewApplyList.planColumns,
 ];

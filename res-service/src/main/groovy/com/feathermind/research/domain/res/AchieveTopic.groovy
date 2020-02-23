@@ -1,10 +1,7 @@
 package com.feathermind.research.domain.res
 
 import com.feathermind.matrix.domain.sys.AttachmentInfo
-import com.feathermind.matrix.trait.AutoTime
 import grails.gorm.annotation.Entity
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
 
 /**
  * 课题成果
@@ -12,14 +9,7 @@ import groovy.transform.ToString
  * 团队成员
  */
 @Entity
-@ToString(includePackage = false, includeNames = true, includes = 'achieveName')
-@EqualsAndHashCode(includes = 'id')
-class TopicAchieve implements AutoTime{
-    String id
-    //成果名称
-    String achieveName
-    //成果负责人姓名
-    ResUser personInCharge
+class AchieveTopic extends Achieve{
     //课题组成员, 0-4人
     String members
     //成果类别
@@ -32,22 +22,14 @@ class TopicAchieve implements AutoTime{
     //上传成果主报告盲评文本
     AttachmentInfo mainReport
 
-    ReviewPlan reviewPlan
-    CheckResult duplicateCheck
     Topic topic
-    ResDept dept
 
     static mapping = {
-        personInCharge fetch: 'join', lazy: false
         summary fetch: 'join', lazy: false
         mainReport fetch: 'join', lazy: false
-        reviewPlan fetch: 'join', lazy: false
-        duplicateCheck fetch: 'join', lazy: false
         topic fetch: 'join', lazy: false
-        dept fetch: 'join', lazy: false
     }
     static constraints = {
-        duplicateCheck nullable: true
         members nullable: true, maxSize: 512
     }
 }

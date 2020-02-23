@@ -13,7 +13,7 @@ import { Button } from 'antd';
 import React from 'react';
 import { TopicList, TopicView } from '../topic';
 const columns: EntityColumnProps[] = [
-  { title: '成果名称', dataIndex: 'achieveName' },
+  { title: '成果名称', dataIndex: 'name' },
   { title: '成果负责人', dataIndex: 'personInCharge.name' },
   ...ReviewApplyList.planColumns,
 ];

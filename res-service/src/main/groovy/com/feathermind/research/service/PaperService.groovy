@@ -1,16 +1,16 @@
 package com.feathermind.research.service
 
 import com.feathermind.matrix.service.AbstractService
-import com.feathermind.research.domain.res.Paper
+import com.feathermind.research.domain.res.AchievePaper
 import org.springframework.stereotype.Service
 
 @Service
-class PaperService extends AbstractService<Paper> {
+class PaperService extends AbstractService<AchievePaper> {
     @Override
-    Paper save(Map map) {
-        Paper entity = super.save(map)
+    AchievePaper save(Map map) {
+        AchievePaper entity = super.save(map)
         entity.paperFile.ownerId = entity.id
-        entity.paperFile.ownerName = entity.title
+        entity.paperFile.ownerName = entity.name
         return entity;
     }
 }

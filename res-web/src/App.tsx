@@ -24,10 +24,6 @@ const introRender = (
   </div>
 );
 const loginPath = '/login/';
-const demoUsers = [
-  { name: '系统管理员', username: 'sys-admin', password: 'abc000' },
-  { name: '单位管理员', username: 'dept-admin', password: 'abc000' },
-];
 const loginProps: LoginFormProps = {
   adminServices,
   title: '教育科研项目管理系统',
@@ -59,10 +55,9 @@ const homeProps = {
 @observer
 class App extends Component {
   render() {
-    //console.debug('依赖paramService.store.allList：', paramService.store.allList);
     const profiles = paramService.getByCode('EnvironmentProfiles')?.value;
     console.debug('EnvironmentProfiles: ', profiles);
-    const users = profiles === 'dev' ? demoUsers : undefined;
+    const users = profiles === 'dev' && config.demoUsers ? config.demoUsers : undefined;
     return (
       <ConfigProvider locale={zhCN}>
         <HashRouter>

@@ -6,6 +6,7 @@ import { PlanService } from './PlanService';
 import { TopicService } from './TopicService';
 import { TopicMemberService } from './TopicMemberService';
 import { TopicSupportService } from './TopicSupportService';
+import { ReviewRoundExpertService } from './ReviewRoundExpertService';
 
 function afterLogin(loginInfo: LoginInfo) {
   if (!loginInfo.token) throw 'token不能为空';
@@ -41,9 +42,9 @@ export const topicMemberService = new TopicMemberService(restClient);
 export const topicSupportService = new TopicSupportService(restClient);
 export const applyService = new DomainService({ domain: 'apply', restClient, storeClass });
 export const reviewPlanService = new PlanService('reviewPlan', restClient);
-export const reviewRoundService = new PlanService('reviewRound', restClient);
-export const reviewRoundExpertService = new PlanService('reviewRoundExpert', restClient);
-export const reviewRoundScoreService = new PlanService('reviewRoundScore', restClient);
+export const reviewRoundService = new DomainService({ domain: 'reviewRound', restClient, storeClass });
+export const reviewRoundExpertService = new ReviewRoundExpertService(restClient);
+export const achieveReviewScoreService = new DomainService({ domain: 'achieveReviewScore', restClient, storeClass });
 export const paperService = new DomainService({ domain: 'paper', restClient, storeClass });
 export const topicAchieveService = new DomainService({ domain: 'topicAchieve', restClient, storeClass });
 export const topicAchieveMemberService = new DomainService({ domain: 'topicAchieveMember', restClient, storeClass });

@@ -2,6 +2,7 @@ abstract class Config {
   dateFormat = 'MM-DD';
   timeFormat = 'YYYY-MM-DD HH:mm';
   abstract isDev(): boolean;
+  demoUsers?: any[];
 }
 
 export class DevConfig extends Config {
@@ -11,6 +12,11 @@ export class DevConfig extends Config {
   isDev() {
     return true;
   }
+  demoUsers = [
+    { name: '系统管理员', username: 'sys-admin', password: 'abc000' },
+    { name: '单位管理员', username: 'dept-admin', password: 'abc000' },
+    { name: '评审专家', username: 'expert', password: 'abc000' },
+  ];
 }
 export class ProdConfig extends Config {
   serverRoot = '';

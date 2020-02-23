@@ -1,23 +1,23 @@
 package com.feathermind.research.service
 
 import com.feathermind.matrix.service.AbstractService
-import com.feathermind.research.domain.res.TopicAchieve
+import com.feathermind.research.domain.res.AchieveTopic
 import org.springframework.stereotype.Service
 
 @Service
-class TopicAchieveService extends AbstractService<TopicAchieve> {
+class TopicAchieveService extends AbstractService<AchieveTopic> {
     @Override
-    TopicAchieve save(Map map) {
+    AchieveTopic save(Map map) {
         //如果当前是修改，需要把原课题恢复为结题状态，先不管是否选择了不同的课题
         if (map.id)
             restoreTopicStatus(map.id)
-        TopicAchieve achieve = super.save(map)
+        AchieveTopic achieve = super.save(map)
         //当前课题的状态改为“已参评”
         achieve.topic.topicStatusCode = 'reviewed'
         achieve.summary.ownerId = achieve.id
-        achieve.summary.ownerName = achieve.achieveName
+        achieve.summary.ownerName = achieve.name
         achieve.mainReport.ownerId = achieve.id
-        achieve.mainReport.ownerName = achieve.achieveName
+        achieve.mainReport.ownerName = achieve.name
         return achieve
     }
 

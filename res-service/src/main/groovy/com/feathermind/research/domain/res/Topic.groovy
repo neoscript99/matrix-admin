@@ -57,7 +57,7 @@ class Topic {
 
     /*评比信息*/
     ReviewPlan reviewPlan
-    TopicAchieve topicAchieve
+    AchieveTopic topicAchieve
     Apply reviewApply
     CheckResult duplicateCheck
 

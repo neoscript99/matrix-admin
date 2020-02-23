@@ -7,16 +7,15 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 /**
- * 论文基本信息
+ * 成果基本信息
  */
 @Entity
-@ToString(includePackage = false, includeNames = true, includes = 'title')
+@ToString(includePackage = false, includeNames = true, includes = 'name')
 @EqualsAndHashCode(includes = 'id')
-class Paper implements AutoTime{
+class Achieve implements AutoTime{
     String id
-    String title
+    String name
     ResUser personInCharge
-    AttachmentInfo paperFile
 
     ReviewPlan reviewPlan
     CheckResult duplicateCheck
@@ -24,7 +23,6 @@ class Paper implements AutoTime{
 
     static mapping = {
         personInCharge fetch: 'join', lazy: false
-        paperFile fetch: 'join', lazy: false, cascade: 'delete'
         reviewPlan fetch: 'join', lazy: false
         duplicateCheck fetch: 'join', lazy: false
         dept fetch: 'join', lazy: false
