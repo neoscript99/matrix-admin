@@ -12,16 +12,11 @@ import groovy.transform.ToString
 @EqualsAndHashCode(includes = 'id')
 class AchieveReviewScore {
     String id
-    Achieve achieve
-    ReviewRoundExpert rrExpert
+    String achieveId
+    String reviewRoundExpertId
     // 百分制
     Integer score
 
     Date dateCreated
     Date lastUpdated
-
-    static mapping = {
-        achieve fetch: 'join', lazy: false
-        rrExpert fetch: 'join', lazy: false
-    }
 }

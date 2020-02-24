@@ -14,15 +14,8 @@ class ReviewRoundExpert {
     String id
     ReviewRound round
     ResUser expert
+    // 专家排序
     Integer seq
-    //可以设置专家评分权重
-    //BigDecimal weight
-    // 总数
-    Integer totalNumber
-    // 已评分数量
-    Integer scoredNumber
-    // 平均分
-    BigDecimal average
 
     Date dateCreated
     Date lastUpdated
@@ -31,11 +24,5 @@ class ReviewRoundExpert {
         expert fetch: 'join', lazy: false
         round fetch: 'join', lazy: false
         sort 'seq'
-    }
-
-    static constraints = {
-        totalNumber nullable: true
-        scoredNumber nullable: true
-        average nullable: true
     }
 }
