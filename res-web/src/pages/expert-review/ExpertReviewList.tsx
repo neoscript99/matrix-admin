@@ -15,6 +15,8 @@ import {
   UploadWrap,
   ListOptions,
   Entity,
+  NumberUtil,
+  TableUtil,
 } from 'oo-rest-mobx';
 interface S extends EntityListState {
   scoreList: any[];
@@ -27,6 +29,7 @@ const Upload = (props: UploadProps) => (
   <UploadWrap value={[props.file]} disabled={true} attachmentService={attachmentService} />
 );
 const columns: EntityColumnProps[] = [
+  TableUtil.commonColumns.index,
   { title: '标题', dataIndex: 'name' },
   { title: '负责人', dataIndex: 'personInCharge.name' },
   { title: '单位', dataIndex: 'dept.name' },
@@ -61,7 +64,8 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
     const { dataList, scoreList, roundExpert } = this.state;
     if (!dataList || dataList.length === 0) return <Result title="当前无评分" />;
     const scoredNumber = scoreList.length;
-    const average = scoredNumber > 0 ? scoreList.reduce((sum, item) => sum + item.score, 0) / scoredNumber : 0;
+    const sum = scoreList.reduce((sum, item) => sum + item.score, 0);
+    const average = scoredNumber > 0 ? NumberUtil.round(sum / scoredNumber, 2) : 0;
     const { round } = roundExpert;
     return (
       <React.Fragment>
@@ -79,7 +83,8 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
             }
             description={
               <span>
-                总数：<Tag>{dataList.length}</Tag>，已评分数量：<Tag>{scoredNumber}</Tag>，平均分：<Tag>{average}</Tag>
+                总数：<Tag>{dataList.length}</Tag>，已评分数量：<Tag>{scoredNumber}</Tag>，已评平均分：
+                <Tag>{average}</Tag>
               </span>
             }
           />
@@ -95,12 +100,16 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
   async queryData() {
     const roundExpert = reviewRoundExpertService.store.currentItem;
     if (!roundExpert?.id) return;
-    const scoreOptions: ListOptions = { criteria: { eq: [['reviewRoundExpertId', roundExpert.id]] } };
+    const scoreOptions: ListOptions = { criteria: { eq: [['roundExpert.id', roundExpert.id]] } };
     const scoreList = (await achieveReviewScoreService.listAll(scoreOptions)).results;
     const achieveOptions: ListOptions = { criteria: { eq: [['reviewPlan.id', roundExpert.round.plan.id]] } };
     const dataList = (await this.domainService.listAll(achieveOptions)).results;
     dataList.forEach(item => (item.score = scoreList.find(s => s.achieveId === item.id)?.score));
-    this.setState({ scoreList, dataList, roundExpert });
+    this.setState({ scoreList, dataList: this.sortList(dataList), roundExpert });
+  }
+
+  sortList(dataList: any[]) {
+    return dataList.sort((a, b) => (b.score || 0) - (a.score || 0));
   }
 
   get columns(): EntityColumnProps[] {
@@ -121,6 +130,7 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
       },
     ];
   }
+  showing = false;
   async updateScore(achieveId: string, score: number | undefined) {
     if (!score) return;
     const { roundExpert, dataList, scoreList } = this.state;
@@ -130,12 +140,17 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
       oldScore.score = score;
       await service.save(oldScore);
     } else {
-      const newScore = await service.save({ achieveId, score, reviewRoundExpertId: roundExpert.id });
+      const newScore = await service.save({ achieveId, score, roundExpert });
       scoreList.push(newScore);
     }
-    dataList.find(d => d.id === achieveId)!.score = score;
-    message.info('评分已更新');
-    this.setState({ dataList, scoreList });
+    const achieve = dataList.find(d => d.id === achieveId);
+    if (achieve) achieve.score = score;
+    if (!this.showing) {
+      this.showing = true;
+      message.info('评分已更新', 2, () => (this.showing = false));
+    }
+
+    this.setState({ dataList: this.sortList(dataList), scoreList });
   }
 
   get domainService() {
@@ -143,8 +158,8 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
   }
 
   get isTopic() {
-    const { round } = reviewRoundExpertService.store.currentItem;
-    return round && round.plan.reviewTypeCode === 'topic';
+    const { roundExpert } = this.state;
+    return roundExpert && roundExpert?.round.plan.reviewTypeCode === 'topic';
   }
 
   get name() {

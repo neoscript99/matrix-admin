@@ -13,10 +13,14 @@ import groovy.transform.ToString
 class AchieveReviewScore {
     String id
     String achieveId
-    String reviewRoundExpertId
+    ReviewRoundExpert roundExpert
     // 百分制
     Integer score
 
     Date dateCreated
     Date lastUpdated
+
+    static mapping = {
+        roundExpert fetch: 'join', lazy: false
+    }
 }

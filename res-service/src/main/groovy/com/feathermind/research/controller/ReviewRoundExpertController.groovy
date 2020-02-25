@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/reviewRoundExpert")
-class ReviewRoundExportController extends DomainController<ReviewRoundExpert> {
+class ReviewRoundExpertController extends DomainController<ReviewRoundExpert> {
     @Autowired
     ReviewRoundExpertService reviewRoundExpertService
 

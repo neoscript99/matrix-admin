@@ -1,8 +1,9 @@
 import React from 'react';
-import { DeptList, AdminPageProps, commonColumns } from 'oo-rest-mobx';
+import { DeptList, AdminPageProps, TableUtil } from 'oo-rest-mobx';
 import { ResDeptForm } from './ResDeptForm';
 import { message } from 'antd';
 
+const { commonColumns } = TableUtil;
 export class ResDeptList extends DeptList {
   constructor(props: AdminPageProps) {
     super(props);
