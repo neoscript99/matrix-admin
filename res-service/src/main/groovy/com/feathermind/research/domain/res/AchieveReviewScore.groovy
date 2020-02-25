@@ -8,7 +8,7 @@ import groovy.transform.ToString
  * 专家每轮评分结果
  */
 @Entity
-@ToString(includePackage = false, includeNames = true, includes = 'achieve,rrExpert,score')
+@ToString(includePackage = false, includeNames = true, includes = 'achieveId,score')
 @EqualsAndHashCode(includes = 'id')
 class AchieveReviewScore {
     String id

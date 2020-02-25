@@ -114,7 +114,7 @@ export class ReviewRoundForm extends EntityForm<ReviewRoundFormProps, S> {
         <SelectField
           fieldId="experts"
           dataSource={this.state.availableExperts}
-          originValueType="array"
+          multiValueType="array"
           formItemProps={{ label: '邀请专家', style: twoSpanFormItemCss }}
           defaultSelectFirst={isDev}
           formUtils={form}

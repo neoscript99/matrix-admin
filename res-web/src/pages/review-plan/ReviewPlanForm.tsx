@@ -53,7 +53,7 @@ export class ReviewPlanForm extends EntityForm {
           formItemProps={{ label: '申报截止日期(当天15:00截止)' }}
           formUtils={form}
           required
-          defaultDiffDays={90}
+          defaultDiffDays={30}
           readonly={readonly}
         />
       </Form>
