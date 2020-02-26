@@ -1,7 +1,7 @@
 package com.feathermind.matrix.util
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.feathermind.matrix.domain.sys.Param
 import spock.lang.Specification
 
 
@@ -22,8 +22,9 @@ class JsonUtilSpec extends Specification {
     }
 }
 
-@JsonIgnoreProperties(value = ['password', "b"], allowSetters = true)
+@JsonIgnoreProperties(["b"])
 class IgnoreTest {
+    @JsonIgnore
     String a
     String b
 }

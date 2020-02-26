@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class ReviewRoundExpertService extends AbstractService<ReviewRoundExpert> {
     @Autowired
-    AchieveReviewScoreService achieveReviewScoreService
+    AchieveExpertScoreService achieveExpertScoreService
     /**
      * 遍历原专家列表，如果新列表中存在则更新排序号
      * 如果不存在，删除原实体，并删除该专家在本轮的所有打分信息
@@ -31,7 +31,7 @@ class ReviewRoundExpertService extends AbstractService<ReviewRoundExpert> {
                 save([round: round, expert: [id: expertId], seq: idx])
         }
         oldList.each {
-            achieveReviewScoreService.deleteMatch([eq: [['roundExpert.id', it.id]]])
+            achieveExpertScoreService.deleteMatch([eq: [['roundExpert.id', it.id]]])
             it.delete()
         }
     }

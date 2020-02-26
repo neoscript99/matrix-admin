@@ -1,11 +1,10 @@
 package com.feathermind.research.service
 
-import com.feathermind.matrix.service.AbstractService
 import com.feathermind.research.domain.res.AchieveTopic
 import org.springframework.stereotype.Service
 
 @Service
-class TopicAchieveService extends AbstractService<AchieveTopic> {
+class TopicAchieveService extends AchieveService<AchieveTopic> {
     @Override
     AchieveTopic save(Map map) {
         //如果当前是修改，需要把原课题恢复为结题状态，先不管是否选择了不同的课题

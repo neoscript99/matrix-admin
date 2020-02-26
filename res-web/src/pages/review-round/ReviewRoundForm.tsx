@@ -17,23 +17,29 @@ import {
 import { dictService, resUserService, reviewRoundExpertService } from '../../services';
 import { config } from '../../utils';
 import moment from 'moment';
+
 const { required, number, array } = commonRules;
 const { flexFormCss, oneSpanFormItemCss, twoSpanFormItemCss } = StyleUtil.commonStyle;
+
 interface S {
   expertIds?: any[];
   availableExperts: Entity[];
 }
+
 export interface ReviewRoundFormProps extends EntityFormProps {
   parentList: any[];
 }
+
 export class ReviewRoundForm extends EntityForm<ReviewRoundFormProps, S> {
   saveEntity(saveItem: Entity): Promise<Entity> {
     //saveItem会出现parentRound: {id: undefined},导致后台保存失败
     if (!saveItem.parentRound?.id) saveItem.parentRound = null;
     return super.saveEntity(saveItem);
   }
+
   state = { availableExperts: [] } as S;
   resetPassword = `${moment().year()}_${StringUtil.randomString(4)}`;
+
   async componentDidMount() {
     const { form, inputItem } = this.props;
     let availableExperts = await resUserService.getAvailableExperts();
@@ -71,18 +77,6 @@ export class ReviewRoundForm extends EntityForm<ReviewRoundFormProps, S> {
           decorator={req}
           readonly={readonly}
         />
-        <InputNumberField
-          fieldId="grades"
-          formItemProps={{
-            label: <TooltipLabel tooltip="专家评分后，计算得分并根据这里的配置分多个等级" label="本轮等级数" />,
-            style: oneSpanFormItemCss,
-          }}
-          formUtils={form}
-          min={2}
-          max={100}
-          decorator={{ initialValue: 4, rules: [number] }}
-          readonly={readonly}
-        />
         <DictSelectField
           fieldId="avgAlgorithmCode"
           formItemProps={{ label: '平均分算法', style: oneSpanFormItemCss }}
@@ -111,18 +105,6 @@ export class ReviewRoundForm extends EntityForm<ReviewRoundFormProps, S> {
           decorator={{ rules: [required], initialValue: this.resetPassword }}
           readonly={readonly}
         />
-        <SelectField
-          fieldId="experts"
-          dataSource={this.state.availableExperts}
-          multiValueType="array"
-          formItemProps={{ label: '邀请专家', style: twoSpanFormItemCss }}
-          defaultSelectFirst={isDev}
-          formUtils={form}
-          valueProp="id"
-          labelRender={(item)=>`${item.name}(${item.account})`}
-          decorator={{ rules: [array] }}
-          mode="multiple"
-        />
         {parentList.length > 0 && (
           <SelectField
             fieldId="parentRound.id"
@@ -136,18 +118,31 @@ export class ReviewRoundForm extends EntityForm<ReviewRoundFormProps, S> {
         )}
         {parentList.length > 0 && parentRound && (
           <InputNumberField
-            fieldId="parentPassGrades"
+            fieldId="passRate"
             formItemProps={{
-              label: `上轮通过等级数(共${parentRound.grades}个)`,
+              label: `上轮通过比例(%)`,
               style: oneSpanFormItemCss,
             }}
             formUtils={form}
-            min={1}
-            max={parentRound?.grades}
+            min={0}
+            max={100}
+            step={0.1}
             decorator={{ rules: [number] }}
             readonly={readonly}
           />
         )}
+        <SelectField
+          fieldId="experts"
+          dataSource={this.state.availableExperts}
+          multiValueType="array"
+          formItemProps={{ label: '邀请专家', style: twoSpanFormItemCss }}
+          defaultSelectFirst={isDev}
+          formUtils={form}
+          valueProp="id"
+          labelRender={item => `${item.name}(${item.account})`}
+          decorator={{ rules: [array] }}
+          mode="multiple"
+        />
       </Form>
     );
   }

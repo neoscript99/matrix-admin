@@ -13,7 +13,7 @@ class ReviewRoundService extends AbstractService<ReviewRound> {
     @Autowired
     ReviewRoundExpertService reviewRoundExpertService
     @Autowired
-    AchieveReviewScoreService reviewRoundScoreService
+    AchieveExpertScoreService reviewRoundScoreService
 
     @Override
     ReviewRound save(Map map) {

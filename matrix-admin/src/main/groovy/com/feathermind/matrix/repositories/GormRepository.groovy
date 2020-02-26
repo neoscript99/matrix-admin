@@ -60,12 +60,14 @@ class GormRepository implements GeneralRepository {
     }
 
     /**
+     * 创建实体，使用HuTools接口
      * @see GeneralRepository#saveMap(Class, Map)
      */
     @Override
     public <T> T saveMap(Class<T> domain, Map map) {
-        GormEntity newEntity = JsonUtil.mapToBean(map, domain)
+        GormEntity newEntity = BeanUtil.toBean(map, domain)
         if (newEntity.ident()) {
+            // 支持部分更新，所以map中只有部分属性，需要先从数据库中获取原实体
             GormEntity updateEntity = get(domain, newEntity.ident())
             //支持部分属性更新,用map做copy,不能直接用bean做copy是因为bean会有初始话的值
             // Spring和common-beanUtils不支持嵌套属性

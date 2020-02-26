@@ -44,10 +44,10 @@ export const applyService = new DomainService({ domain: 'apply', restClient, sto
 export const reviewPlanService = new PlanService('reviewPlan', restClient);
 export const reviewRoundService = new DomainService({ domain: 'reviewRound', restClient, storeClass });
 export const reviewRoundExpertService = new ReviewRoundExpertService(restClient);
-export const achieveReviewScoreService = new DomainService({ domain: 'achieveReviewScore', restClient, storeClass });
+export const achieveExpertScoreService = new DomainService({ domain: 'achieveExpertScore', restClient, storeClass });
+export const achieveService = new DomainService({ domain: 'achieve', restClient, storeClass });
 export const paperService = new DomainService({ domain: 'paper', restClient, storeClass });
 export const topicAchieveService = new DomainService({ domain: 'topicAchieve', restClient, storeClass });
-export const topicAchieveMemberService = new DomainService({ domain: 'topicAchieveMember', restClient, storeClass });
 
 export const loginService = adminServices.loginService;
 //session登录不成功的话，尝试本地保存的用户密码登录

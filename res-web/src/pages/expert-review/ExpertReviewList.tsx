@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Tag, Card, Result, InputNumber, message } from 'antd';
 import {
-  achieveReviewScoreService,
+  achieveExpertScoreService,
   attachmentService,
   paperService,
   reviewRoundExpertService,
@@ -101,7 +101,7 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
     const roundExpert = reviewRoundExpertService.store.currentItem;
     if (!roundExpert?.id) return;
     const scoreOptions: ListOptions = { criteria: { eq: [['roundExpert.id', roundExpert.id]] } };
-    const scoreList = (await achieveReviewScoreService.listAll(scoreOptions)).results;
+    const scoreList = (await achieveExpertScoreService.listAll(scoreOptions)).results;
     const achieveOptions: ListOptions = { criteria: { eq: [['reviewPlan.id', roundExpert.round.plan.id]] } };
     const dataList = (await this.domainService.listAll(achieveOptions)).results;
     dataList.forEach(item => (item.score = scoreList.find(s => s.achieveId === item.id)?.score));
@@ -135,12 +135,12 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
     if (!score) return;
     const { roundExpert, dataList, scoreList } = this.state;
     const oldScore = scoreList.find(s => s.achieveId === achieveId);
-    const service = achieveReviewScoreService;
+    const service = achieveExpertScoreService;
     if (oldScore) {
       oldScore.score = score;
       await service.save(oldScore);
     } else {
-      const newScore = await service.save({ achieveId, score, roundExpert });
+      const newScore = await service.save({ achieve: { id: achieveId }, score, roundExpert: { id: roundExpert.id } });
       scoreList.push(newScore);
     }
     const achieve = dataList.find(d => d.id === achieveId);

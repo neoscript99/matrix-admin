@@ -32,6 +32,7 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
         reviewTypeDict()
         projectLevelDict()
         avgAlgorithmDict()
+        runStatusDict()
     }
 
     void initParam() {
@@ -211,6 +212,16 @@ class ResDictInitializer extends AbstractDataInitializer implements DataInitiali
 
         new Dict(code: 'normal', name: '全部分数平均', seq: 10, type: dictType).save();
         new Dict(code: 'ignore-max-min', name: '去除最高最低', seq: 20, type: dictType).save();
+    }
+
+    void runStatusDict() {
+        def dictType = new DictType(id: 'res-run-status', name: '评分计算状态').save()
+
+        new Dict(code: 'init', name: '新建', seq: 10, type: dictType).save();
+        new Dict(code: 'running', name: '计算中', seq: 20, type: dictType).save();
+        new Dict(code: 'success', name: '成功', seq: 30, type: dictType).save();
+        new Dict(code: 'partial', name: '部分成功', seq: 40, type: dictType).save();
+        new Dict(code: 'fail', name: '失败', seq: 50, type: dictType).save();
     }
 
 }
