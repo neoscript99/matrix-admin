@@ -59,23 +59,27 @@ export class InitialApplyForm extends DeptUserForm<InitialApplyFormProps, S> {
   async saveEntity(saveItem) {
     const {
       inputItem: {
+        id,
         initialPlan: { planYear },
       },
     } = this.props;
-    const user = { id: loginService.user!.id };
-    const day = moment().format('MMDD');
-    const apply = {
-      name: `${saveItem.topicName}立项申请`,
-      type: 'topic_initial_apply',
-      applier: user,
-      statusCode: 'draft',
-    };
-    const initialApply = await applyService.save(apply);
-    saveItem.initialApply = initialApply;
-    saveItem.dept = { id: loginService.dept!.id };
-    saveItem.topicStatusCode = 'created';
-    //立项编码在审批成功后再生成
-    saveItem.topicCode = `${saveItem.topicCateCode}-${planYear}-${day}-${StringUtil.randomString(4)}`;
+    //如果是新申请，自动设置部分属性
+    if (!id) {
+      const user = { id: loginService.user!.id };
+      const day = moment().format('MMDD');
+      const apply = {
+        name: `${saveItem.topicName}立项申请`,
+        type: 'topic_initial_apply',
+        applier: user,
+        statusCode: 'draft',
+      };
+      const initialApply = await applyService.save(apply);
+      saveItem.initialApply = initialApply;
+      saveItem.dept = { id: loginService.dept!.id };
+      saveItem.topicStatusCode = 'created';
+      //立项编码在审批成功后再生成
+      saveItem.topicCode = `${saveItem.topicCateCode}-${planYear}-${day}-${StringUtil.randomString(4)}`;
+    }
     return await super.saveEntity(saveItem);
   }
 

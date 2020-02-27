@@ -2,11 +2,13 @@ package com.feathermind.matrix.domain.sys
 
 import com.feathermind.matrix.initializer.InitializeDomain
 import grails.gorm.annotation.Entity
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 @Entity
 @ToString(includePackage = false, includes = 'name')
 @InitializeDomain
+@EqualsAndHashCode(includes = 'id')
 class Department {
     String id
     String name;

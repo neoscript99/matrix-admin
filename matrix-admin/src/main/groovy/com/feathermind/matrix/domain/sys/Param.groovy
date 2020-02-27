@@ -13,7 +13,7 @@ import groovy.transform.ToString
 @Entity
 @InitializeDomain(value = 'paramList', depends = [ParamType, User])
 @ToString(includePackage = false, includes = 'name,code')
-@EqualsAndHashCode(includes = 'code')
+@EqualsAndHashCode(includes = 'id')
 class Param {
     static final Param ALLOW_ANONYMOUS_LOGIN = (new Param(code: 'AllowAnonymousLogin', name: '允许匿名登录',
             value: 'false', type: ParamType.SYSTEM, validExp: '^(true|false)$', validDescribe: 'true或者false', lastUser: User.ADMIN))

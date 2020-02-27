@@ -12,19 +12,12 @@ import groovy.transform.ToString
  */
 @Entity
 @ToString(includePackage = false, includeNames = true, includes = 'planName')
-@EqualsAndHashCode(includes = 'id')
 @InitializeDomain(profiles = 'dev')
+@EqualsAndHashCode(includes = 'id')
 class InitialPlan implements PlanTrait {
     String id
-    String planName
-    //立项年度
-    Integer planYear
     //计划类型，相当于课题大类
     String planCateCode
-    //申报开始日期
-    String planBeginDay
-    //申报截止日期
-    String planEndDay
     //结题截止日期
     String finishDeadline
     //每个单位最多可申报数

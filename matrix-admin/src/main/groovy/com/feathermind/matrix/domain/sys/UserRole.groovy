@@ -10,7 +10,7 @@ import groovy.transform.TupleConstructor
 @TupleConstructor(includes = 'user,role')
 @InitializeDomain(depends = [User, Role])
 @ToString(includes = ['role', 'user'])
-@EqualsAndHashCode(includes = ['role', 'user'])
+@EqualsAndHashCode(includes = 'id')
 class UserRole implements Serializable {
 
     String id

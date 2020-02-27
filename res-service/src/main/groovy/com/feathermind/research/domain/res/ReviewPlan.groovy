@@ -11,20 +11,12 @@ import groovy.transform.ToString
  */
 @Entity
 @ToString(includePackage = false, includeNames = true, includes = 'planName')
-@EqualsAndHashCode(includes = 'id')
 @InitializeDomain(profiles = 'dev')
+@EqualsAndHashCode(includes = 'id')
 class ReviewPlan implements PlanTrait {
     String id
     //评比类型：成果或论文
     String reviewTypeCode
-    String planName
-    //年度
-    Integer planYear
-    String planBeginDay
-    String planEndDay
-
-    Date dateCreated
-    Date lastUpdated
 
     static DemoPlan1 = new ReviewPlan([planName    : '2020年教育科学幼教课题评比计划',
                                        planYear    : 2020, reviewTypeCode: 'topic',

@@ -1,6 +1,7 @@
 package com.feathermind.matrix.domain.sys
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.feathermind.matrix.util.EncoderUtil
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
@@ -11,10 +12,8 @@ import com.feathermind.matrix.initializer.InitializeDomain
 @Entity
 @TupleConstructor
 @ToString(includePackage = false, includes = 'name,dept')
-@EqualsAndHashCode(includes = 'account')
+@EqualsAndHashCode(includes = 'id')
 @InitializeDomain(depends = [Department])
-@JsonIgnoreProperties(value = ['password', "dirtyPropertyNames", "errors", "dirty", "attached", "version", "properties", "metaClass", "tenantId", "dbo"]
-        , allowSetters = true)
 /**
  * 管理后台的系统用户信息
  * sys包下都是管理后台相关domain
@@ -26,6 +25,7 @@ class User {
 
     String id
     String account
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password = encodePassword('anonymous')
     String name
     Boolean editable = true

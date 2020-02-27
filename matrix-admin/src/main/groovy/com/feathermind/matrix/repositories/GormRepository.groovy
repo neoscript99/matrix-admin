@@ -1,7 +1,5 @@
 package com.feathermind.matrix.repositories
 
-import cn.hutool.core.bean.BeanUtil
-import cn.hutool.core.bean.copier.CopyOptions
 import com.feathermind.matrix.util.JsonUtil
 import groovy.transform.CompileStatic
 import groovy.transform.TypeCheckingMode
@@ -11,6 +9,7 @@ import org.grails.datastore.gorm.GormEnhancer
 import org.grails.datastore.gorm.GormEntity
 import org.hibernate.SessionFactory
 import org.hibernate.criterion.CriteriaSpecification
+import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
@@ -61,24 +60,33 @@ class GormRepository implements GeneralRepository {
 
     /**
      * 创建实体，使用HuTools接口
+     *
+     * org.apache.commons.beanutils.BeanUtils.populate功能较弱，已经试过，不支持“容错”、“默认值处理不正确”、“嵌套属性”
      * @see GeneralRepository#saveMap(Class, Map)
      */
     @Override
     public <T> T saveMap(Class<T> domain, Map map) {
-        GormEntity newEntity = BeanUtil.toBean(map, domain)
+        GormEntity newEntity = JsonUtil.mapToBean(map, domain)
         if (newEntity.ident()) {
             // 支持部分更新，所以map中只有部分属性，需要先从数据库中获取原实体
             GormEntity updateEntity = get(domain, newEntity.ident())
-            //支持部分属性更新,用map做copy,不能直接用bean做copy是因为bean会有初始话的值
-            // Spring和common-beanUtils不支持嵌套属性
-            // hutool不支持trait属性，因为trait生成的field名带了前缀，而HuTools是根据field来copy的，不根据property
-            BeanUtil.fillBeanWithMap(map, updateEntity, PROPERTY_NOT_COPY)
+            /**
+             * 支持部分属性更新,不能直接用bean做copy是因为bean会有初始话的值，要忽略map中没有的key值
+             *
+             * @see cn.hutool.core.bean.BeanUtil#fillBeanWithMap
+             * hutool不支持trait属性，因为trait生成的field名带了前缀，而HuTools是根据field来copy的，不根据property
+             */
+            def ignoreProps = BeanUtils.getPropertyDescriptors(domain)*.name
+            ignoreProps.removeAll(map.keySet());
+            ignoreProps.addAll(domainUpdateIgnores);
+            log.debug("ignoreProperties: {}", ignoreProps)
+            BeanUtils.copyProperties(newEntity, updateEntity, ignoreProps.toArray(new String[0]))
             saveEntity(updateEntity)
         } else
             saveEntity(newEntity)
     }
 
-    static CopyOptions PROPERTY_NOT_COPY = CopyOptions.create().setIgnoreProperties('id', 'version', 'metaClass', 'lastUpdated', 'dateCreated')
+    static String[] domainUpdateIgnores = ['id', 'version', 'metaClass', 'lastUpdated', 'dateCreated']
 
     /**
      * @see GeneralRepository#saveTransietEntity
@@ -86,13 +94,12 @@ class GormRepository implements GeneralRepository {
     Object saveTransietEntity(Object entity) {
         log.debug("saveTransietEntity $entity")
         GormEntity transietEntity = entity as GormEntity;
-        GormEntity attachedEntity = transietEntity.class.get(transietEntity.ident())
-
+        GormEntity attachedEntity = GormEnhancer.findStaticApi(transietEntity.class).get(transietEntity.ident())
         if (attachedEntity) {//update
             if (attachedEntity.hasProperty('version'))
                 log.debug("old version is $attachedEntity.version")
 
-            BeanUtil.copyProperties(transietEntity, attachedEntity, PROPERTY_NOT_COPY)
+            BeanUtils.copyProperties(transietEntity, attachedEntity, domainUpdateIgnores)
             saveEntity(attachedEntity)
         } else //insert
             saveEntity(transietEntity)

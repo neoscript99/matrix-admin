@@ -7,13 +7,15 @@ import { config } from '../../utils';
 export class FinishApplyForm extends EntityForm {
   async saveEntity(saveItem) {
     const { inputItem } = this.props;
-    const user = { id: loginService.user!.id };
-    saveItem.finishApply = await applyService.save({
-      name: `${inputItem!.topicName}结题申请`,
-      type: 'topic_finish_apply',
-      applier: user,
-      statusCode: 'draft',
-    });
+    if (!inputItem?.finishApply) {
+      const user = { id: loginService.user!.id };
+      saveItem.finishApply = await applyService.save({
+        name: `${inputItem!.topicName}结题申请`,
+        type: 'topic_finish_apply',
+        applier: user,
+        statusCode: 'draft',
+      });
+    }
     return await super.saveEntity(saveItem);
   }
   getForm() {

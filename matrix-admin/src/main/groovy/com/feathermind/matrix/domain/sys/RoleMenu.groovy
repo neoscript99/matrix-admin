@@ -8,7 +8,7 @@ import groovy.transform.TupleConstructor
 @Entity
 @TupleConstructor(includes = 'role,menu')
 @ToString(includes = ['role', 'menu'])
-@EqualsAndHashCode(includes = ['role', 'menu'])
+@EqualsAndHashCode(includes = 'id')
 class RoleMenu implements Serializable {
 
     String id

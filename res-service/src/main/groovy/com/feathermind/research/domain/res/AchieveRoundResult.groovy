@@ -1,6 +1,7 @@
 package com.feathermind.research.domain.res
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -14,7 +15,7 @@ import groovy.transform.ToString
 class AchieveRoundResult {
     String id
     //到前台的数据会有一个achieveId属性，但不做achieve关联（topic的关联太多），后台如有使用自动lazy加载
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     Achieve achieve
     ReviewRound round
     BigDecimal average
@@ -31,7 +32,6 @@ class AchieveRoundResult {
     }
     static constraints = {
         average nullable: true
-        grade nullable: true
         error nullable: true
     }
 }

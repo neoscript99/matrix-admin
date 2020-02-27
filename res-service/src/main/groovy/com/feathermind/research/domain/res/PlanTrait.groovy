@@ -6,9 +6,17 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 trait PlanTrait extends AutoTime {
-    abstract String getPlanBeginDay();
-
-    abstract String getPlanEndDay();
+    /**
+     * 子类不支持@EqualsAndHashCode(includes = 'id')
+     */
+    //String id
+    String planName
+    //立项年度
+    Integer planYear
+    //申报开始日期
+    String planBeginDay
+    //申报截止日期
+    String planEndDay
     /**
      * 计划状态
      * @return

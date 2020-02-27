@@ -13,7 +13,7 @@ import com.feathermind.matrix.initializer.InitializeDomain
 @Entity
 @TupleConstructor
 @ToString(includePackage = false, includes = 'roleName')
-@EqualsAndHashCode(includes = 'roleCode')
+@EqualsAndHashCode(includes = 'id')
 @InitializeDomain
 class Role {
     //管理员，所有菜单权限
