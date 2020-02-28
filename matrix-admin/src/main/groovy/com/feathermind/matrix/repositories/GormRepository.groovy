@@ -76,9 +76,10 @@ class GormRepository implements GeneralRepository {
              * @see cn.hutool.core.bean.BeanUtil#fillBeanWithMap
              * hutool不支持trait属性，因为trait生成的field名带了前缀，而HuTools是根据field来copy的，不根据property
              */
-            def ignoreProps = BeanUtils.getPropertyDescriptors(domain)*.name
             // 忽略map中没有或默认设置的的key
-            ignoreProps.removeAll(map.keySet().removeAll(domainUpdateIgnores));
+            def ignoreProps = BeanUtils.getPropertyDescriptors(domain)*.name.findAll {
+                !map.containsKey(it) || domainUpdateIgnores.contains(it)
+            }
             log.debug("ignoreProperties: {}", ignoreProps)
             BeanUtils.copyProperties(newEntity, updateEntity, ignoreProps.toArray(new String[0]))
             saveEntity(updateEntity)

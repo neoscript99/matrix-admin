@@ -18,9 +18,11 @@ class ReviewRoundService extends AbstractService<ReviewRound> {
     @Override
     ReviewRound save(Map map) {
         def round = super.save(map)
-        reviewRoundExpertService.saveRoundExpert(round, map.experts)
-        def pass = User.encodePassword(round.expertPassword)
-        resUserService.updateMatch([inList: [['id', map.experts]]], [password: pass])
+        if (map.experts) {
+            reviewRoundExpertService.saveRoundExpert(round, map.experts)
+            def pass = User.encodePassword(round.expertPassword)
+            resUserService.updateMatch([inList: [['id', map.experts]]], [password: pass])
+        }
         return round
     }
 

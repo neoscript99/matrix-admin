@@ -1,6 +1,5 @@
 package com.feathermind.research.domain.res
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode

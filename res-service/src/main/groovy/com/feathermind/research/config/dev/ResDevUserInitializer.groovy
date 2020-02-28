@@ -6,11 +6,7 @@ import com.feathermind.matrix.initializer.AbstractDataInitializer
 import com.feathermind.matrix.initializer.DataInitializer
 import com.feathermind.research.config.common.InitEntity
 import com.feathermind.research.config.common.ResUserInitializer
-import com.feathermind.research.domain.res.AchievePaper
-import com.feathermind.research.domain.res.ResUser
-import com.feathermind.research.domain.res.ReviewPlan
-import com.feathermind.research.domain.res.ReviewRound
-import com.feathermind.research.domain.res.ReviewRoundExpert
+import com.feathermind.research.domain.res.*
 import groovy.transform.CompileStatic
 import groovy.transform.TypeCheckingMode
 import org.springframework.core.annotation.Order
@@ -22,6 +18,8 @@ import static com.feathermind.research.domain.res.ResDept.*
 class ResDevUserInitializer extends AbstractDataInitializer implements DataInitializer {
 
     static final String DEFAULT_PASS = ResUserInitializer.DEFAULT_PASS
+    List<ReviewRoundExpert> roundExpertList
+    List<ResUser> expertList
 
     @Override
     boolean isInited() {
@@ -31,21 +29,32 @@ class ResDevUserInitializer extends AbstractDataInitializer implements DataIniti
     @Override
     void doInit() {
         initUser()
+        initExpert()
         initReviewRoundExpert()
         initPaper()
     }
 
 
     static ResUser demoSchoolUser = new ResUser(name: '单位管理员', account: 'dept-admin', cellPhone: '88888888', dept: demoSchool, password: DEFAULT_PASS)
-    static ResUser expertUser = new ResUser(name: '评审专家', account: 'expert', cellPhone: '88888888', dept: expertDept, password: DEFAULT_PASS)
+    static ResUser expertUser = new ResUser(name: '评审专家', account: 'expert', dept: expertDept, password: DEFAULT_PASS)
+    static ResUser expertUser02 = new ResUser(name: '评审专家02', account: 'expert02', dept: expertDept, password: DEFAULT_PASS)
+    static ResUser expertUser03 = new ResUser(name: '评审专家03', account: 'expert03', dept: expertDept, password: DEFAULT_PASS)
 
     def initUser() {
         demoSchoolUser.save()
-        expertUser.save()
         new UserRole(demoSchoolUser, InitEntity.DEPT_MANAGER).save()
         new UserRole(demoSchoolUser, InitEntity.RES_USER).save()
-        new UserRole(expertUser, InitEntity.EXPERT).save()
         initDemoSchoolMember()
+    }
+
+    void initExpert() {
+        expertList = [expertUser,
+                      new ResUser(name: '评审专家02', account: 'expert02', dept: expertDept, password: DEFAULT_PASS),
+                      new ResUser(name: '评审专家03', account: 'expert03', dept: expertDept, password: DEFAULT_PASS)]
+        expertList.each {
+            it.save()
+            new UserRole(it, InitEntity.EXPERT).save()
+        }
     }
 
     def initDemoSchoolMember() {
@@ -54,10 +63,10 @@ class ResDevUserInitializer extends AbstractDataInitializer implements DataIniti
         new ResUser(name: '成员3', account: '高级中学管理员03', idCard: '333000199012126663', cellPhone: '88888888', dept: demoSchool, password: DEFAULT_PASS).save()
     }
 
-    static demoReviewRoundExpert = new ReviewRoundExpert(round: ReviewRound.DemoPaperRound, expert: expertUser, seq: 10)
-
-    def initReviewRoundExpert() {
-        demoReviewRoundExpert.save()
+    void initReviewRoundExpert() {
+        roundExpertList = expertList.collect {
+            new ReviewRoundExpert(round: ReviewRound.DemoPaperRound, expert: it, seq: 10).save()
+        }
     }
 
     def initPaper() {
@@ -71,8 +80,19 @@ class ResDevUserInitializer extends AbstractDataInitializer implements DataIniti
                     new AchievePaper(name: '论文004', personInCharge: demoSchoolUser,
                             reviewPlan: ReviewPlan.DemoPaperPlan, dept: demoSchool, paperFile: fileInfo),
                     new AchievePaper(name: '论文005', personInCharge: demoSchoolUser,
+                            reviewPlan: ReviewPlan.DemoPaperPlan, dept: demoSchool, paperFile: fileInfo),
+                    new AchievePaper(name: '论文006', personInCharge: demoSchoolUser,
+                            reviewPlan: ReviewPlan.DemoPaperPlan, dept: demoSchool, paperFile: fileInfo),
+                    new AchievePaper(name: '论文007', personInCharge: demoSchoolUser,
                             reviewPlan: ReviewPlan.DemoPaperPlan, dept: demoSchool, paperFile: fileInfo)]
-        list.each { it.save() }
+        list.eachWithIndex { paper, idx1 ->
+            paper.save()
+            roundExpertList.eachWithIndex { exp, idx2 ->
+                //def score = Math.abs(paper.hashCode()) % 100
+                def score = 60 + idx2 * 10
+                new AchieveExpertScore(achieve: paper, roundExpert: exp, score: score).save()
+            }
+        }
         return list
     }
 }

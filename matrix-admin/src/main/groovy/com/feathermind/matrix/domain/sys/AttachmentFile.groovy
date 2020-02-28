@@ -31,7 +31,7 @@ class AttachmentFile {
         fileId maxSize: 80
         data maxSize: 1024 * 1024 * 20
     }
-    static DemoData = '656d7074792066696c6520666f722074657374'
+    static DemoData = 'empty file for test'
     static DemoFile = new AttachmentFile(fileId: DemoData, refCount: 1, data: DemoData.bytes)
     static initList = [DemoFile]
 }

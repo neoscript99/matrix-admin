@@ -7,6 +7,7 @@ import { TopicService } from './TopicService';
 import { TopicMemberService } from './TopicMemberService';
 import { TopicSupportService } from './TopicSupportService';
 import { ReviewRoundExpertService } from './ReviewRoundExpertService';
+import { ReviewRoundService } from './ReviewRoundService';
 
 function afterLogin(loginInfo: LoginInfo) {
   if (!loginInfo.token) throw 'token不能为空';
@@ -42,7 +43,7 @@ export const topicMemberService = new TopicMemberService(restClient);
 export const topicSupportService = new TopicSupportService(restClient);
 export const applyService = new DomainService({ domain: 'apply', restClient, storeClass });
 export const reviewPlanService = new PlanService('reviewPlan', restClient);
-export const reviewRoundService = new DomainService({ domain: 'reviewRound', restClient, storeClass });
+export const reviewRoundService = new ReviewRoundService(restClient);
 export const reviewRoundExpertService = new ReviewRoundExpertService(restClient);
 export const achieveExpertScoreService = new DomainService({ domain: 'achieveExpertScore', restClient, storeClass });
 export const achieveService = new DomainService({ domain: 'achieve', restClient, storeClass });

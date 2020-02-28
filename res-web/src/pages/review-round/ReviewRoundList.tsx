@@ -11,6 +11,7 @@ import {
 import { dictService, reviewRoundService } from '../../services';
 import { ReviewRoundForm, ReviewRoundFormProps } from './ReviewRoundForm';
 import { Button, Popconfirm, Table } from 'antd';
+
 const columns: EntityColumnProps[] = [
   { title: '评分轮次', dataIndex: 'name' },
   { title: '截止日期', dataIndex: 'endDay' },
@@ -22,11 +23,13 @@ const columns: EntityColumnProps[] = [
   },
 ];
 const { tdButtonProps, twoColModalProps } = Consts.commonProps;
+
 interface P extends EntityListProps {
   plan: Entity;
   showForm?: boolean;
   onFormClose: () => void;
 }
+
 export class ReviewRoundList extends EntityList<P> {
   constructor(props, context) {
     super(props, context);
@@ -37,6 +40,7 @@ export class ReviewRoundList extends EntityList<P> {
   componentDidMount(): void {
     this.query();
   }
+
   render() {
     const { showForm } = this.props;
     const { dataList, formProps } = this.state;
@@ -49,6 +53,7 @@ export class ReviewRoundList extends EntityList<P> {
       </div>
     );
   }
+
   genFormProps(action: string, item?: any, exProps?): ReviewRoundFormProps {
     const { dataList } = this.state;
     const props = super.genFormProps(action, item, exProps);
@@ -58,9 +63,11 @@ export class ReviewRoundList extends EntityList<P> {
       parentList: item ? dataList.filter(p => p.dateCreated! < item.dateCreated) : dataList,
     };
   }
+
   get domainService(): DomainService {
     return reviewRoundService;
   }
+
   get columns(): EntityColumnProps[] {
     return [
       ...columns,
@@ -79,33 +86,47 @@ export class ReviewRoundList extends EntityList<P> {
             >
               <Button {...tdButtonProps}>删除</Button>
             </Popconfirm>
+            <Button {...tdButtonProps} onClick={this.runResult.bind(this, item)}>
+              计算得分
+            </Button>
           </div>
         ),
       },
     ];
   }
+
+  runResult(item) {
+    reviewRoundService.runResult(item);
+  }
+
   getQueryParam(): ListOptions {
     const { plan } = this.props;
     return { criteria: { eq: [['plan.id', plan.id]] } };
   }
+
   getInitItem() {
     const { plan } = this.props;
     return { plan };
   }
+
   get name() {
     return '专家评分轮次';
   }
+
   getEntityForm() {
     return ReviewRoundForm;
   }
+
   handleFormCancel(): void {
     super.handleFormCancel();
     this.props.onFormClose();
   }
+
   handleFormSuccess(item: Entity): void {
     super.handleFormSuccess(item);
     this.props.onFormClose();
   }
+
   handleDeleteError(err, msg?: string) {
     super.handleDeleteError(err, '删除失败，可能存在其它轮次依赖本轮');
   }

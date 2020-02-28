@@ -56,10 +56,10 @@ class Topic {
 
 
     /*评比信息*/
-    ReviewPlan reviewPlan
-    AchieveTopic topicAchieve
-    Apply reviewApply
-    CheckResult duplicateCheck
+    //ReviewPlan reviewPlan
+    //AchieveTopic topicAchieve
+    //Apply reviewApply
+    //CheckResult duplicateCheck
 
     Date dateCreated
     Date lastUpdated
@@ -74,10 +74,10 @@ class Topic {
         mainReport fetch: 'join', lazy: false, cascade: 'delete'
         finishApply fetch: 'join', lazy: false
 
-        reviewPlan fetch: 'join', lazy: false
-        reviewApply fetch: 'join', lazy: false
-        topicAchieve fetch: 'join', lazy: false
-        duplicateCheck fetch: 'join', lazy: false
+        //reviewPlan fetch: 'join', lazy: false
+        //reviewApply fetch: 'join', lazy: false
+        //topicAchieve fetch: 'join', lazy: false
+        //duplicateCheck fetch: 'join', lazy: false
     }
     static constraints = {
         originInitialCode nullable: true
@@ -93,9 +93,9 @@ class Topic {
         topicCert nullable: true
         finishApply nullable: true
 
-        reviewPlan nullable: true
-        topicAchieve nullable: true
-        reviewApply nullable: true
-        duplicateCheck nullable: true
+        //reviewPlan nullable: true
+        //topicAchieve nullable: true
+        //reviewApply nullable: true
+        //duplicateCheck nullable: true
     }
 }

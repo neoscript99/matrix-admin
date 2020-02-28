@@ -19,6 +19,7 @@ class ReviewRound {
     String name
     //本轮等级数，暂不分等级，数据导出后可自由设置
     //Integer grades
+    //ignore-max-min
     String avgAlgorithmCode
     //暂时不需要开始日期，新建后直接算开始
     //String beginDay
