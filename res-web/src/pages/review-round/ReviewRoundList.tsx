@@ -7,6 +7,7 @@ import {
   Entity,
   EntityListProps,
   Consts,
+  RunStatus,
 } from 'oo-rest-mobx';
 import { dictService, reviewRoundService } from '../../services';
 import { ReviewRoundForm, ReviewRoundFormProps } from './ReviewRoundForm';
@@ -15,11 +16,15 @@ import { Button, Popconfirm, Table } from 'antd';
 const columns: EntityColumnProps[] = [
   { title: '评分轮次', dataIndex: 'name' },
   { title: '截止日期', dataIndex: 'endDay' },
-  { title: '等级数', dataIndex: 'grades' },
   {
     title: '平均分算法',
     dataIndex: 'avgAlgorithmCode',
     render: dictService.dictRender.bind(null, 'res-avg-algorithm'),
+  },
+  {
+    title: '计算状态',
+    dataIndex: 'runStatus',
+    render: (text, record) => <RunStatus status={text} tooltip={record.runError} />,
   },
 ];
 const { tdButtonProps, twoColModalProps } = Consts.commonProps;
@@ -89,6 +94,9 @@ export class ReviewRoundList extends EntityList<P> {
             <Button {...tdButtonProps} onClick={this.runResult.bind(this, item)}>
               计算得分
             </Button>
+            <Button {...tdButtonProps} onClick={this.refresh.bind(this)}>
+              刷新
+            </Button>
           </div>
         ),
       },
@@ -96,7 +104,10 @@ export class ReviewRoundList extends EntityList<P> {
   }
 
   runResult(item) {
-    reviewRoundService.runResult(item);
+    reviewRoundService.runResult(item).then(res => {
+      item.runStatus = res.runStatus;
+      this.forceUpdate();
+    });
   }
 
   getQueryParam(): ListOptions {

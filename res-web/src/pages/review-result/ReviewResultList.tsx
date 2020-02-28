@@ -1,17 +1,38 @@
 import React from 'react';
-import { EntityList } from 'oo-rest-mobx';
-import { achieveService } from '../../services';
+import { EntityList, EntityColumnProps, TableUtil, ListOptions, ReactUtil } from 'oo-rest-mobx';
+import { achieveRoundResultService } from '../../services';
+
+const columns: EntityColumnProps[] = [
+  TableUtil.commonColumns.index,
+  { title: '标题', dataIndex: 'achieve.name' },
+  { title: '负责人', dataIndex: 'achieve.personInCharge.name' },
+  { title: '单位', dataIndex: 'achieve.dept.name' },
+  { title: '正文', dataIndex: 'achieve.paperFile.name' },
+  { title: '得分', dataIndex: 'average' },
+  { title: '打分明细', dataIndex: 'expertScores', render: ReactUtil.wordBreakTextRender.bind(undefined, 10) },
+  { title: '备注', dataIndex: 'message' },
+];
 
 export class ReviewResultList extends EntityList {
-  render() {
-    return <div></div>;
+  constructor(a, b) {
+    super(a, b);
+    this.tableProps.pagination = { hideOnSinglePage: true, pageSize: 999 };
+    this.tableProps.rowSelection = undefined;
+  }
+  componentDidMount(): void {
+    this.query();
+  }
+
+  getQueryParam(): ListOptions {
+    const param: ListOptions = { orders: [['average', 'desc']] };
+    return param;
   }
 
   get columns() {
-    return [];
+    return columns;
   }
 
   get domainService() {
-    return achieveService;
+    return achieveRoundResultService;
   }
 }

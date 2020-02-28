@@ -22,6 +22,7 @@ import { ReviewPlanList } from './review-plan';
 import { PaperList } from './review-apply';
 import { TopicAchieveList } from './review-apply';
 import { ExpertReviewList } from './expert-review';
+import { ReviewResultList } from './review-result';
 
 const allOp: OperatorSwitch = { create: true, update: true, delete: true, view: true };
 export class PageSwitch extends Component<PageSwitchProps> {
@@ -63,6 +64,7 @@ export class PageSwitch extends Component<PageSwitchProps> {
         <Route path={`${pathPrefix}PaperReview/`} component={PaperList} />
         <Route path={`${pathPrefix}TopicReview/`} component={TopicAchieveList} />
         <Route path={`${pathPrefix}ExpertReview/`} component={ExpertReviewList} />
+        <Route path={`${pathPrefix}ReviewResult/`} component={ReviewResultList} />
         <Route render={() => <Welcome />} />
       </Switch>
     );

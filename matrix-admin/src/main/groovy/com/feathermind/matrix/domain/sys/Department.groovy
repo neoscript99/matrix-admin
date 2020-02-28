@@ -14,6 +14,9 @@ class Department {
     String name;
     Integer seq;
     Boolean enabled = true
+    static mapping = {
+        tablePerHierarchy true
+    }
     static final Department HEAD_OFFICE = new Department(name: '总部', seq: 1);
     static initList = [HEAD_OFFICE]
     static constraints = {

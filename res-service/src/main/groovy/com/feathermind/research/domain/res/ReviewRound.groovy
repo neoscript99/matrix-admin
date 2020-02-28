@@ -29,7 +29,10 @@ class ReviewRound {
     ReviewRound parentRound
     //通过比例
     BigDecimal passRate
-    String runStatusCode = 'init'
+    //https://ant.design/components/badge-cn/
+    //success error default processing warning
+    String runStatus = 'default'
+    String runError
 
     Date dateCreated
     Date lastUpdated
@@ -43,6 +46,7 @@ class ReviewRound {
     static constraints = {
         parentRound nullable: true
         passRate nullable: true
+        runError nullable: true, maxSize: 1024
     }
     static DemoRound1 =
             new ReviewRound(plan: ReviewPlan.DemoPlan1, name: '第一轮',

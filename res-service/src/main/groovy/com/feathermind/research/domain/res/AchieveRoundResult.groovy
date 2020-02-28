@@ -16,7 +16,7 @@ import groovy.transform.ToString
 class AchieveRoundResult implements AutoTime{
     String id
     //到前台的数据会有一个achieveId属性，但不做achieve关联（topic的关联太多），后台如有使用自动lazy加载
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     Achieve achieve
     ReviewRound round
     BigDecimal average
@@ -26,6 +26,7 @@ class AchieveRoundResult implements AutoTime{
     String message
 
     static mapping = {
+        achieve fetch: 'join', lazy: false
         round fetch: 'join', lazy: false
     }
     static constraints = {

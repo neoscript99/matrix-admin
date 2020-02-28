@@ -42,6 +42,7 @@ class User {
 
     static mapping = {
         dept fetch: 'join', lazy: false
+        tablePerHierarchy true
     }
     static constraints = {
         account unique: true

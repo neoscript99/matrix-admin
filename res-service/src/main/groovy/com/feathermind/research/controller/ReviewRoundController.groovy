@@ -22,10 +22,11 @@ class ReviewRoundController extends DomainController<ReviewRound> {
     @PostMapping("/runResult")
     ResponseEntity<ReviewRound> runResult(@RequestBody Map entityMap) {
         String id = entityMap.id;
+        def round = domainService.save([id: id, runStatus: 'processing'])
         Thread.start {
             achieveRoundResultService.calcRoundResult(id)
         }
-        return ResponseEntity.ok(domainService.save([id: id, runStatusCode: 'running']))
+        return ResponseEntity.ok(round)
     }
 
     @Override

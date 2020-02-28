@@ -46,6 +46,7 @@ export const reviewPlanService = new PlanService('reviewPlan', restClient);
 export const reviewRoundService = new ReviewRoundService(restClient);
 export const reviewRoundExpertService = new ReviewRoundExpertService(restClient);
 export const achieveExpertScoreService = new DomainService({ domain: 'achieveExpertScore', restClient, storeClass });
+export const achieveRoundResultService = new DomainService({ domain: 'achieveRoundResult', restClient, storeClass });
 export const achieveService = new DomainService({ domain: 'achieve', restClient, storeClass });
 export const paperService = new DomainService({ domain: 'paper', restClient, storeClass });
 export const topicAchieveService = new DomainService({ domain: 'topicAchieve', restClient, storeClass });

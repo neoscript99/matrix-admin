@@ -9,8 +9,6 @@ import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-import java.math.MathContext
-
 @Service
 @CompileStatic
 class AchieveRoundResultService extends AbstractService<AchieveRoundResult> {
@@ -28,15 +26,21 @@ class AchieveRoundResultService extends AbstractService<AchieveRoundResult> {
         }
         catch (Throwable e) {
             log.error('评分轮次跑分错误：{}', e)
-            round.runStatusCode = 'fail'
+            round.runStatus = 'error'
+            round.runError = e.message
+            round.save()
         }
     }
 
     void calcRoundResult(ReviewRound round) {
+        log.info("开始得分计算：{}", round)
+        AchieveRoundResult.where { round == round }.deleteAll()
         int expTotal = reviewRoundExpertService.count([eq: [['round', round]]])
         Map<Achieve, List<AchieveExpertScore>> groupMap = achieveExpertScoreService.findByRound(round).groupBy {
             it.achieve
         }
+        round.runStatus = 'success'
+        round.runError = null
         groupMap.each { achieve, expertScoreList ->
             AchieveRoundResult result = new AchieveRoundResult(achieve: achieve, round: round, hasError: false)
             List<Integer> scores = expertScoreList.collect {
@@ -49,6 +53,9 @@ class AchieveRoundResultService extends AbstractService<AchieveRoundResult> {
                 result.hasError = true;
                 result.message = '部分专家未评分'
                 result.save()
+
+                round.runError = '部分未评分'
+                round.runStatus = 'warning'
                 return
             }
             scores.sort()
@@ -60,10 +67,14 @@ class AchieveRoundResultService extends AbstractService<AchieveRoundResult> {
             }
             int size = scores.size()
             result.average = size > 0
-                    ? new BigDecimal((int) scores.sum(), new MathContext(2)) / size
+                    ? new BigDecimal((int) scores.sum()).setScale(2) / size
                     : BigDecimal.ZERO
             result.save()
         }
-        round.runStatusCode = 'success'
+        if (Achieve.where { reviewPlan == round.plan }.count() > groupMap.size()) {
+            round.runError = '部分未评分'
+            round.runStatus = 'warning'
+        }
+        round.save()
     }
 }
