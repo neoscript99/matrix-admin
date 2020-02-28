@@ -1,5 +1,6 @@
 package com.feathermind.research.domain.res
 
+import com.feathermind.matrix.trait.AutoTime
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -10,15 +11,12 @@ import groovy.transform.ToString
 @Entity
 @ToString(includePackage = false, includeNames = true, includes = 'round,expert')
 @EqualsAndHashCode(includes = 'id')
-class ReviewRoundExpert {
+class ReviewRoundExpert implements AutoTime{
     String id
     ReviewRound round
     ResUser expert
     // 专家排序
     Integer seq
-
-    Date dateCreated
-    Date lastUpdated
 
     static mapping = {
         expert fetch: 'join', lazy: false

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Tag, Card, Result, InputNumber, message } from 'antd';
+import { Avatar, Tag, Card, Result, InputNumber, message, Button } from 'antd';
 import {
   achieveExpertScoreService,
   attachmentService,
@@ -82,10 +82,14 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
               </div>
             }
             description={
-              <span>
-                总数：<Tag>{dataList.length}</Tag>，已评分数量：<Tag>{scoredNumber}</Tag>，已评平均分：
+              <div>
+                <span>总数：</span>
+                <Tag>{dataList.length}</Tag>
+                <span>，已评分数量：</span>
+                <Tag>{scoredNumber}</Tag>
+                <span>，已评平均分：</span>
                 <Tag>{average}</Tag>
-              </span>
+              </div>
             }
           />
         </Card>

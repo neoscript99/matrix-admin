@@ -1,5 +1,6 @@
 package com.feathermind.matrix.domain.sys
 
+import com.feathermind.matrix.initializer.InitializeDomain
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -11,10 +12,12 @@ import groovy.transform.ToString
 @Entity
 @ToString(includes = 'fileId,refCount')
 @EqualsAndHashCode(includes = 'fileId')
+@InitializeDomain(profiles = 'dev')
 class AttachmentFile {
     String fileId
     Integer refCount = 0 //引用计数
     byte[] data;
+    Date dateCreated
     static mapping = {
         id name: 'fileId', generator: 'assigned'
         /**
@@ -28,4 +31,7 @@ class AttachmentFile {
         fileId maxSize: 80
         data maxSize: 1024 * 1024 * 20
     }
+    static DemoData = '656d7074792066696c6520666f722074657374'
+    static DemoFile = new AttachmentFile(fileId: DemoData, refCount: 1, data: DemoData.bytes)
+    static initList = [DemoFile]
 }

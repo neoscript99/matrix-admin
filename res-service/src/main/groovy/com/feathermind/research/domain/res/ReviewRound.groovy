@@ -43,12 +43,13 @@ class ReviewRound {
         parentRound nullable: true
         passRate nullable: true
     }
-    static initList = [
+    static DemoRound1 =
             new ReviewRound(plan: ReviewPlan.DemoPlan1, name: '第一轮',
                     avgAlgorithmCode: 'normal',
-                    endDay: DateUtil.dayStr(10)),
-            new ReviewRound(plan: ReviewPlan.DemoPlan2, name: '第一轮',
+                    endDay: DateUtil.dayStr(10))
+    static DemoPaperRound =
+            new ReviewRound(plan: ReviewPlan.DemoPaperPlan, name: '第一轮',
                     avgAlgorithmCode: 'ignore-max-min',
-                    endDay: DateUtil.dayStr(210)),
-    ]
+                    endDay: DateUtil.dayStr(210))
+    static initList = [DemoRound1, DemoPaperRound]
 }

@@ -1,12 +1,15 @@
 package com.feathermind.matrix.domain.sys
 
+import com.feathermind.matrix.initializer.InitializeDomain
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import static com.feathermind.matrix.domain.sys.AttachmentFile.*
 
 @Entity
 @ToString(includes = 'name,fileSize')
 @EqualsAndHashCode(includes = 'id')
+@InitializeDomain(profiles = 'dev', depends = AttachmentFile)
 class AttachmentInfo {
     String id
     String name
@@ -30,4 +33,6 @@ class AttachmentInfo {
         name maxSize: 256
     }
     static graphql = true
+    static DemoFileInfo = new AttachmentInfo(name: 'test.txt', fileSize: 19, fileId: DemoData)
+    static initList = [DemoFileInfo]
 }

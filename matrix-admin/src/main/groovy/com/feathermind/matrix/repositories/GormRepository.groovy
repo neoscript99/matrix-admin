@@ -77,8 +77,8 @@ class GormRepository implements GeneralRepository {
              * hutool不支持trait属性，因为trait生成的field名带了前缀，而HuTools是根据field来copy的，不根据property
              */
             def ignoreProps = BeanUtils.getPropertyDescriptors(domain)*.name
-            ignoreProps.removeAll(map.keySet());
-            ignoreProps.addAll(domainUpdateIgnores);
+            // 忽略map中没有或默认设置的的key
+            ignoreProps.removeAll(map.keySet().removeAll(domainUpdateIgnores));
             log.debug("ignoreProperties: {}", ignoreProps)
             BeanUtils.copyProperties(newEntity, updateEntity, ignoreProps.toArray(new String[0]))
             saveEntity(updateEntity)
@@ -89,6 +89,8 @@ class GormRepository implements GeneralRepository {
     static String[] domainUpdateIgnores = ['id', 'version', 'metaClass', 'lastUpdated', 'dateCreated']
 
     /**
+     * 可能可以直接用attach，有案例的时候测试
+     * @see org.grails.datastore.gorm.GormEntity#attach()
      * @see GeneralRepository#saveTransietEntity
      */
     Object saveTransietEntity(Object entity) {

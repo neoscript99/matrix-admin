@@ -10,7 +10,6 @@ import grails.gorm.annotation.Entity
 class AchievePaper extends Achieve{
     AttachmentInfo paperFile
 
-
     static mapping = {
         paperFile fetch: 'join', lazy: false
     }
