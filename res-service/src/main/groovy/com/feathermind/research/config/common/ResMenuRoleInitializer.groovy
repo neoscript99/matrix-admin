@@ -105,7 +105,7 @@ class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInit
         }
         subList.addAll([
                 new Menu(label: '评比计划', app: 'ReviewPlan', seq: 10, parentId: parentMenu.id, icon: 'schedule').save(),
-                new Menu(label: '结果查询', app: 'ReviewResult', seq: 40, parentId: parentMenu.id, icon: 'table').save(),
+                //new Menu(label: '结果查询', app: 'ReviewResult', seq: 40, parentId: parentMenu.id, icon: 'table').save(),
         ])
 
         return subList

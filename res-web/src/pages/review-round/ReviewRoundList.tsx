@@ -94,8 +94,8 @@ export class ReviewRoundList extends EntityList<P> {
             <Button {...tdButtonProps} onClick={this.runResult.bind(this, item)}>
               计算得分
             </Button>
-            <Button {...tdButtonProps} onClick={this.refresh.bind(this)}>
-              刷新
+            <Button {...tdButtonProps} onClick={this.showResult.bind(this, item)}>
+              查看结果
             </Button>
           </div>
         ),
@@ -103,11 +103,21 @@ export class ReviewRoundList extends EntityList<P> {
     ];
   }
 
+  showResult(item) {
+    const { history } = this.props;
+    history?.push(`/ReviewResult/${item.id}`);
+  }
+
   runResult(item) {
-    reviewRoundService.runResult(item).then(res => {
-      item.runStatus = res.runStatus;
+    const setStatus = newItem => {
+      item.runStatus = newItem.runStatus;
       this.forceUpdate();
-    });
+    };
+    reviewRoundService.runResult(item).then(setStatus);
+    //一分钟后查询结果
+    setTimeout(() => {
+      reviewRoundService.get(item.id).then(setStatus);
+    }, 60000);
   }
 
   getQueryParam(): ListOptions {

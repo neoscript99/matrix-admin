@@ -39,9 +39,11 @@ export class ReviewPlanList extends EntityPageList<EntityListProps, S> {
     this.tableProps.expandRowByClick = true;
     this.tableProps.expandedRowRender = plan => {
       const { expandedRowKeys, showRoundForm } = this.state;
+      const {  history } = this.props;
       return (
         <ReviewRoundList
           plan={plan}
+          history={history}
           showForm={showRoundForm && expandedRowKeys.includes(plan.id as string)}
           onFormClose={this.handleRoundFormClose}
         />

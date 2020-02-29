@@ -64,7 +64,7 @@ export class PageSwitch extends Component<PageSwitchProps> {
         <Route path={`${pathPrefix}PaperReview/`} component={PaperList} />
         <Route path={`${pathPrefix}TopicReview/`} component={TopicAchieveList} />
         <Route path={`${pathPrefix}ExpertReview/`} component={ExpertReviewList} />
-        <Route path={`${pathPrefix}ReviewResult/`} component={ReviewResultList} />
+        <Route path={`${pathPrefix}ReviewResult/:roundId`} component={ReviewResultList} />
         <Route render={() => <Welcome />} />
       </Switch>
     );

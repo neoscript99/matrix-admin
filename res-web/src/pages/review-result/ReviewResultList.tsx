@@ -1,6 +1,7 @@
 import React from 'react';
 import { EntityList, EntityColumnProps, TableUtil, ListOptions, ReactUtil } from 'oo-rest-mobx';
 import { achieveRoundResultService } from '../../services';
+import { Button } from 'antd';
 
 const columns: EntityColumnProps[] = [
   TableUtil.commonColumns.index,
@@ -21,8 +22,21 @@ export class ReviewResultList extends EntityList {
   }
   componentDidMount(): void {
     this.query();
+    const { match } = this.props;
+    console.log(match);
   }
-
+  render() {
+    return (
+      <React.Fragment>
+        <Button onClick={this.goBack} icon="rollback" />
+        {super.render()}
+      </React.Fragment>
+    );
+  }
+  goBack = () => {
+    const { history } = this.props;
+    history?.goBack();
+  };
   getQueryParam(): ListOptions {
     const param: ListOptions = { orders: [['average', 'desc']] };
     return param;

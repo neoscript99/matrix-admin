@@ -88,8 +88,7 @@ class ResDevUserInitializer extends AbstractDataInitializer implements DataIniti
         list.eachWithIndex { paper, idx1 ->
             paper.save()
             roundExpertList.eachWithIndex { exp, idx2 ->
-                //def score = Math.abs(paper.hashCode()) % 100
-                def score = 60 + idx2 * 10
+                def score = Math.random() * 100
                 new AchieveExpertScore(achieve: paper, roundExpert: exp, score: score).save()
             }
         }

@@ -50,11 +50,11 @@ class ReviewRound {
     }
     static DemoRound1 =
             new ReviewRound(plan: ReviewPlan.DemoPlan1, name: '第一轮',
-                    avgAlgorithmCode: 'normal',
+                    avgAlgorithmCode: 'ignore-max-min',
                     endDay: DateUtil.dayStr(10))
     static DemoPaperRound =
             new ReviewRound(plan: ReviewPlan.DemoPaperPlan, name: '第一轮',
-                    avgAlgorithmCode: 'ignore-max-min',
+                    avgAlgorithmCode: 'normal',
                     endDay: DateUtil.dayStr(210))
     static initList = [DemoRound1, DemoPaperRound]
 }
