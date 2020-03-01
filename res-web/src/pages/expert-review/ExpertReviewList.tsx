@@ -18,6 +18,7 @@ import {
   NumberUtil,
   TableUtil,
 } from 'oo-rest-mobx';
+import { AchieveService } from '../../services/AchieveService';
 interface S extends EntityListState {
   scoreList: any[];
   roundExpert: Entity;
@@ -106,14 +107,9 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
     if (!roundExpert?.id) return;
     const scoreOptions: ListOptions = { criteria: { eq: [['roundExpert.id', roundExpert.id]] } };
     const scoreList = (await achieveExpertScoreService.listAll(scoreOptions)).results;
-    const achieveOptions: ListOptions = { criteria: { eq: [['reviewPlan.id', roundExpert.round.plan.id]] } };
-    const dataList = (await this.domainService.listAll(achieveOptions)).results;
+    const dataList = await this.domainService.listByRound(roundExpert.round);
     dataList.forEach(item => (item.score = scoreList.find(s => s.achieveId === item.id)?.score));
-    this.setState({ scoreList, dataList: this.sortList(dataList), roundExpert });
-  }
-
-  sortList(dataList: any[]) {
-    return dataList.sort((a, b) => (b.score || 0) - (a.score || 0));
+    this.setState({ scoreList, dataList, roundExpert });
   }
 
   get columns(): EntityColumnProps[] {
@@ -122,10 +118,13 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
       ...(this.isTopic ? topicColumns : paperColumns),
       {
         title: '评分',
-        render: (text, item) => (
+        dataIndex: 'score',
+        sortDirections: ['descend'],
+        sorter: (a, b) => (a.score || 0) - (b.score || 0),
+        render: (value, item) => (
           <InputNumber
             placeholder="总分100"
-            value={item.score}
+            value={value}
             min={0}
             max={100}
             onChange={this.updateScore.bind(this, item.id as string)}
@@ -154,10 +153,10 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
       message.info('评分已更新', 2, () => (this.showing = false));
     }
 
-    this.setState({ dataList: this.sortList(dataList), scoreList });
+    this.setState({ dataList, scoreList });
   }
 
-  get domainService() {
+  get domainService(): AchieveService {
     return this.isTopic ? topicAchieveService : paperService;
   }
 

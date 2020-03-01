@@ -118,15 +118,15 @@ export class ReviewRoundForm extends EntityForm<ReviewRoundFormProps, S> {
         )}
         {parentList.length > 0 && parentRound && (
           <InputNumberField
-            fieldId="passRate"
+            fieldId="parentPassNum"
             formItemProps={{
-              label: `上轮通过比例(%)`,
+              label: `上轮通过数量`,
               style: oneSpanFormItemCss,
             }}
             formUtils={form}
-            min={0}
-            max={100}
-            step={0.1}
+            min={1}
+            max={9999}
+            step={1}
             decorator={{ rules: [number] }}
             readonly={readonly}
           />

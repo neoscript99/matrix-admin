@@ -36,6 +36,7 @@ interface P extends EntityListProps {
 }
 
 export class ReviewRoundList extends EntityList<P> {
+  ref = React.createRef<HTMLDivElement>();
   constructor(props, context) {
     super(props, context);
     this.tableProps.pagination = { hideOnSinglePage: true, pageSize: 999 };
@@ -79,7 +80,7 @@ export class ReviewRoundList extends EntityList<P> {
       {
         title: '操作',
         render: (text, item) => (
-          <div>
+          <div ref={this.ref}>
             <Button {...tdButtonProps} onClick={this.doUpdate.bind(this, item)}>
               修改
             </Button>
@@ -111,7 +112,11 @@ export class ReviewRoundList extends EntityList<P> {
   runResult(item) {
     const setStatus = newItem => {
       item.runStatus = newItem.runStatus;
-      this.forceUpdate();
+      // 代表mount
+      if (this.ref.current) {
+        console.log(this.ref);
+        this.forceUpdate();
+      }
     };
     reviewRoundService.runResult(item).then(setStatus);
     //一分钟后查询结果

@@ -36,9 +36,7 @@ class ResDevUserInitializer extends AbstractDataInitializer implements DataIniti
 
 
     static ResUser demoSchoolUser = new ResUser(name: '单位管理员', account: 'dept-admin', cellPhone: '88888888', dept: demoSchool, password: DEFAULT_PASS)
-    static ResUser expertUser = new ResUser(name: '评审专家', account: 'expert', dept: expertDept, password: DEFAULT_PASS)
-    static ResUser expertUser02 = new ResUser(name: '评审专家02', account: 'expert02', dept: expertDept, password: DEFAULT_PASS)
-    static ResUser expertUser03 = new ResUser(name: '评审专家03', account: 'expert03', dept: expertDept, password: DEFAULT_PASS)
+    static ResUser expertUser = new ResUser(name: '测试专家01', account: 'expert', dept: expertDept, password: DEFAULT_PASS)
 
     def initUser() {
         demoSchoolUser.save()
@@ -49,8 +47,11 @@ class ResDevUserInitializer extends AbstractDataInitializer implements DataIniti
 
     void initExpert() {
         expertList = [expertUser,
-                      new ResUser(name: '评审专家02', account: 'expert02', dept: expertDept, password: DEFAULT_PASS),
-                      new ResUser(name: '评审专家03', account: 'expert03', dept: expertDept, password: DEFAULT_PASS)]
+                      new ResUser(name: '测试专家02', account: 'expert02', dept: expertDept, password: DEFAULT_PASS),
+                      new ResUser(name: '测试专家03', account: 'expert03', dept: expertDept, password: DEFAULT_PASS),
+                      new ResUser(name: '测试专家04', account: 'expert04', dept: expertDept, password: DEFAULT_PASS),
+                      new ResUser(name: '测试专家05', account: 'expert05', dept: expertDept, password: DEFAULT_PASS)
+        ]
         expertList.each {
             it.save()
             new UserRole(it, InitEntity.EXPERT).save()

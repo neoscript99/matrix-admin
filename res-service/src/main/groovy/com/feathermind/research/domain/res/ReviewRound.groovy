@@ -5,6 +5,7 @@ import com.feathermind.matrix.util.DateUtil
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import groovy.transform.TupleConstructor
 
 /**
  * 课题成果、论文评比轮次
@@ -27,8 +28,8 @@ class ReviewRound {
     String expertPassword = 'abc000'
     //上级轮次，依赖上级结果
     ReviewRound parentRound
-    //通过比例
-    BigDecimal passRate
+    //上轮
+    Integer parentPassNum
     //https://ant.design/components/badge-cn/
     //success error default processing warning
     String runStatus = 'default'
@@ -45,16 +46,16 @@ class ReviewRound {
 
     static constraints = {
         parentRound nullable: true
-        passRate nullable: true
+        parentPassNum nullable: true
         runError nullable: true, maxSize: 1024
     }
     static DemoRound1 =
             new ReviewRound(plan: ReviewPlan.DemoPlan1, name: '第一轮',
-                    avgAlgorithmCode: 'ignore-max-min',
+                    avgAlgorithmCode: 'normal',
                     endDay: DateUtil.dayStr(10))
     static DemoPaperRound =
             new ReviewRound(plan: ReviewPlan.DemoPaperPlan, name: '第一轮',
-                    avgAlgorithmCode: 'normal',
-                    endDay: DateUtil.dayStr(210))
+                    avgAlgorithmCode: 'ignore-max-min',
+                    endDay: DateUtil.dayStr(20))
     static initList = [DemoRound1, DemoPaperRound]
 }

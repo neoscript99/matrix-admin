@@ -8,6 +8,7 @@ import { TopicMemberService } from './TopicMemberService';
 import { TopicSupportService } from './TopicSupportService';
 import { ReviewRoundExpertService } from './ReviewRoundExpertService';
 import { ReviewRoundService } from './ReviewRoundService';
+import { AchieveService } from './AchieveService';
 
 function afterLogin(loginInfo: LoginInfo) {
   if (!loginInfo.token) throw 'token不能为空';
@@ -47,9 +48,8 @@ export const reviewRoundService = new ReviewRoundService(restClient);
 export const reviewRoundExpertService = new ReviewRoundExpertService(restClient);
 export const achieveExpertScoreService = new DomainService({ domain: 'achieveExpertScore', restClient, storeClass });
 export const achieveRoundResultService = new DomainService({ domain: 'achieveRoundResult', restClient, storeClass });
-export const achieveService = new DomainService({ domain: 'achieve', restClient, storeClass });
-export const paperService = new DomainService({ domain: 'paper', restClient, storeClass });
-export const topicAchieveService = new DomainService({ domain: 'topicAchieve', restClient, storeClass });
+export const paperService = new AchieveService({ domain: 'paper', restClient, storeClass });
+export const topicAchieveService = new AchieveService({ domain: 'topicAchieve', restClient, storeClass });
 
 export const loginService = adminServices.loginService;
 //session登录不成功的话，尝试本地保存的用户密码登录

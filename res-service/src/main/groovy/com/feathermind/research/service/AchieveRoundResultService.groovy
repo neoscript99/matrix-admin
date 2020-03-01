@@ -1,23 +1,33 @@
 package com.feathermind.research.service
 
 import com.feathermind.matrix.service.AbstractService
+import com.feathermind.matrix.service.DictService
+import com.feathermind.matrix.util.JsonUtil
 import com.feathermind.research.domain.res.Achieve
 import com.feathermind.research.domain.res.AchieveExpertScore
 import com.feathermind.research.domain.res.AchieveRoundResult
+import com.feathermind.research.domain.res.ReviewPlan
 import com.feathermind.research.domain.res.ReviewRound
 import groovy.transform.CompileStatic
+import groovy.transform.TypeCheckingMode
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-@CompileStatic
+@CompileStatic(TypeCheckingMode.SKIP)
 class AchieveRoundResultService extends AbstractService<AchieveRoundResult> {
     @Autowired
     ReviewRoundService reviewRoundService
     @Autowired
     AchieveExpertScoreService achieveExpertScoreService
     @Autowired
+    TopicAchieveService topicAchieveService
+    @Autowired
+    PaperService paperService
+    @Autowired
     ReviewRoundExpertService reviewRoundExpertService
+    @Autowired
+    DictService dictService
 
     void calcRoundResult(String roundId) {
         def round = reviewRoundService.get(roundId)
@@ -34,8 +44,8 @@ class AchieveRoundResultService extends AbstractService<AchieveRoundResult> {
 
     void calcRoundResult(ReviewRound round) {
         log.info("开始得分计算：{}", round)
-        AchieveRoundResult.where { round == round }.deleteAll()
-        int expTotal = reviewRoundExpertService.count([eq: [['round', round]]])
+        deleteByRound(round)
+        int totalExperts = reviewRoundExpertService.count([eq: [['round', round]]])
         Map<Achieve, List<AchieveExpertScore>> groupMap = achieveExpertScoreService.findByRound(round).groupBy {
             it.achieve
         }
@@ -43,22 +53,20 @@ class AchieveRoundResultService extends AbstractService<AchieveRoundResult> {
         round.runError = null
         groupMap.each { achieve, expertScoreList ->
             AchieveRoundResult result = new AchieveRoundResult(achieve: achieve, round: round, hasError: false)
-            List<Integer> scores = expertScoreList.collect {
-                def str = result.expertScores;
-                def expStr = "${it.roundExpert.expert.name}: ${it.score}";
-                result.expertScores = str ? str.concat(", ${expStr}") : expStr
-                return it.score
+            expertScoreList.sort { a, b -> a.score <=> b.score }
+            List<Map> infos = expertScoreList.collect {
+                [name: it.roundExpert.expert.name, score: it.score]
             }
-            if (expertScoreList.size() < expTotal) {
+            result.scoresJson = JsonUtil.toJson(infos)
+            List<Integer> scores = expertScoreList.collect { it.score }
+            if (expertScoreList.size() < totalExperts) {
                 result.hasError = true;
-                result.message = '部分专家未评分'
+                round.runError = result.message = '部分专家未评分'
                 result.save()
 
-                round.runError = '部分未评分'
                 round.runStatus = 'warning'
                 return
             }
-            scores.sort()
             if (round.avgAlgorithmCode == 'ignore-max-min') {
                 if (scores.size() > 2) {
                     scores.remove(scores.size() - 1)
@@ -71,10 +79,20 @@ class AchieveRoundResultService extends AbstractService<AchieveRoundResult> {
                     : BigDecimal.ZERO
             result.save()
         }
-        if (Achieve.where { reviewPlan == round.plan }.count() > groupMap.size()) {
-            round.runError = '部分未评分'
+        def totalAchieves = getAchieveService(round.plan).countByRound(round)
+        if (totalAchieves > groupMap.size()) {
+            def type = dictService.getDict('res-review-type', round.plan.reviewTypeCode)
+            round.runError = "部分未评分: 总${type.name}数${totalAchieves}, 已评分数${groupMap.size()}"
             round.runStatus = 'warning'
         }
         round.save()
+    }
+
+    def deleteByRound(ReviewRound r) {
+        AchieveRoundResult.where { round == r }.deleteAll()
+    }
+
+    AchieveService getAchieveService(ReviewPlan plan) {
+        plan.reviewTypeCode == 'paper' ? paperService : topicAchieveService
     }
 }

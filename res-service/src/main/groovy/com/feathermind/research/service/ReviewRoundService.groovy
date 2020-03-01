@@ -14,6 +14,8 @@ class ReviewRoundService extends AbstractService<ReviewRound> {
     ReviewRoundExpertService reviewRoundExpertService
     @Autowired
     AchieveExpertScoreService reviewRoundScoreService
+    @Autowired
+    AchieveRoundResultService achieveRoundResultService
 
     @Override
     ReviewRound save(Map map) {
@@ -32,6 +34,7 @@ class ReviewRoundService extends AbstractService<ReviewRound> {
             def roundMap = [eq: [['round.id', it]]]
             reviewRoundScoreService.deleteMatch([roundExpert: roundMap])
             reviewRoundExpertService.deleteMatch(roundMap)
+            achieveRoundResultService.deleteByRound(new ReviewRound(id: it))
         }
         return super.deleteByIds(idList)
     }
