@@ -105,12 +105,14 @@ export class ReviewRoundList extends EntityList<P> {
   }
 
   showResult(item) {
+    this.store.currentItem = item;
     const { history } = this.props;
     history?.push(`/ReviewResult/${item.id}`);
   }
 
   runResult(item) {
     const setStatus = newItem => {
+      if (!newItem) return;
       item.runStatus = newItem.runStatus;
       // 代表mount
       if (this.ref.current) {

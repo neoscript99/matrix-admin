@@ -109,6 +109,9 @@ class GormRepository implements GeneralRepository {
     }
 
     /**
+     * param中的关联属性查询默认都是inner join，
+     * 如需outer join，不要用本方法，service中单独处理，指定JoinType.LEFT_OUTER_JOIN.joinTypeValue，
+     * 前台参数传入也应该注意
      * @see GeneralRepository#list
      */
     @Override

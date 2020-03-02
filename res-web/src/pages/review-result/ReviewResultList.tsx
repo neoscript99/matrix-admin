@@ -1,7 +1,22 @@
-import React from 'react';
-import { EntityList, EntityColumnProps, TableUtil, ListOptions } from 'oo-rest-mobx';
-import { achieveRoundResultService } from '../../services';
-import { Button, Tag } from 'antd';
+import React, { CSSProperties } from 'react';
+import {
+  EntityList,
+  EntityColumnProps,
+  TableUtil,
+  ListOptions,
+  Consts,
+  EntityFormProps,
+  Entity,
+  ObjectUtil,
+} from 'oo-rest-mobx';
+import { achieveRoundResultService, duplicateCheckService, reviewRoundService } from '../../services';
+import { Alert, Button, Tag } from 'antd';
+import { DuplicateCheckForm, DuplicateCheckFormProps } from './DuplicateCheckForm';
+import ReactExport from 'react-data-export';
+
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const columns: EntityColumnProps[] = [
   TableUtil.commonColumns.index,
@@ -12,8 +27,9 @@ const columns: EntityColumnProps[] = [
   {
     title: '打分明细',
     dataIndex: 'scoresJson',
-    render: value => {
-      const scores: any[] = JSON.parse(value);
+    render: (v, item) => {
+      const scores: any[] = JSON.parse(item.scoresJson);
+      if (v === 'export') return scores.map(s => `${s.name}: ${s.score}`).join(',');
       return (
         <div className="flex" style={{ width: '15em', margin: -10 }}>
           {scores.map(s => (
@@ -21,13 +37,17 @@ const columns: EntityColumnProps[] = [
               {s.name}: {s.score}
             </Tag>
           ))}
+          {item.hasError && <Alert message={item.message} type="error" style={{ padding: 5, marginTop: 5 }} />}
         </div>
       );
     },
   },
-  { title: '备注', dataIndex: 'message' },
 ];
 
+const buttonCss: CSSProperties = {
+  marginRight: '0.5rem',
+};
+const { tdButtonProps } = Consts.commonProps;
 export class ReviewResultList extends EntityList {
   constructor(a, b) {
     super(a, b);
@@ -38,21 +58,35 @@ export class ReviewResultList extends EntityList {
     this.query();
   }
   render() {
+    const { currentItem: round } = reviewRoundService.store;
+    const { dataList } = this.state;
     return (
       <React.Fragment>
-        <Button onClick={this.goBack} icon="rollback" />
+        <Button onClick={this.goBack} icon="rollback" style={buttonCss} />
+        {round.plan && (
+          <ExcelFile element={<Button icon="download" style={buttonCss} />} filename={round.plan.planName}>
+            <ExcelSheet data={dataList} name={round.name}>
+              {this.columns.map(col => (
+                <ExcelColumn
+                  key={col.title + (col.dataIndex || 'none')}
+                  label={col.title}
+                  value={item =>
+                    col.render
+                      ? col.render('export', item, dataList.indexOf(item))
+                      : col.dataIndex && ObjectUtil.get(item, col.dataIndex)
+                  }
+                />
+              ))}
+            </ExcelSheet>
+          </ExcelFile>
+        )}
         {super.render()}
       </React.Fragment>
     );
   }
-  export = () => {
-    const tab = document.querySelector('table');
-    if (tab) tab.id = 'datatable';
-    console.log(tab);
-  };
   goBack = () => {
     const { history } = this.props;
-    history?.goBack();
+    history?.push('/ReviewPlan');
   };
 
   getQueryParam(): ListOptions {
@@ -63,7 +97,44 @@ export class ReviewResultList extends EntityList {
   }
 
   get columns() {
-    return columns;
+    return [
+      ...columns,
+      {
+        title: '查重',
+        render: (v, item) => {
+          const dup = item.achieve.duplicateCheck;
+          const info = dup && dup.success ? '通过' : '不通过';
+          if (v === 'export') return info;
+          return (
+            <div className="flex-col">
+              {dup && (
+                <Tag>
+                  {dup.success ? '通过' : '不通过'}
+                  {dup.desc && `: ${dup.desc}`}
+                </Tag>
+              )}
+              <Button {...tdButtonProps} onClick={this.showForm.bind(this, item)}>
+                结果录入
+              </Button>
+            </div>
+          );
+        },
+      },
+    ];
+  }
+  showForm(item) {
+    this.setState({ formProps: this.genFormProps('查重', item) });
+  }
+  getEntityForm() {
+    return DuplicateCheckForm;
+  }
+
+  /**
+   * 本页面的对话框只设置查重信息
+   */
+  genFormProps(title: string, item?: Entity, exProps?: Partial<EntityFormProps>): DuplicateCheckFormProps {
+    const props = super.genFormProps(title, item!.achieve.duplicateCheck, { modalProps: { title, okText: '保存' } });
+    return { ...props, domainService: duplicateCheckService, achieve: item!.achieve };
   }
 
   get domainService() {

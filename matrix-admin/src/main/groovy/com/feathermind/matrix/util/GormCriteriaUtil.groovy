@@ -12,6 +12,8 @@ class GormCriteriaUtil {
     /**
      * 将map参数转化为HibernateCriteriaBuilder
      * <p>本方法为hibernate专用，如需使用需继承本类
+     * <p>map中的关联属性查询默认都是inner join，需要手工设置JoinType.LEFT_OUTER_JOIN.joinTypeValue，
+     * 前台参数传入也应该注意
      * @see grails.orm.HibernateCriteriaBuilder
      */
     static def makeCriteria(Map param) {

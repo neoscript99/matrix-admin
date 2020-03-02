@@ -50,6 +50,7 @@ export const achieveExpertScoreService = new DomainService({ domain: 'achieveExp
 export const achieveRoundResultService = new DomainService({ domain: 'achieveRoundResult', restClient, storeClass });
 export const paperService = new AchieveService({ domain: 'paper', restClient, storeClass });
 export const topicAchieveService = new AchieveService({ domain: 'topicAchieve', restClient, storeClass });
+export const duplicateCheckService = new AchieveService({ domain: 'duplicateCheck', restClient, storeClass });
 
 export const loginService = adminServices.loginService;
 //session登录不成功的话，尝试本地保存的用户密码登录

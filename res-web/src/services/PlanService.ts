@@ -4,6 +4,8 @@ import { observable } from 'mobx';
 export class PlanStore extends MobxDomainStore {
   @observable
   startedList?: Entity[];
+  @observable
+  expandedRowKeys: string[] = [];
 }
 export class PlanService extends DomainService<PlanStore> implements DictInitService {
   constructor(domain: string, restClient: AbstractClient) {

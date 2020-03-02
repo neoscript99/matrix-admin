@@ -1,6 +1,6 @@
 package com.feathermind.research.domain.res
 
-import com.feathermind.matrix.domain.sys.AttachmentInfo
+
 import com.feathermind.matrix.trait.AutoTime
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
@@ -18,7 +18,7 @@ class Achieve implements AutoTime{
     ResUser personInCharge
 
     ReviewPlan reviewPlan
-    CheckResult duplicateCheck
+    DuplicateCheckResult duplicateCheck
     ResDept dept
 
     static mapping = {

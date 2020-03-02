@@ -2,7 +2,6 @@ import React from 'react';
 import {
   EntityPageList,
   EntityColumnProps,
-  DomainService,
   SimpleSearchForm,
   ListOptions,
   StringUtil,
@@ -15,6 +14,7 @@ import { observer } from 'mobx-react';
 import { ReviewPlanForm } from './ReviewPlanForm';
 import { ReviewRoundList } from '../review-round';
 import { Button } from 'antd';
+import { PlanService } from '../../services/PlanService';
 const columns: EntityColumnProps[] = [
   { title: '计划标题', dataIndex: 'planName' },
   { title: '立项年度', dataIndex: 'planYear' },
@@ -29,42 +29,44 @@ const columns: EntityColumnProps[] = [
 ];
 interface S extends EntityListState {
   showRoundForm?: boolean;
-  expandedRowKeys: string[];
 }
 @observer
 export class ReviewPlanList extends EntityPageList<EntityListProps, S> {
   constructor(props, context) {
     super(props, context);
-    this.state.expandedRowKeys = [];
     this.tableProps.expandRowByClick = true;
     this.tableProps.expandedRowRender = plan => {
-      const { expandedRowKeys, showRoundForm } = this.state;
-      const {  history } = this.props;
+      const { showRoundForm } = this.state;
+      const { history } = this.props;
       return (
         <ReviewRoundList
           plan={plan}
           history={history}
-          showForm={showRoundForm && expandedRowKeys.includes(plan.id as string)}
+          showForm={showRoundForm && this.store.expandedRowKeys.includes(plan.id as string)}
           onFormClose={this.handleRoundFormClose}
         />
       );
     };
     this.tableProps.onExpand = (expanded, record) => {
       const expandedRowKeys = expanded ? [record.id as string] : [];
-      this.setState({ expandedRowKeys });
+      this.store.expandedRowKeys = expandedRowKeys;
     };
   }
   handleRoundFormClose = () => this.setState({ showRoundForm: false });
   handleRoundCreate(plan, e) {
     e.stopPropagation();
-    this.setState({ expandedRowKeys: [plan.id as string], showRoundForm: true });
+    this.store.expandedRowKeys = [plan.id as string];
+    this.setState({ showRoundForm: true });
   }
   render() {
-    this.tableProps.expandedRowKeys = this.state.expandedRowKeys;
+    this.tableProps.expandedRowKeys = this.store.expandedRowKeys;
     return super.render();
   }
-  get domainService(): DomainService {
+  get domainService(): PlanService {
     return reviewPlanService;
+  }
+  get store() {
+    return this.domainService.store;
   }
   get columns(): EntityColumnProps[] {
     return [
