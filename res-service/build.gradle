@@ -20,10 +20,12 @@ repositories {
     maven { url "http://maven.aliyun.com/nexus/content/groups/public" }
     jcenter()
     maven { url "https://repo.grails.org/grails/core" }
+    maven { url "https://dl.bintray.com/neoscript/maven/" }
 }
 
 dependencies {
     implementation project(':matrix-admin')
+    // implementation ('com.feathermind.matrix:matrix-admin:1.4')
     testImplementation("org.spockframework:spock-spring:$spockVersion")
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

@@ -7,7 +7,7 @@
     "antd": "^3.26.3",
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.8",
-    "oo-rest-mobx": "^1.0.3",
+    "oo-rest-mobx": "1.0.4",
     "react": "^16.8.6",
     "react-data-export": "^0.6.0",
     "react-dom": "^16.8.6",

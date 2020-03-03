@@ -35,22 +35,19 @@ export const Welcome = (props: any) => (
     <Paragraph>
       <ul>
         <li>
-          <Text code>系统管理员</Text>发布评比计划
+          <Text code>系统管理员</Text>发布评比计划，设置申报起止日期
         </li>
         <li>
-          <Text code>单位管理员</Text>录入成果、论文基本信息，提交参评申请
+          <Text code>单位管理员</Text>录入成果、论文基本信息
         </li>
         <li>
-          <Text code>系统管理员</Text>审核参评申请，邀请评审专家
+          <Text code>系统管理员</Text>邀请评审专家
         </li>
         <li>
           <Text code>评审专家</Text>对成果、论文进行打分
         </li>
         <li>
-          <Text code>系统后台</Text>自动计算平均分，并统计排名
-        </li>
-        <li>
-          <Text code>系统管理员</Text>导出评比结果
+          <Text code>系统管理员</Text>汇总评分，查看结果，导出表格
         </li>
       </ul>
     </Paragraph>

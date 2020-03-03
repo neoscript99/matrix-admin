@@ -29,9 +29,13 @@ const columns: EntityColumnProps[] = [
     dataIndex: 'scoresJson',
     render: (v, item) => {
       const scores: any[] = JSON.parse(item.scoresJson);
-      if (v === 'export') return scores.map(s => `${s.name}: ${s.score}`).join(',');
+      if (v === 'export') {
+        const spt = ',\n';
+        const info = scores.map(s => `${s.name}: ${s.score}`).join(spt);
+        return item.hasError ? info.concat(spt, item.message) : info;
+      }
       return (
-        <div className="flex" style={{ width: '15em', margin: -10 }}>
+        <div className="flex-row" style={{ maxWidth: '16em', margin: -10, justifyContent: 'space-between' }}>
           {scores.map(s => (
             <Tag key={s.name}>
               {s.name}: {s.score}
@@ -96,26 +100,29 @@ export class ReviewResultList extends EntityList {
     else throw '请传入正确的评比轮次';
   }
 
-  get columns() {
+  get columns(): EntityColumnProps[] {
     return [
       ...columns,
       {
         title: '查重',
         render: (v, item) => {
           const dup = item.achieve.duplicateCheck;
-          const info = dup && dup.success ? '通过' : '不通过';
+          let info;
+          if (dup) {
+            info = dup.success ? '通过' : '不通过';
+            if (dup.desc) info += `: ${dup.desc}`;
+          }
           if (v === 'export') return info;
           return (
-            <div className="flex-col">
+            <div className="flex-col" style={{ alignItems: 'center', margin: -10 }}>
+              <Button {...tdButtonProps} onClick={this.showForm.bind(this, item)} icon="edit" />
               {dup && (
-                <Tag>
-                  {dup.success ? '通过' : '不通过'}
-                  {dup.desc && `: ${dup.desc}`}
-                </Tag>
+                <Alert
+                  message={info}
+                  type={dup.success ? 'success' : 'error'}
+                  style={{ maxWidth: '10em', padding: 5 }}
+                />
               )}
-              <Button {...tdButtonProps} onClick={this.showForm.bind(this, item)}>
-                结果录入
-              </Button>
             </div>
           );
         },
