@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Tag, Card, Result, InputNumber, message, Button } from 'antd';
+import { Avatar, Tag, Card, Result, InputNumber, message } from 'antd';
 import {
   achieveExpertScoreService,
   attachmentService,
@@ -127,15 +127,22 @@ export class ExpertReviewList extends EntityList<EntityListProps, S> {
             value={value}
             min={0}
             max={100}
-            onChange={this.updateScore.bind(this, item.id as string)}
+            onChange={this.handleChange.bind(this, item.id as string)}
+            onBlur={() => (this.action = Promise.resolve())}
           />
         ),
       },
     ];
   }
   showing = false;
-  async updateScore(achieveId: string, score: number | undefined) {
-    if (!score) return;
+  action = Promise.resolve();
+  handleChange(achieveId: string, score: number | undefined) {
+    if (!score || score < 0 || score > 100) return;
+    //请求按顺序执行，防止顺序混乱，多次新增或数值错误
+    this.action = this.action.then(() => this.updateScore(achieveId, score));
+  }
+  async updateScore(achieveId: string, score: number) {
+    console.debug('ExpertReviewList.updateScore: ', achieveId, score);
     const { roundExpert, dataList, scoreList } = this.state;
     const oldScore = scoreList.find(s => s.achieveId === achieveId);
     const service = achieveExpertScoreService;

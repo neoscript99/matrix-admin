@@ -26,4 +26,8 @@ class AchieveExpertScore {
     static mapping = {
         roundExpert fetch: 'join', lazy: false
     }
+
+    static constraints = {
+        achieve unique: 'roundExpert'
+    }
 }

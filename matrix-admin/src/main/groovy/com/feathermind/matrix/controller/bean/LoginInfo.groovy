@@ -7,4 +7,5 @@ class LoginInfo extends ResBean{
     User user
     String roles
     String account
+    Boolean kaptchaFree
 }

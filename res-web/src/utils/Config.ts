@@ -3,9 +3,21 @@ abstract class Config {
   timeFormat = 'YYYY-MM-DD HH:mm';
   abstract isDev(): boolean;
   demoUsers = [
-    { name: '系统管理员', username: 'sys-admin', password: 'abc000' },
-    { name: '单位管理员', username: 'dept-admin', password: 'abc000' },
-    { name: '评审专家', username: 'expert', password: 'abc000' },
+    {
+      name: '系统管理员',
+      username: 'sys-admin',
+      passwordHash: '8224b8e566ef89f147c58d6b07739a74cf05e2a56ce4bc4b227bd59858e9b6e9',
+    },
+    {
+      name: '单位管理员',
+      username: 'dept-admin',
+      passwordHash: '8224b8e566ef89f147c58d6b07739a74cf05e2a56ce4bc4b227bd59858e9b6e9',
+    },
+    {
+      name: '评审专家',
+      username: 'expert',
+      passwordHash: '8224b8e566ef89f147c58d6b07739a74cf05e2a56ce4bc4b227bd59858e9b6e9',
+    },
   ];
 }
 

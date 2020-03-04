@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from 'antd';
-import applyPic from '../asset/topic-apply.png';
+import initialPic from '../asset/flow_initial.png';
+import reviewPic from '../asset/flow_review.png';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -30,7 +31,7 @@ export const Welcome = (props: any) => (
         </li>
       </ul>
     </Paragraph>
-    <img src={applyPic} />
+    <img src={initialPic} width={600} />
     <Title level={2}>评比流程</Title>
     <Paragraph>
       <ul>
@@ -51,5 +52,6 @@ export const Welcome = (props: any) => (
         </li>
       </ul>
     </Paragraph>
+    <img src={reviewPic} width={360} />
   </Typography>
 );

@@ -4,7 +4,7 @@
   "description": "鄞州区科研项目管理系统",
   "homepage": ".",
   "dependencies": {
-    "antd": "^3.26.3",
+    "antd": "3.26.12",
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.8",
     "oo-rest-mobx": "1.0.4",

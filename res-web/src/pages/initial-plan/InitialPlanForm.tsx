@@ -1,6 +1,14 @@
 import React from 'react';
 import { Form } from 'antd';
-import { EntityForm, commonRules, InputField, InputNumberField, SelectField, DatePickerField } from 'oo-rest-mobx';
+import {
+  EntityForm,
+  commonRules,
+  InputField,
+  InputNumberField,
+  SelectField,
+  DatePickerField,
+  TooltipLabel,
+} from 'oo-rest-mobx';
 import moment from 'moment';
 import { dictService } from '../../services';
 const { required, number } = commonRules;
@@ -48,7 +56,7 @@ export class InitialPlanForm extends EntityForm {
         />
         <DatePickerField
           fieldId="planEndDay"
-          formItemProps={{ label: '申报截止日期(当天15:00截止)' }}
+          formItemProps={{ label: <TooltipLabel label="申报截止日期" tooltip="当天15:00截止" /> }}
           formUtils={form}
           required
           defaultDiffDays={90}
