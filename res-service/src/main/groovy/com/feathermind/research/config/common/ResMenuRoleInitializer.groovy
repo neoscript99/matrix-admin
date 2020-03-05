@@ -61,6 +61,7 @@ class ResMenuRoleInitializer extends AbstractDataInitializer implements DataInit
         ]
         subList.each {
             new RoleMenu(RES_USER, it).save()
+            new RoleMenu(EXPERT, it).save()
         }
         subList << new Menu(label: '用户管理', app: 'ResUser', seq: 10, parentId: parentMenu.id, icon: 'usergroup-delete').save()
         subList.each { new RoleMenu(DEPT_MANAGER, it).save() }
