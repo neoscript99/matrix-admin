@@ -13,6 +13,17 @@ class DictController extends DomainController<Dict> {
     @Autowired
     DictService dictService
 
+    /**
+     * 开放读权限
+     */
+    @Override
+    void readAuthorize() {
+    }
+
+    @Override
+    void readOneAuthorize() {
+    }
+
     @Override
     AbstractService<Dict> getDomainService() {
         return dictService

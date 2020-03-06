@@ -231,7 +231,8 @@ class GormRepository implements GeneralRepository {
                 sb.append("$msg\n")
 
             }
-            throw new RuntimeException(sb.toString())
+            def errMap = [code: 'save_entity', error: sb.toString()]
+            throw new RuntimeException(JsonUtil.toJson(errMap))
         }
     }
 

@@ -1,6 +1,7 @@
 package com.feathermind.research.trait
 
 import com.feathermind.matrix.controller.DomainController
+import com.feathermind.matrix.controller.bean.ResBean
 import groovy.transform.SelfType
 
 import static com.feathermind.research.config.common.InitEntity.DEPT_MANAGER
@@ -23,7 +24,7 @@ trait ListByRole {
         else if (roles.contains(RES_USER.roleCode))
             criteria.eq << ['personInCharge', user]
         else
-            throw new RuntimeException('当前用户没有权限')
+            throw new RuntimeException(ResBean.json('authorize_fail', '当前用户没有权限'))
         return criteria
     }
 }

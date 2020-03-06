@@ -21,6 +21,17 @@ class ParamController extends DomainController<Param> {
         return ResponseEntity.ok(list)
     }
 
+    /**
+     * 开放读权限
+     */
+    @Override
+    void readAuthorize() {
+    }
+
+    @Override
+    void readOneAuthorize() {
+    }
+
     @Override
     AbstractService<Param> getDomainService() {
         return paramService

@@ -42,6 +42,8 @@ dependencies {
     implementation "org.apache.tomcat.embed:tomcat-embed-logging-log4j:8.5.0"
     api 'org.springframework.boot:spring-boot-starter-logging'
     api 'org.springframework.boot:spring-boot-starter-web'
+    api 'org.springframework.boot:spring-boot-starter-security'
+
     //devtools存在Domain Class加载多次问题
     //https://github.com/grails/grails-data-mapping/issues/970
     //developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -52,6 +54,7 @@ dependencies {
     api 'cn.hutool:hutool-crypto:5.0.3'
     implementation 'org.apache.poi:poi-ooxml:3.16'
     implementation 'com.baomidou:kaptcha-spring-boot-starter:1.1.0'
+    implementation 'com.auth0:java-jwt:3.8.2'
 
     def gradleVersion = '5.6.4'
     testImplementation group: 'org.gradle', name: 'gradle-core', version: gradleVersion

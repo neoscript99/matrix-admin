@@ -1,5 +1,6 @@
 package com.feathermind.matrix.domain.sys
 
+import com.feathermind.matrix.trait.AutoTime
 import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -15,13 +16,13 @@ import com.feathermind.matrix.initializer.InitializeDomain
 @ToString(includePackage = false, includes = 'roleName')
 @EqualsAndHashCode(includes = 'id')
 @InitializeDomain
-class Role {
+class Role implements AutoTime {
     //管理员，所有菜单权限
     static final Role ADMINISTRATORS = new Role(roleName: '系统管理员', roleCode: 'Administrators',
-            editable: false, description: '系统参数管理.')
+            editable: false, description: '系统参数管理.', authorities: 'SysAdmin')
 
     static final Role NORMAL_USERS = new Role(roleName: '普通用户', roleCode: 'NormalUsers',
-            editable: false, description: '普通用户.')
+            editable: false, description: '普通用户.', authorities: 'UserWriteOne')
 
     //公开用户，可支持匿名用户查看网站通知等开放功能
     static final Role PUBLIC = new Role(roleName: '默认角色', roleCode: ' Public',
@@ -33,12 +34,14 @@ class Role {
     String description
     Boolean editable = true
     Boolean enabled = true
-    Date dateCreated
-    Date lastUpdated
+
+    String authorities
+
     static mapping = {
     }
     static constraints = {
         description nullable: true, blank: true, maxSize: 128
+        authorities nullable: true, blank: true, maxSize: 512
         roleCode unique: true
     }
 

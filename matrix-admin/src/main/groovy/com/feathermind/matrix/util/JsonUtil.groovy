@@ -33,7 +33,7 @@ public class JsonUtil {
      * @version 2016年6月28日
      */
     public static String toJson(Object o) {
-        return toJson(o, true);
+        return toJson(o, false);
     }
 
     public static String toJson(Object o, boolean isPretty) {
