@@ -24,8 +24,6 @@ import java.util.concurrent.TimeUnit
 @CrossOrigin(origins = ["http://localhost:3000", "null"], allowCredentials = "true")
 class GormController {
     @Autowired
-    GormSessionBean gormSessionBean
-    @Autowired
     AttachmentService attachmentService
     @Autowired
     CasClientService casClientService

@@ -4,4 +4,7 @@ export class ResDeptService extends DeptService {
   constructor(restClient: AbstractClient) {
     super(restClient, 'resDept');
   }
+  get packageName() {
+    return 'res';
+  }
 }

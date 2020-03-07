@@ -1,6 +1,5 @@
-token:
-  expire.minutes: 600
-  expire.maxRefreshTimes: 100
+gorm:
+  token.expire.minutes: 1
 
 server:
   port: 8080

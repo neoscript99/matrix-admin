@@ -2,10 +2,11 @@ package com.feathermind.matrix.controller.bean
 
 import com.feathermind.matrix.domain.sys.User
 
-class LoginInfo extends ResBean{
+class LoginInfo extends ResBean {
     String token
     User user
-    String roles
+    Collection<String> roles
+    Collection<String> authorities
     String account
     Boolean kaptchaFree
 }

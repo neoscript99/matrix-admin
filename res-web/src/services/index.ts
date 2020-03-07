@@ -1,4 +1,4 @@
-import { LoginInfo, AdminServices, DomainService, SpringBootClient, MobxDomainStore } from 'oo-rest-mobx';
+import { LoginInfo, AdminServices, DomainService, SpringBootClient, MobxDomainStore, ObjectUtil } from 'oo-rest-mobx';
 import { config } from '../utils';
 import { ResUserService } from './ResUserService';
 import { ResDeptService } from './ResDeptService';
@@ -9,18 +9,24 @@ import { TopicSupportService } from './TopicSupportService';
 import { ReviewRoundExpertService } from './ReviewRoundExpertService';
 import { ReviewRoundService } from './ReviewRoundService';
 import { AchieveService } from './AchieveService';
+import { ResDeptTypeService } from './ResDeptTypeService';
 
 function afterLogin(loginInfo: LoginInfo) {
   if (!loginInfo.token) throw 'token不能为空';
-  initialPlanService.initDictList();
-  reviewPlanService.initDictList();
-  resDeptTypeService.listAll({});
+  //必须最先执行，否则验证错误
+  ObjectUtil.set(restClient.fetchOptions, 'reqInit.headers.Authorization', `Bearer ${loginInfo.token}`);
+  const funs = [
+    initialPlanService.afterLogin(loginInfo),
+    reviewPlanService.afterLogin(loginInfo),
+    resDeptTypeService.afterLogin(loginInfo),
+  ];
+  return Promise.all(funs);
 }
 
 const storeClass = MobxDomainStore;
 export const restClient = new SpringBootClient({ rootUrl: config.serverRoot });
 
-export const resDeptTypeService = new DomainService({ domain: 'resDeptType', restClient, storeClass });
+export const resDeptTypeService = new ResDeptTypeService(restClient);
 //机构、用户服务自定义
 export const resDeptService = new ResDeptService(restClient);
 export const resUserService = new ResUserService(restClient);

@@ -8,8 +8,8 @@ import com.baomidou.kaptcha.exception.KaptchaTimeoutException
 import com.feathermind.matrix.controller.bean.CasConfig
 import com.feathermind.matrix.controller.bean.LoginInfo
 import com.feathermind.matrix.controller.bean.ResBean
+import com.feathermind.matrix.security.UserSecurityService
 import com.feathermind.matrix.service.CasClientService
-import com.feathermind.matrix.service.TokenService
 import com.feathermind.matrix.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -36,9 +36,9 @@ class LoginController {
     @Autowired
     CasClientService casClientService
     @Autowired
-    TokenService tokenService
-    @Autowired
     UserService userService
+    @Autowired
+    UserSecurityService userSecurityService
     @Autowired
     GormSessionBean gormSessionBean
     @Autowired
@@ -48,25 +48,26 @@ class LoginController {
     @PostMapping("/login")
     ResponseEntity<LoginInfo> login(@RequestBody Map reqBody, HttpServletRequest request) {
         String ip = getClientIP(request)
-        if (!isSafe(ip, reqBody.username)) {
+        String username = reqBody.username;
+        if (!isSafe(ip, username)) {
             def kResult = kaptchaValid(reqBody.kaptchaCode);
             if (!kResult.success) {
                 return ResponseEntity.ok(new LoginInfo(kResult))
             }
         }
-        def result = userService.login(reqBody.username, reqBody.passwordHash);
+        def result = userService.login(username, reqBody.passwordHash);
         if (result.success) {
-            def roles = userService.getUserRoleCodes(result.user)
-            def token = tokenService.createToken(result.user.account, roles)
+            def tokenDetails = userSecurityService.loadUserByUsername(username)
             if (gormSessionBean)
-                gormSessionBean.token = token
+                gormSessionBean.tokenDetails = tokenDetails
             result << [
-                    account: result.user.account,
-                    roles  : roles,
-                    token  : token.id]
-            clearLoginError(ip, reqBody.username)
+                    account    : username,
+                    roles      : tokenDetails.roles,
+                    authorities: tokenDetails.plainAuthorities,
+                    token      : userSecurityService.generateToken(tokenDetails)]
+            clearLoginError(ip, username)
         } else
-            result.kaptchaFree = newLoginError(ip, reqBody.username)
+            result.kaptchaFree = newLoginError(ip, username)
         ResponseEntity.ok(new LoginInfo(result))
     }
 
@@ -142,17 +143,22 @@ class LoginController {
         }
     }
 
+    /**
+     * 支持CAS登录
+     * @return
+     */
     @PostMapping("/sessionLogin")
     ResponseEntity<LoginInfo> sessionLogin() {
-        def token = gormSessionBean.token
+        def tokenDetails = gormSessionBean.tokenDetails
         def result
-        if (token) {
-            def user = userService.findByAccount(token.username)
-            result = [success: true,
-                      user   : user,
-                      roles  : token.roles,
-                      account: token.username,
-                      token  : token.id]
+        if (tokenDetails) {
+            // 如果是CAS登录，user可能为null
+            result = [success    : true,
+                      user       : tokenDetails.user,
+                      roles      : tokenDetails.roles,
+                      authorities: tokenDetails.plainAuthorities,
+                      account    : tokenDetails.username,
+                      token      : userSecurityService.generateToken(tokenDetails)]
         } else
             result = [success: false,
                       error  : '服务端没有session信息']
@@ -162,11 +168,8 @@ class LoginController {
 
     @PostMapping("/logout")
     ResponseEntity<ResBean> logout(HttpSession session) {
+        gormSessionBean.tokenDetails = null;
         session.invalidate()
-        if (gormSessionBean.token) {
-            tokenService.destoryToken(gormSessionBean.token.id)
-            gormSessionBean.token = null
-        }
         ResponseEntity.ok(new ResBean([success: true]))
     }
 

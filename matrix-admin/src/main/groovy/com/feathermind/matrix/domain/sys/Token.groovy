@@ -1,13 +1,12 @@
 package com.feathermind.matrix.domain.sys
 
-import grails.gorm.annotation.Entity
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import com.feathermind.matrix.initializer.InitializeDomain
 
 import java.time.LocalDateTime
 
-@Entity
+@Deprecated
 @ToString(includePackage = false, includes = 'expireTime,lastUpdated')
 @EqualsAndHashCode(includes = 'id')
 @InitializeDomain(profiles = ['dev', 'test'])

@@ -12,8 +12,8 @@ import static com.feathermind.research.config.common.InitEntity.RES_USER
 @SelfType(DomainController)
 trait ListByRole {
     Map preList(Map criteria) {
-        def user = this.getSessionUser(true)
-        def roles = this.getToken().roles.split(',')
+        def user = this.getCurrentUser(true)
+        def roles = this.tokenDetails.roles
         if (roles.contains(MAIN_MANAGER.roleCode) || roles.contains(EXPERT.roleCode))
             return criteria
 
@@ -24,7 +24,7 @@ trait ListByRole {
         else if (roles.contains(RES_USER.roleCode))
             criteria.eq << ['personInCharge', user]
         else
-            throw new RuntimeException(ResBean.json('authorize_fail', '当前用户没有权限'))
+            throw new RuntimeException(ResBean.json('AuthorizeFail', '当前用户没有权限'))
         return criteria
     }
 }

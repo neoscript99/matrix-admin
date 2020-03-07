@@ -17,7 +17,7 @@ class ReviewRoundExpertController extends DomainController<ReviewRoundExpert> {
 
     @PostMapping("/listByExpert")
     ResponseEntity<List<ReviewRoundExpert>> listByExpert() {
-        return ResponseEntity.ok(reviewRoundExpertService.listByExpert(getSessionUser(true)))
+        return ResponseEntity.ok(reviewRoundExpertService.listByExpert(getCurrentUser(true)))
     }
 
     @Override

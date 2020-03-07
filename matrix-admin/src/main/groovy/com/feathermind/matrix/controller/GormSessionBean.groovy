@@ -1,6 +1,7 @@
 package com.feathermind.matrix.controller
 
-import com.feathermind.matrix.domain.sys.Token
+import com.feathermind.matrix.security.TokenDetails
+import com.feathermind.matrix.security.UserSecurityService
 import com.feathermind.matrix.service.CasClientService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
@@ -8,21 +9,24 @@ import org.springframework.context.annotation.ScopedProxyMode
 import org.springframework.stereotype.Component
 import org.springframework.web.context.WebApplicationContext
 
+/**
+ * 仅用于用户信息缓存，如果session关闭，不影响功能
+ * 用户信息将通过JwtAuthorizationFilter解析header中的token获取
+ */
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Component
 class GormSessionBean {
     @Autowired
     CasClientService casClientService
+    @Autowired
+    UserSecurityService userSecurityService
 
-    private Token token
+    TokenDetails tokenDetails
 
-    Token getToken() {
-        if (!token && casClientService.clientEnabled)
-            token = casClientService.createTokenByCas()
-        return token
-    }
-
-    void setToken(Token token) {
-        this.token = token
+    TokenDetails getTokenDetails() {
+        if (!tokenDetails && casClientService.clientEnabled && casClientService.casAccount) {
+            tokenDetails = userSecurityService.loadUserWithDefaultRoles(casClientService.casAccount, casClientService.casDefaultRoles)
+        }
+        return tokenDetails
     }
 }

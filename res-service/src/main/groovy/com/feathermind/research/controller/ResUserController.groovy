@@ -26,8 +26,8 @@ class ResUserController extends DomainController<ResUser> {
     }
 
     Map preList(Map criteria) {
-        def user = this.getSessionUser(true)
-        def roles = this.getToken().roles.split(',')
+        def user = this.getCurrentUser(true)
+        def roles = this.tokenDetails.roles
         if (!roles.contains(MAIN_MANAGER.roleCode)) {
             if (!criteria.eq)
                 criteria.eq = []

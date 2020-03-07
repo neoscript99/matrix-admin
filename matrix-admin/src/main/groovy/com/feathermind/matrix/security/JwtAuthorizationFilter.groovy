@@ -1,5 +1,7 @@
 package com.feathermind.matrix.security
 
+import com.feathermind.matrix.controller.GormSessionBean
+import com.feathermind.matrix.service.UserService
 import com.feathermind.matrix.util.JwtUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,15 +22,26 @@ import javax.servlet.http.HttpServletResponse
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Autowired
-    UserSecurityService userDetailsService;
+    GormSessionBean gormSessionBean
+    @Autowired
+    UserSecurityService userSecurityService;
+    @Autowired
+    UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        getAuthentication(request);
+
+        UserDetails userDetails = /*gormSessionBean.tokenDetails ?:*/ parseToken(request);
+        if (userDetails) {
+            def authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
         chain.doFilter(request, response);
+        // todo 清理还有问题，需继续处理
+        //  SecurityContextHolder.getContext().setAuthentication('anonymousUser');
     }
 
-    private void getAuthentication(HttpServletRequest request) {
+    private UserDetails parseToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         if (header == null || !header.startsWith("Bearer ")) {
             return;
@@ -36,13 +49,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String token = header.split(" ")[1];
         String username = JwtUtil.getUsername(token);
         try {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (JwtUtil.verify(token, userDetails.getPassword())) {
-                def authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            def user = userService.findByAccount(username)
+            if (user && JwtUtil.verify(token, user.password)) return userSecurityService.loadUserByUsername(username);
+            else log.warn('用户{}的token过期', username)
         } catch (UsernameNotFoundException e) {
             log.error(e.message, e);
+            return null;
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.feathermind.matrix.controller
 
 import com.feathermind.matrix.domain.sys.Menu
-import com.feathermind.matrix.domain.sys.User
 import com.feathermind.matrix.service.AbstractService
 import com.feathermind.matrix.service.MenuNode
 import com.feathermind.matrix.service.MenuService
@@ -21,20 +20,15 @@ class MenuController extends DomainController<Menu> {
     @Autowired
     RoleService roleService
     @Autowired
-    GormSessionBean gormSessionBean
-    @Autowired
     UserService userService
 
     @PostMapping("/menuTree")
     ResponseEntity<MenuNode> menuTree() {
-        def token = gormSessionBean.token
-        def account = token.username;
-        def user = userService.findByAccount(account);
         MenuNode menuNode
-        if (user)
-            menuNode = menuService.getUserTree(user)
+        if (tokenDetails.user)
+            menuNode = menuService.getUserTree(tokenDetails.user)
         else {
-            def roleList = roleService.findByCodes(token.roles.split(','))
+            def roleList = roleService.findByCodes(tokenDetails.roles)
             menuNode = menuService.getRolesTree(roleList)
         }
         ResponseEntity.ok(menuNode)

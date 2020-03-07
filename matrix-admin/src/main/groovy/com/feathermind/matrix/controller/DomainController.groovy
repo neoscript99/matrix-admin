@@ -1,7 +1,6 @@
 package com.feathermind.matrix.controller
 
 import com.feathermind.matrix.controller.bean.ResBean
-import com.feathermind.matrix.domain.sys.Token
 import com.feathermind.matrix.domain.sys.User
 import com.feathermind.matrix.service.AbstractService
 import com.feathermind.matrix.service.UserService
@@ -15,13 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody
 
 /**
  * SysWrite、SysRead两个为最大的权限，应该只赋值给管理员
- * @param <T >
+ * @param < T >
  */
 @CrossOrigin(origins = ["http://localhost:3000", "null"], allowCredentials = "true")
 abstract class DomainController<T> extends SecureController {
     protected Logger log = LoggerFactory.getLogger(this.getClass())
-    @Autowired(required = false)
-    GormSessionBean gormSessionBean
     @Autowired
     UserService userService
 
@@ -90,17 +87,4 @@ abstract class DomainController<T> extends SecureController {
         return "${last}Package"
     }
 
-    protected User getSessionUser(boolean isNeed = false) {
-        def token = gormSessionBean.token
-        def user = userService.findByAccount(token.username)
-        if (user)
-            return user
-        else if (isNeed)
-            throw new RuntimeException(ResBean.json('not_login', '用户未登录'))
-    }
-
-    protected Token getToken() {
-        if (gormSessionBean)
-            return gormSessionBean.token
-    }
 }

@@ -18,6 +18,7 @@ class InitialPlanController extends DomainController<InitialPlan> {
 
     @PostMapping("/listStarted")
     ResponseEntity<List<InitialPlan>> listStarted() {
+        readAuthorize()
         return ResponseEntity.ok(initialPlanService.listStarted())
     }
 

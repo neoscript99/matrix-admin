@@ -12,22 +12,23 @@ import groovy.util.logging.Slf4j
 @Slf4j
 public class JwtUtil {
 
-    // 过期时间5分钟
-    private final static long EXPIRE_TIME = 60 * 60 * 1000;
 
     /**
-     * 生成签名,5min后过期
+     * 生成签名,默认10min后过期
      * @param username 用户名
      * @param secret 用户的密码
      * @return 加密的token
      */
     public static String generate(String username, String secret) {
-        Date expireDate = new Date(System.currentTimeMillis() + EXPIRE_TIME);
+        return generate(username, secret, 10)
+    }
+
+    public static String generate(String username, String secret, long expireMinutes) {
+        Date expireDate = new Date(System.currentTimeMillis() + expireMinutes * 60 * 1000);
         Algorithm algorithm = Algorithm.HMAC256(secret);
         return JWT.create()
                 .withSubject(username)
                 .withExpiresAt(expireDate)
-                .withIssuedAt(new Date())
                 .sign(algorithm);
     }
 
@@ -41,8 +42,9 @@ public class JwtUtil {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm).build();
-            DecodedJWT jwt = verifier.verify(token);
-            return jwt.getExpiresAt().after(new Date());
+            // 过期也会抛出异常
+            verifier.verify(token);
+            return true;
         } catch (JWTVerificationException e) {
             log.error("token校验异常", e)
             return false;

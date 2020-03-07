@@ -14,6 +14,6 @@ interface InitEntity {
             description: '个人事务办理')
 
     static EXPERT = new Role(roleName: '评审专家', roleCode: 'ResExpert',
-            description: '课题论文评审', authorities: 'AchieveExpertScoreAll,AchieveRead,ReviewRoundExpertRead')
+            description: '课题论文评审', authorities: 'AchieveExpertScoreAll,AchieveRead,ReviewRoundExpertRead,ResUserWriteOne')
 
 }

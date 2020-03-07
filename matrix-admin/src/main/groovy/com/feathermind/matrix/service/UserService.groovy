@@ -1,9 +1,6 @@
 package com.feathermind.matrix.service
 
 import com.feathermind.matrix.domain.sys.*
-import com.feathermind.matrix.security.UserSecurityService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,11 +11,6 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 class UserService extends AbstractService<User> {
-
-    @Autowired
-    UserSecurityService userSecurityService
-    @Value('${gorm.cas.defaultRoles}')
-    String casDefaultRoles
 
     @Transactional(readOnly = true)
     Map login(String account, String password) {
@@ -58,7 +50,7 @@ class UserService extends AbstractService<User> {
     String getUserRoleCodes(User user) {
         //如果当前用户未配置角色，视同CAS登录无帐号的情况
         def roles = getUserRoles(user)
-        roles ? (roles*.roleCode).join(',') : casDefaultRoles
+        (roles*.roleCode).join(',')
     }
 
     User saveUserWithRoles(Map userMap, List<String> roleIds) {
@@ -72,7 +64,6 @@ class UserService extends AbstractService<User> {
             new UserRole(user: user, role: Role.get(it)).save()
         }
         // 清楚该用户缓存
-        userSecurityService.removeDetails(user.account)
         return user;
     }
 }

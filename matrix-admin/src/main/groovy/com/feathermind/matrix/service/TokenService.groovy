@@ -2,15 +2,18 @@ package com.feathermind.matrix.service
 
 import com.feathermind.matrix.domain.sys.Token
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Service
 
 import java.time.Duration
 import java.time.LocalDateTime
 
-@Service
+/**
+ * 数据库方式保存Token
+ * 202003弃用
+ */
+@Deprecated
 class TokenService extends AbstractService<Token> {
 
-    @Value('${token.expire.minutes}')
+    @Value('${gorm.token.expire.minutes}')
     Integer expireMinutes
     @Value('${token.expire.maxRefreshTimes}')
     Integer maxRefreshTimes

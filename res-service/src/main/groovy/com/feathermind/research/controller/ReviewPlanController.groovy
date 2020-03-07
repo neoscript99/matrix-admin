@@ -17,6 +17,7 @@ class ReviewPlanController extends DomainController<ReviewPlan> {
 
     @PostMapping("/listStarted")
     ResponseEntity<List<ReviewPlan>> listStarted() {
+        readAuthorize()
         return ResponseEntity.ok(reviewPlanService.listStarted())
     }
 

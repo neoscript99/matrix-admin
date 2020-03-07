@@ -1,6 +1,8 @@
 package com.feathermind.matrix.controller
 
 import com.feathermind.matrix.controller.bean.ResBean
+import com.feathermind.matrix.domain.sys.User
+import com.feathermind.matrix.security.TokenDetails
 import groovy.transform.CompileStatic
 import org.springframework.security.core.context.SecurityContextHolder
 
@@ -16,20 +18,49 @@ abstract class SecureController {
      * 如果没有权限，抛出异常，代表非法访问
      */
     void authorize(Object... needOneList) {
-        def userList = SecurityContextHolder.getContext().getAuthentication().authorities
+        def userList = tokenDetails.plainAuthorities
         if (userList.contains('SysAdmin')) return;
         if (!needOneList) return;
         def lookListFlat = needOneList.flatten();
-        for (def it : lookListFlat) {
-            if (userList.contains(it.toString())) return;
+        for (def lookAuthority : lookListFlat) {
+            if (userList.contains(lookAuthority.toString())) return;
+        }
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        def trace = stackTrace.find {
+            def className = it.className
+            !(className.startsWith('java.')
+                    || className.startsWith('org.codehaus.groovy')
+                    || className.startsWith('sun.reflect')
+                    || className.indexOf('\$') > -1
+                    || className.indexOf('SecureController') > -1)
         }
         throw new RuntimeException(
-                ResBean.json('authorize_fail', "当前用户无以下任一权限：${lookListFlat}"))
+                ResBean.json('AuthorizeFail', "当前用户（${userList}）无以下任一权限：SysAdmin, ${lookListFlat} at ${trace}"))
     }
 
-    abstract String getName();
+    protected User getCurrentUser() {
+        getCurrentUser(true)
+    }
 
-    abstract String getPackageName();
+    protected User getCurrentUser(boolean isNeed) {
+        def user = tokenDetails.user
+        if (user)
+            return user
+        else if (isNeed)
+            throw new RuntimeException(ResBean.json('NoUser', '用户未登录'))
+    }
+
+    protected TokenDetails getTokenDetails() {
+        def principal = SecurityContextHolder.getContext().getAuthentication().principal
+        if (principal instanceof TokenDetails)
+            return (TokenDetails) principal
+        else
+            throw new RuntimeException(ResBean.json('IllegalToken', "非法token：$principal"))
+    }
+
+    String getName() { return null }
+
+    String getPackageName() { return null }
 
 
     List getReadAuthorities() {

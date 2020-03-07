@@ -11,7 +11,11 @@ import org.springframework.stereotype.Service
 @Service
 class RoleService extends AbstractService<Role> {
     List<Role> findByCodes(String[] codes) {
-        if (codes && codes.length > 0)
-            list(['in': [['roleCode', codes]]])
+        findByCodes(codes.toList())
+    }
+
+    List<Role> findByCodes(List<String> codeList) {
+        if (codeList)
+            list(['inList': [['roleCode', codeList]]])
     }
 }
