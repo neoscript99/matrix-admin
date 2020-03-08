@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil
 import com.feathermind.matrix.domain.sys.AttachmentFile
 import com.feathermind.matrix.domain.sys.AttachmentInfo
 import com.feathermind.matrix.util.EncoderUtil
+import com.feathermind.matrix.util.MatrixException
 import grails.gorm.transactions.ReadOnly
 import org.apache.poi.util.IOUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,7 +32,7 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
         if (file && file.isFile())
             return saveWithByte(file.name, ownerId, ownerName, file.getBytes());
         else
-            throw new RuntimeException("$file,该文件不存在")
+            throw new MatrixException('NoFile', "$file,该文件不存在")
 
     }
 

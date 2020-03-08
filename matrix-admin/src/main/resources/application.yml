@@ -1,11 +1,15 @@
-gorm:
-  token.expire.minutes: 1
 
+gorm:
+  token.expire.minutes: 30
+# token过期时间为固定值，而且没有做缓存，需要查库，客户端需要控制有效性手动刷新
+
+# session过期时间是最后一次访问之后计时，容器自动缓存，这种方式更合理，优先使用session
 server:
   port: 8080
   servlet.session:
     cookie.name: GormSessionId
     tracking-modes: cookie
+    timeout: 30m
 spring:
   h2.console:
     enabled: true

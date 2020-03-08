@@ -1,15 +1,20 @@
-package com.feathermind.matrix.controller
+package com.feathermind.matrix.security
 
 import com.feathermind.matrix.controller.bean.ResBean
 import com.feathermind.matrix.domain.sys.User
-import com.feathermind.matrix.security.TokenDetails
+import com.feathermind.matrix.util.MatrixException
+import com.sun.org.apache.bcel.internal.generic.NEW
 import groovy.transform.CompileStatic
-import org.springframework.security.core.context.SecurityContextHolder
+import groovy.util.logging.Slf4j
+import org.springframework.core.MethodParameter
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.bind.MissingPathVariableException
 
 /**
  * SysAdmin、SysWrite、SysRead为最大的权限，应该只赋值给管理员
  */
 @CompileStatic
+@Slf4j
 abstract class SecureController {
     /**
      * 检查权限，当前用户是否具有其中一个权限
@@ -18,24 +23,16 @@ abstract class SecureController {
      * 如果没有权限，抛出异常，代表非法访问
      */
     void authorize(Object... needOneList) {
-        def userList = tokenDetails.plainAuthorities
-        if (userList.contains('SysAdmin')) return;
         if (!needOneList) return;
+        def userList = tokenDetails.authorities
+        if (userList.contains('SysAdmin')) return;
         def lookListFlat = needOneList.flatten();
         for (def lookAuthority : lookListFlat) {
             if (userList.contains(lookAuthority.toString())) return;
         }
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        def trace = stackTrace.find {
-            def className = it.className
-            !(className.startsWith('java.')
-                    || className.startsWith('org.codehaus.groovy')
-                    || className.startsWith('sun.reflect')
-                    || className.indexOf('\$') > -1
-                    || className.indexOf('SecureController') > -1)
-        }
-        throw new RuntimeException(
-                ResBean.json('AuthorizeFail', "当前用户（${userList}）无以下任一权限：SysAdmin, ${lookListFlat} at ${trace}"))
+        def e = new MatrixException('AuthorizeFail', "用户(${tokenDetails.username})无此功能权限")
+        log.error("用户权限: ${userList}，需要其中之一：${lookListFlat}或SysAdmin".toString())
+        throw e
     }
 
     protected User getCurrentUser() {
@@ -43,19 +40,18 @@ abstract class SecureController {
     }
 
     protected User getCurrentUser(boolean isNeed) {
-        def user = tokenDetails.user
+        def user = tokenDetails?.user
         if (user)
             return user
         else if (isNeed)
-            throw new RuntimeException(ResBean.json('NoUser', '用户未登录'))
+            throw new MatrixException('NoUser', '用户未登录')
     }
 
     protected TokenDetails getTokenDetails() {
-        def principal = SecurityContextHolder.getContext().getAuthentication().principal
-        if (principal instanceof TokenDetails)
-            return (TokenDetails) principal
-        else
-            throw new RuntimeException(ResBean.json('IllegalToken', "非法token：$principal"))
+        def tokenDetails = TokenHolder.getToken()
+        if (!tokenDetails)
+            throw new MatrixException('NoToken', "登录信息不存在，无法执行")
+        return tokenDetails;
     }
 
     String getName() { return null }

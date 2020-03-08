@@ -8,7 +8,7 @@ import com.baomidou.kaptcha.exception.KaptchaTimeoutException
 import com.feathermind.matrix.controller.bean.CasConfig
 import com.feathermind.matrix.controller.bean.LoginInfo
 import com.feathermind.matrix.controller.bean.ResBean
-import com.feathermind.matrix.security.UserSecurityService
+import com.feathermind.matrix.security.TokenService
 import com.feathermind.matrix.service.CasClientService
 import com.feathermind.matrix.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,7 +38,7 @@ class LoginController {
     @Autowired
     UserService userService
     @Autowired
-    UserSecurityService userSecurityService
+    TokenService userSecurityService
     @Autowired
     GormSessionBean gormSessionBean
     @Autowired
@@ -63,7 +63,7 @@ class LoginController {
             result << [
                     account    : username,
                     roles      : tokenDetails.roles,
-                    authorities: tokenDetails.plainAuthorities,
+                    authorities: tokenDetails.authorities,
                     token      : userSecurityService.generateToken(tokenDetails)]
             clearLoginError(ip, username)
         } else
@@ -156,7 +156,7 @@ class LoginController {
             result = [success    : true,
                       user       : tokenDetails.user,
                       roles      : tokenDetails.roles,
-                      authorities: tokenDetails.plainAuthorities,
+                      authorities: tokenDetails.authorities,
                       account    : tokenDetails.username,
                       token      : userSecurityService.generateToken(tokenDetails)]
         } else

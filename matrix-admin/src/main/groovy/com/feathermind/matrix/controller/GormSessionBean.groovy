@@ -1,7 +1,7 @@
 package com.feathermind.matrix.controller
 
 import com.feathermind.matrix.security.TokenDetails
-import com.feathermind.matrix.security.UserSecurityService
+import com.feathermind.matrix.security.TokenService
 import com.feathermind.matrix.service.CasClientService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
@@ -19,7 +19,7 @@ class GormSessionBean {
     @Autowired
     CasClientService casClientService
     @Autowired
-    UserSecurityService userSecurityService
+    TokenService userSecurityService
 
     TokenDetails tokenDetails
 

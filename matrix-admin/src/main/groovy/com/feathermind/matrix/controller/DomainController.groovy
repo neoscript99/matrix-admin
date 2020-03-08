@@ -1,7 +1,7 @@
 package com.feathermind.matrix.controller
 
-import com.feathermind.matrix.controller.bean.ResBean
-import com.feathermind.matrix.domain.sys.User
+
+import com.feathermind.matrix.security.SecureController
 import com.feathermind.matrix.service.AbstractService
 import com.feathermind.matrix.service.UserService
 import org.slf4j.Logger

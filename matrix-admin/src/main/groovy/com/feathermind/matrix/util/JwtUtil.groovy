@@ -56,7 +56,12 @@ public class JwtUtil {
      * @return token中包含的用户名
      */
     public static String getUsername(String token) {
-        DecodedJWT jwt = JWT.decode(token);
-        return jwt.getSubject();
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            return jwt.getSubject();
+        } catch (JWTVerificationException e) {
+            log.error("token校验异常", e)
+            return null;
+        }
     }
 }

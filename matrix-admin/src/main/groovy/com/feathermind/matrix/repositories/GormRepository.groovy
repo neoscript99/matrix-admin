@@ -1,6 +1,7 @@
 package com.feathermind.matrix.repositories
 
 import com.feathermind.matrix.util.JsonUtil
+import com.feathermind.matrix.util.MatrixException
 import groovy.transform.CompileStatic
 import groovy.transform.TypeCheckingMode
 import groovy.util.logging.Slf4j
@@ -231,8 +232,7 @@ class GormRepository implements GeneralRepository {
                 sb.append("$msg\n")
 
             }
-            def errMap = [code: 'SaveEntityFail', error: sb.toString()]
-            throw new RuntimeException(JsonUtil.toJson(errMap))
+            throw new MatrixException('SaveEntityFail', sb)
         }
     }
 
