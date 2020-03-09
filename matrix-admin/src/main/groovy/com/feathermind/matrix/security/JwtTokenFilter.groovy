@@ -2,6 +2,7 @@ package com.feathermind.matrix.security
 
 import com.feathermind.matrix.controller.GormSessionBean
 import com.feathermind.matrix.util.JwtUtil
+import com.feathermind.matrix.util.MatrixException
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -36,7 +37,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        TokenDetails tokenDetails = gormSessionBean.tokenDetails ?: parseToken(request);
+        TokenDetails tokenDetails = gormSessionBean.tokenDetails ?: parseToken(getToken(request));
         TokenHolder.setToken(tokenDetails)
 
         chain.doFilter(request, response);
@@ -48,15 +49,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
      * CAS的话，用户可能没有在系统用户表中，有时不能使用本方法获取信息，只能通过上面的session做处理
      * 本方法不抛出异常，如果token有问题，通过后端controller控制权限
      * @param request
-     * @return 成功解析token并校验有效期，返回对应TokenDetails，否则返回null
+     * @return 成功解析token并校验有效期，返回对应TokenDetails，否则返回null，本方法不抛出异常
      */
-    private TokenDetails parseToken(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
-            return null;
-        }
-        String token = header.split(" ")[1];
-
+    private TokenDetails parseToken(String token) {
+        if (!token || token == 'anonymous') return null;
         String username = JwtUtil.getUsername(token);
         if (!username) return null;
 
@@ -66,5 +62,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             log.error('用户{}的token验证失败', username)
             return null
         }
+    }
+
+    private String getToken(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header && header.startsWith("Bearer "))
+            return header.split(" ")[1];
+        //POST请求必须包含Authorization头
+        else if ('POST' == request.method && request.getRequestURI().startsWith('/api/'))
+            throw new MatrixException('IllegalPostRequest', '非法请求')
+        else
+            return null;
+
     }
 }

@@ -20,7 +20,7 @@ plugins {
 }
 
 group = 'com.feathermind.matrix'
-version = '1.4'
+version = '1.6'
 sourceCompatibility = '1.8'
 
 repositories {

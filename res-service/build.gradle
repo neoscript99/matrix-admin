@@ -24,8 +24,8 @@ repositories {
 }
 
 dependencies {
-    implementation project(':matrix-admin')
-    // implementation ('com.feathermind.matrix:matrix-admin:1.4')
+    // implementation project(':matrix-admin')
+    implementation ('com.feathermind.matrix:matrix-admin:1.5')
     testImplementation("org.spockframework:spock-spring:$spockVersion")
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
