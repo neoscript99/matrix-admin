@@ -19,13 +19,6 @@ class MatrixErrorAttributes extends DefaultErrorAttributes {
         Map errorAttributes = super.getErrorAttributes(webRequest, includeStackTrace);
 
         Throwable throwable = getError(webRequest);
-        Throwable cause = throwable.getCause();
-        if (cause != null) {
-            Map causeErrorAttributes = new HashMap<>();
-            causeErrorAttributes.put("exception", cause.getClass().getName());
-            causeErrorAttributes.put("message", cause.getMessage());
-            errorAttributes.put("cause", causeErrorAttributes);
-        }
         if (throwable instanceof MatrixException) {
             MatrixException me = (MatrixException) throwable
             errorAttributes.put('errorCode', me.errorCode)

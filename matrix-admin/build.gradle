@@ -2,9 +2,9 @@ buildscript {
     repositories {
         mavenLocal()
         maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
         mavenCentral()
         jcenter()
-        maven { url "https://repo.grails.org/grails/core" }
     }
 }
 
@@ -20,12 +20,15 @@ plugins {
 }
 
 group = 'com.feathermind.matrix'
-version = '1.6'
+version = '1.6.1'
 sourceCompatibility = '1.8'
 
 repositories {
     mavenLocal()
     maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.aliyun.com/repository/grails-core/' }
+    maven { url 'https://maven.aliyun.com/repository/spring/' }
+    maven { url 'https://maven.aliyun.com/repository/google/' }
     mavenCentral()
     jcenter()
     maven { url "https://repo.grails.org/grails/core" }
@@ -85,13 +88,9 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-
             artifact sourceJar {
                 classifier "sources"
             }
-            groupId project.group
-            artifactId project.name
-            version project.version
         }
     }
 }
@@ -109,7 +108,6 @@ bintray {
         websiteUrl = 'https://github.com/neoscript99/matrix-admin.git'
         vcsUrl = 'https://github.com/neoscript99/matrix-admin'
         publicDownloadNumbers = true
-
         version {
             name = project.version
             desc = "$project.name $project.version"

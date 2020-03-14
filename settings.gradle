@@ -1,6 +1,4 @@
 rootProject.name = 'matrix-research'
 
 include 'matrix-admin',
-        'res-service',
-        'oo-rest-mobx',
-        'res-web'
+        'oo-rest-mobx'

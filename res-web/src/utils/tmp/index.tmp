@@ -1,4 +1,0 @@
-import { @classname@ } from './Config';
-export * from './ApplyUtil';
-
-export const config = new @classname@();
