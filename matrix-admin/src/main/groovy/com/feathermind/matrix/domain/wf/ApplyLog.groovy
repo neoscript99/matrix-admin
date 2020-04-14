@@ -17,7 +17,7 @@ class ApplyLog {
     User operator
     String fromStatusCode
     String toStatusCode
-    String comment
+    String info
 
     Date dateCreated
     Date lastUpdated
@@ -28,6 +28,6 @@ class ApplyLog {
     }
 
     static constraints = {
-        comment nullable: true
+        info nullable: true
     }
 }
