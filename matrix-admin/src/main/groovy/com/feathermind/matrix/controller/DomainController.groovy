@@ -8,7 +8,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody
  * SysWrite、SysRead两个为最大的权限，应该只赋值给管理员
  * @param < T >
  */
-@CrossOrigin(origins = ["http://localhost:3000", "null"], allowCredentials = "true")
 abstract class DomainController<T> extends SecureController {
     protected Logger log = LoggerFactory.getLogger(this.getClass())
     @Autowired
