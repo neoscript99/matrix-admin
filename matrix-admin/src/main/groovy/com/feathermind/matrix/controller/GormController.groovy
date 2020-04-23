@@ -4,6 +4,7 @@ import com.feathermind.matrix.domain.sys.AttachmentInfo
 import com.feathermind.matrix.service.AttachmentService
 import com.feathermind.matrix.service.CasClientService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.CacheControl
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.view.RedirectView
 
+import javax.activation.FileTypeMap
 import javax.servlet.http.HttpSession
+import java.util.concurrent.TimeUnit
 
 @RestController
 class GormController {
@@ -31,12 +34,11 @@ class GormController {
         def info = attachmentService.get(id)
         if (info) {
             def file = attachmentService.getFile(info.fileId)
-            HttpHeaders headers = new HttpHeaders();
-            //指定文件名
-            headers.setContentDispositionFormData("attachment", new String(info.name.getBytes(), "ISO-8859-1"));
-            //指定以流的形式下载文件
-            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            return ResponseEntity.ok().headers(headers).body(file.data);
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename* = UTF-8''" + URLEncoder.encode(info.name,'UTF-8'))
+                    .cacheControl(CacheControl.maxAge(10, TimeUnit.DAYS).cachePublic().noTransform())
+                    .contentType(MediaType.valueOf(FileTypeMap.getDefaultFileTypeMap().getContentType(info.name)))
+                    .body(file.data);
         } else
             return ResponseEntity.notFound().build()
     }
