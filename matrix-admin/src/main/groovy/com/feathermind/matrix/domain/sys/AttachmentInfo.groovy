@@ -29,7 +29,8 @@ class AttachmentInfo {
     static constraints = {
         fileId maxSize: 80
         ownerId maxSize: 80, nullable: true
-        ownerName nullable: true
+        //超过长度的应该自行截断
+        ownerName maxSize: 128, nullable: true
         name maxSize: 256
     }
     static graphql = true
