@@ -6,8 +6,10 @@ import org.springframework.context.ApplicationContext
 
 /**
  * Created by Neo on 2017-08-25.
+ * 2020-10-26 Deprecated 改用flyway
  */
 @Slf4j
+@Deprecated
 abstract class AbstractDataInitializer implements DataInitializer {
     GeneralRepository generalRepository
     ApplicationContext applicationContext

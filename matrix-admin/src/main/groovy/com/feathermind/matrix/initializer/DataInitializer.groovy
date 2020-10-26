@@ -8,8 +8,9 @@ import org.springframework.context.ApplicationContext;
  * <p>必须直接实现这个接口，并通过包扫描执行
  * <p>通过org.springframework.core.annotation.Order实现顺序执行
  * Created by Neo on 2017-08-22.
+ * 2020-10-26 Deprecated 改用flyway
  */
-
+@Deprecated
 interface DataInitializer {
 
     /**

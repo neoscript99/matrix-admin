@@ -1,6 +1,6 @@
 package com.feathermind.matrix.service
 
-import com.feathermind.matrix.config.data.MenuInitializer
+import com.feathermind.matrix.config.data.V0003__menu_init
 import com.feathermind.matrix.domain.sys.Menu
 import com.feathermind.matrix.repositories.GeneralRepository
 import org.grails.datastore.gorm.GormEntity
@@ -25,8 +25,8 @@ class MenuServiceSpec extends Specification {
             return menuList.find { it.id == id }
         }
 
-        MenuInitializer menuInitializer = new MenuInitializer(generalRepository: generalRepository)
-        menuInitializer.init()
+        V0003__menu_init menuInitializer = new V0003__menu_init(generalRepository: generalRepository)
+        menuInitializer.run()
     }
 
     def 'menu tree test'() {

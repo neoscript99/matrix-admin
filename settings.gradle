@@ -1,4 +1,4 @@
-rootProject.name = 'matrix-research'
+rootProject.name = 'matrix-admin'
 
 include 'matrix-admin',
         'oo-rest-mobx'

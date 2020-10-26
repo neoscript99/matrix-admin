@@ -21,9 +21,9 @@ import java.lang.reflect.Field
  * <p> 通过命令行参数"--init"执行初始化，同时如果传入profiles执行对应的多套初始化方案，
  * <p> 命令行如果未传profiles，默认为[default],也就是注解默认值
  * Created by Neo on 2017-09-27.
- * @see InitializeDomain
+ * @see InitializeDomain* 2020-10-26 Deprecated 改用flyway
  */
-@Component
+@Deprecated
 @Order(InitializeOrder.DOMAIN_INIT)
 @Slf4j
 class DomainInitRunner implements CommandLineRunner {
@@ -41,52 +41,7 @@ class DomainInitRunner implements CommandLineRunner {
     @Transactional
     void run(String... args) throws Exception {
         if (applicationArguments.containsOption('init') || System.getProperty('init') != null) {
-            def profiles = new HashSet(['default'])
-            profiles.addAll(environment.getActiveProfiles())
-            initStaticList(profiles)
+            new InitializeDomainRunner(applicationContext, generalRepository, environment).run();
         }
-    }
-
-    /**
-     * 初始化InitializeDomain注解的domain类
-     * @see InitializeDomain
-     */
-    void initStaticList(Set profiles) {
-        log.info("initialize system with StaticList profiles: $profiles")
-        ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
-        Set doneSet = new HashSet()
-        //遍历entity类，执行InitializeDomain初始化
-        configurableApplicationContext.getBeansOfType(Datastore).each { String key, Datastore datastore ->
-            datastore.getMappingContext().getPersistentEntities().each {
-                initDomain(it.javaClass, doneSet, profiles)
-            }
-        }
-    }
-
-    /**
-     * 根据InitializeDomain的profiles配置，决定是否进行初始化
-     * @param domain
-     * @param doneSet
-     * @param profiles
-     */
-    void initDomain(Class domain, Set doneSet, Set profiles) {
-        if (doneSet.contains(domain))
-            return;
-        log.info('initDomain: {}', domain)
-        InitializeDomain initializeDomain = domain.getAnnotation(InitializeDomain.class)
-        //执行条件：1、是否注解InitializeDomain；2、profiles和命令行参数是否匹配（命令行如果未传profiles，默认为[default],也就是注解默认值）
-        if (initializeDomain && initializeDomain.profiles().any { profiles.contains(it) }) {
-            log.debug("$domain 初始化开始")
-            //如果有依赖，先处理依赖类
-            initializeDomain.depends().each { initDomain(it, doneSet, profiles) }
-            //表数据为空
-            if (!generalRepository.countAll(domain)) {
-                Field initField = domain.getDeclaredField(initializeDomain.value())
-                initField.setAccessible(true)
-                initField.get(domain).each { generalRepository.saveEntity(it) }
-            }
-            log.debug("$domain 初始化完成")
-        }
-        doneSet.add(domain)
     }
 }

@@ -26,6 +26,7 @@ import org.springframework.util.SystemPropertyUtils
  * Created by Neo on 2017-09-28.
  */
 @Slf4j
+@Deprecated
 abstract class AbstractDataInitializerRunner implements CommandLineRunner {
     @Autowired
     GeneralRepository generalRepository
