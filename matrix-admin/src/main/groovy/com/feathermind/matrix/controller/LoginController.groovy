@@ -8,10 +8,13 @@ import com.baomidou.kaptcha.exception.KaptchaTimeoutException
 import com.feathermind.matrix.controller.bean.CasConfig
 import com.feathermind.matrix.controller.bean.LoginInfo
 import com.feathermind.matrix.controller.bean.ResBean
+import com.feathermind.matrix.domain.sys.User
 import com.feathermind.matrix.security.TokenService
 import com.feathermind.matrix.service.CasClientService
 import com.feathermind.matrix.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Profile
+import org.springframework.core.env.Environment
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -41,6 +44,9 @@ class LoginController {
     GormSessionBean gormSessionBean
     @Autowired
     private Kaptcha kaptcha;
+    @Autowired
+    Environment env;
+
     Map<String, Integer> loginErrorMap = new ConcurrentHashMap()
 
     @PostMapping("/login")
@@ -55,18 +61,24 @@ class LoginController {
         }
         def result = userService.login(username, reqBody.passwordHash);
         if (result.success) {
-            def tokenDetails = userSecurityService.loadUserByUsername(username)
-            if (gormSessionBean)
-                gormSessionBean.tokenDetails = tokenDetails
-            result << [
-                    account    : username,
-                    roles      : tokenDetails.roles,
-                    authorities: tokenDetails.authorities,
-                    token      : userSecurityService.generateToken(tokenDetails)]
+            result << afterLogin(result.user)
             clearLoginError(ip, username)
         } else
             result.kaptchaFree = newLoginError(ip, username)
         ResponseEntity.ok(new LoginInfo(result))
+    }
+
+    Map afterLogin(User user) {
+        def tokenDetails = userSecurityService.loadUserByUsername(user.account)
+        if (gormSessionBean)
+            gormSessionBean.tokenDetails = tokenDetails
+        return [
+                success    : true,
+                user       : user,
+                account    : user.account,
+                roles      : tokenDetails.roles,
+                authorities: tokenDetails.authorities,
+                token      : userSecurityService.generateToken(tokenDetails)]
     }
 
     /**
@@ -186,5 +198,18 @@ class LoginController {
                 return v
         }
         return request.remoteAddr
+    }
+
+
+    @PostMapping("/devLogin")
+    @Profile('dev')
+    ResponseEntity<LoginInfo> devLogin(@RequestBody Map reqBody) {
+        def result = [success: false, error: "非开发环境，无法登录"]
+        if (env.activeProfiles.contains('dev')) {
+            String username = reqBody.username;
+            def user = username ? userService.findByAccount(username) : null;
+            result = user ? afterLogin(user) : [success: false, error: "$username 用户不存在"]
+        }
+        ResponseEntity.ok(new LoginInfo(result))
     }
 }
