@@ -16,6 +16,7 @@ class Department {
     Boolean enabled = true
     static mapping = {
         tablePerHierarchy true
+        sort 'seq'
     }
     static final Department HEAD_OFFICE = new Department(name: '总部', seq: 1);
     static initList = [HEAD_OFFICE]
