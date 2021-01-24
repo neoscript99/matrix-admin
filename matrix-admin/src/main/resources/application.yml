@@ -16,11 +16,17 @@ spring:
     enabled: true
     settings.web-allow-others: true
   datasource:
-    pooled: true
-    name: devDb
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:h2:file:./build/devDB;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
     username: sa
     password:
+    druid:
+      validation-query: SELECT 1
+      stat-view-servlet:
+        enabled: true
+      filters: stat
+      filter.stat.log-slow-sql: true
   servlet:
     multipart.max-file-size: 100MB
     multipart.max-request-size: 100MB
@@ -29,7 +35,7 @@ spring:
 
 #org.grails.orm.hibernate.connections.HibernateConnectionSourceSettings
 hibernate:
-  hbm2ddl.auto: create-drop
+  hbm2ddl.auto: update
   show_sql: true
   format_sql: true
   #通过application.groovy实现更细化的控制
