@@ -25,9 +25,10 @@ class ApplyLog {
     static mapping = {
         apply fetch: 'join', lazy: false
         operator fetch: 'join', lazy: false
+        sort 'dateCreated'
     }
 
     static constraints = {
-        info nullable: true
+        info maxSize: 256, nullable: true
     }
 }

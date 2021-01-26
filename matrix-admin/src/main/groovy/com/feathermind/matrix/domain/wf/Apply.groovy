@@ -18,6 +18,11 @@ class Apply {
     User applier
     String statusCode
     Date passTime
+    //增加流程所有人信息，支持双向关联
+    String ownerId
+    //可用于流程类型设置，各系统可自行处理
+    String ownerType
+    String ownerName
 
     Date dateCreated
     Date lastUpdated
@@ -28,5 +33,9 @@ class Apply {
     static constraints = {
         passTime nullable: true
         name maxSize: 50
+        ownerId maxSize: 80, nullable: true
+        ownerType nullable: true
+        //超过长度的应该自行截断
+        ownerName maxSize: 128, nullable: true
     }
 }
