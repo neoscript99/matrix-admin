@@ -1,6 +1,10 @@
+/**如果互相之间有依赖的话，这里的前后关系要注意*/
+export * from '../rest';
+export * from './DomainStore';
+export * from './RestService';
+export * from './StoreService';
 export * from './DomainService';
-export * from './LivebosServerService';
-export * from './PortletDataSourceService';
+export * from './AdminServices';
 export * from './UserService';
 export * from './LoginService';
 export * from './MenuService';
@@ -9,7 +13,8 @@ export * from './DeptService';
 export * from './RoleService';
 export * from './DictService';
 export * from './AttachmentService';
-export * from '../rest';
+export * from './ApplyService';
+export * from './ApplyLogService';
 
 //排序支持传字段名列表，或者字段名+顺序类型
 export type CriteriaOrder = string | [string, 'asc' | 'desc'];
@@ -53,8 +58,8 @@ export interface ListOptions {
   isAppend?: boolean;
 }
 
-export interface ListResult {
-  results: Entity[];
+export interface ListResult<T extends Entity = Entity> {
+  results: T[];
   totalCount: number;
 }
 

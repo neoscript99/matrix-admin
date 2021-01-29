@@ -1,5 +1,5 @@
 import { AbstractClient } from '../rest';
-import { DeptStore } from '../stores';
+import { DomainStore } from './DomainStore';
 import { DomainService } from './DomainService';
 import { Entity, LoginInfo } from './index';
 
@@ -9,7 +9,12 @@ export interface DeptEntity extends Entity {
   enabled: boolean;
 }
 
-export class DeptService extends DomainService<DeptStore> {
+export class DeptStore extends DomainStore<DeptEntity> {
+  completeList: Entity[] = [];
+  enabledList: Entity[] = [];
+}
+
+export class DeptService extends DomainService<DeptEntity, DeptStore> {
   constructor(restClient: AbstractClient, domain = 'department') {
     super({ domain, storeClass: DeptStore, restClient });
   }
