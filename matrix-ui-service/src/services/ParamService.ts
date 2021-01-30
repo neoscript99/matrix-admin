@@ -22,6 +22,7 @@ export class ParamService extends DomainService<ParamEntity> {
     const list = await this.list({});
     const exList = await this.listExtra();
     this.store.allList = list.results.concat(exList);
+    this.fireStoreChange();
   }
 
   listExtra() {
