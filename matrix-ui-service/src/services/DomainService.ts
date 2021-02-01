@@ -143,7 +143,7 @@ export class DomainService<
    * create or update,根据item.id是否存在判断
    * @param newItem
    */
-  save(item: T): Promise<T> {
+  save(item: Partial<T>): Promise<T> {
     return this.postApi('save', item).then((data) => {
       const newItem = data as T;
       if (!item.id) this.newListItem(newItem);
@@ -152,7 +152,7 @@ export class DomainService<
     });
   }
 
-  get(id: any): Promise<Entity> {
+  get(id: any): Promise<T> {
     return this.postApi('get', { id }).then((data) => this.changeCurrentItem(data as T));
   }
 
