@@ -20,7 +20,6 @@ class ApplyLog {
     String info
 
     Date dateCreated
-    Date lastUpdated
 
     static mapping = {
         apply fetch: 'join', lazy: false
