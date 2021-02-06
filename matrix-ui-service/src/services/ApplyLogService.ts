@@ -12,7 +12,7 @@ export interface ApplyLogEntity extends Entity {
   info: string;
 }
 
-export class ApplyLogService extends DomainService {
+export class ApplyLogService extends DomainService<ApplyLogEntity> {
   constructor(restClient: AbstractClient) {
     super({ domain: 'applyLog', storeClass: DomainStore, restClient });
   }
