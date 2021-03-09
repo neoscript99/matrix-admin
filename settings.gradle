@@ -1,5 +1,5 @@
 rootProject.name = 'matrix-admin'
 
 include 'matrix-admin',
-        'oo-rest-mobx',
+        'matrix-ui-com',
         'matrix-ui-service'

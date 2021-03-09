@@ -1,6 +1,7 @@
 package com.feathermind.matrix.service
 
 import com.feathermind.matrix.domain.sys.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -11,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 class UserService extends AbstractService<User> {
+    @Autowired
+    UserRoleService userRoleService
 
     @Transactional(readOnly = true)
     Map login(String account, String password) {
@@ -65,5 +68,21 @@ class UserService extends AbstractService<User> {
         }
         // 清楚该用户缓存
         return user;
+    }
+    /**
+     * 删除角色
+     */
+    @Override
+    Number deleteById(Serializable id) {
+        userRoleService.deleteByUserId(id)
+        super.deleteById(id)
+    }
+    /**
+     * 删除角色
+     */
+    @Override
+    Number deleteByIds(List idList) {
+        userRoleService.deleteByUserIds(idList)
+        super.deleteByIds(idList)
     }
 }

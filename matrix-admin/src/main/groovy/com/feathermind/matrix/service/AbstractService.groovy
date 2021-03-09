@@ -99,7 +99,7 @@ abstract class AbstractService<T> {
     /**
      * @see com.feathermind.matrix.repositories.GeneralRepository#deleteByIds
      */
-    Number deleteById(def id) {
+    Number deleteById(Serializable id) {
         generalRepository.deleteById(domain, id)
     }
     /**
