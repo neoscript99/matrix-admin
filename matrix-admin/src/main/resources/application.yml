@@ -1,8 +1,8 @@
 
 gorm:
   token.expire.minutes: 30
-  wechat.mp.appId: wx601fa973969006a4
-  wechat.mp.appSecret: ee51729f9127038a5d4fd3a06fabcc15
+  wechat.appId: wx601fa973969006a4
+  wechat.appSecret: ee51729f9127038a5d4fd3a06fabcc15
 # token过期时间为固定值，而且没有做缓存，需要查库，客户端需要控制有效性手动刷新
 
 # session过期时间是最后一次访问之后计时，容器自动缓存，这种方式更合理，优先使用session
