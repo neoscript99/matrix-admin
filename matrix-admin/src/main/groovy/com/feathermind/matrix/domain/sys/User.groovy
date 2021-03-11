@@ -50,6 +50,7 @@ class User {
         cellPhone nullable: true
         email nullable: true
         sexCode nullable: true
+        dept nullable: true
     }
 
 

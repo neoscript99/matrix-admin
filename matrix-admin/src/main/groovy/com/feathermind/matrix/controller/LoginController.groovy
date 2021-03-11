@@ -1,16 +1,20 @@
 package com.feathermind.matrix.controller
 
+import cn.hutool.core.bean.BeanUtil
 import com.baomidou.kaptcha.Kaptcha
 import com.baomidou.kaptcha.exception.KaptchaException
 import com.baomidou.kaptcha.exception.KaptchaIncorrectException
 import com.baomidou.kaptcha.exception.KaptchaNotFoundException
 import com.baomidou.kaptcha.exception.KaptchaTimeoutException
+import com.feathermind.matrix.bean.WxUserInfo
 import com.feathermind.matrix.controller.bean.CasConfig
 import com.feathermind.matrix.controller.bean.LoginInfo
 import com.feathermind.matrix.controller.bean.ResBean
 import com.feathermind.matrix.domain.sys.User
+import com.feathermind.matrix.domain.sys.UserBind
 import com.feathermind.matrix.security.TokenService
 import com.feathermind.matrix.service.CasClientService
+import com.feathermind.matrix.service.UserBindService
 import com.feathermind.matrix.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
@@ -33,11 +37,13 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @RestController
 @RequestMapping("/api/login")
-class LoginController {
+class LoginController implements WechatBinder {
     @Autowired
     CasClientService casClientService
     @Autowired
     UserService userService
+    @Autowired
+    UserBindService userBindService
     @Autowired
     TokenService userSecurityService
     @Autowired
@@ -211,5 +217,11 @@ class LoginController {
             result = user ? afterLogin(user) : [success: false, error: "$username 用户不存在"]
         }
         ResponseEntity.ok(new LoginInfo(result))
+    }
+
+    @Override
+    Map bindWechat(WxUserInfo wxUserInfo) {
+        User user = userBindService.getOrCreateUser(BeanUtil.toBean(wxUserInfo, UserBind))
+        return afterLogin(user)
     }
 }

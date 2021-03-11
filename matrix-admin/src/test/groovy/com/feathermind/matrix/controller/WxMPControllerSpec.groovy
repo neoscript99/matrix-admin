@@ -34,10 +34,10 @@ class WxMPControllerSpec extends Specification {
         m == 1000 * 60 * 60
     }
 
-    def 'get token'() {
+    def 'wechat api test'() {
         given:
-        def t = mpCtrl.getAccessToken();
-        log.info("Token: {}", t)
+        def t = mpCtrl.createQrcode();
+        log.info("Result: {}", t)
         expect:
         t.isValid()
     }

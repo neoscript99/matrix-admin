@@ -5,28 +5,26 @@ import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.feathermind.matrix.bean.WxAccessToken;
-import com.feathermind.matrix.bean.WxUserInfo;
+import com.feathermind.matrix.bean.*;
 import com.feathermind.matrix.config.WxConfigProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
 /**
- * @see < a href=" ">例1</ a>
+ * @see < a href="https://blog.csdn.net/qq_42851002/article/details/81327770">例1</ a>
  * @see < a href="https://learnku.com/articles/26718">例2</ a>
  * @see < a href="https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html">生成带参数的二维码</ a>
  * @see < a href="http://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo">个人测试公众号</ a>
@@ -38,6 +36,8 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/wechat")
 public class WxMPController implements InitializingBean, DisposableBean {
+    @Autowired
+    private WechatBinder wechatBinder;
     private WxConfigProperties wxConfigProperties;
     private WxAccessToken wxAccessToken;
 
@@ -59,42 +59,61 @@ public class WxMPController implements InitializingBean, DisposableBean {
         return wxAccessToken;
     }
 
-    @GetMapping("qrcode/{scene_str}")
-    public ResponseEntity<byte[]> qrcode(@PathVariable("scene_str") String scene_str) {
-        return ResponseEntity.notFound().build();
+    /**
+     * 第二步：获取二维码地址
+     */
+    @PostMapping("qrcode")
+    public WxQrcodeCreateRes createQrcode() {
+        WxQrcodeCreateReq req = new WxQrcodeCreateReq();
+        Map urlParam = Collections.singletonMap("access_token", getAccessToken().getAccess_token());
+        //access_token拼到url中
+        String url = HttpUtil.urlWithForm(wxConfigProperties.getQrcodeCreateUrl(), urlParam, StandardCharsets.UTF_8, false);
+
+        String json = HttpUtil.createPost(url).body(JSONUtil.toJsonStr(req)).execute().body();
+        log.info("createQrcode res: {}", json);
+        WxQrcodeCreateRes res = JSONUtil.toBean(json, WxQrcodeCreateRes.class);
+        res.setScene_str(req.getAction_info().getScene().getScene_str());
+
+        Map imgUrlParam = Collections.singletonMap("ticket", res.getTicket());
+        res.setWxImgUrl(HttpUtil.urlWithForm(wxConfigProperties.getQrcodeShowUrl(), imgUrlParam, StandardCharsets.UTF_8, false));
+        return res;
+    }
+
+
+    /**
+     * 第三步：用户在前台扫码
+     * 第四步：等待微信回调
+     * https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Access_Overview.html
+     */
+    @GetMapping("callback")
+    public String callbackGet(@RequestParam String echostr, HttpServletRequest httpRequest) {
+        log.info("wechat callback: {}", httpRequest.getQueryString());
+        //如果是微信校验，直接返回"随机字符串"
+        return echostr;
+    }
+
+    @PostMapping("callback")
+    public void callbackPost(@RequestBody SubscribeCallbackReq req, @RequestBody String body) {
+        log.info("wechat callback: {}", body);
+        String prefix = "qrscene_";
+        String scene_str = req.getEventKey();
+        if ("event".equals(req.getMsgType()) && "subscribe".equals(req.getEvent())
+                && scene_str != null && scene_str.startsWith(prefix)) {
+            userCache.put(scene_str.substring(prefix.length()), getUserInfo(req.getFromUserName()));
+        }
     }
 
     /**
-     * https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Access_Overview.html
-     *
-     * @return
+     * 第五步：前台发起检测，一般为定时多次发起
      */
-    @GetMapping("callback")
-    @ResponseBody
-    public Map callback(@RequestBody Map req) {
-        //如果是微信校验，直接返回"随机字符串"
-        if (req.get("signature") != null && req.get("echostr") != null)
-            return Collections.singletonMap("echostr", req.get("echostr"));
-        return null;
-    }
-
-    // 检测登录
     @PostMapping("checkLogin")
-    @ResponseBody
-    public Map<String, Object> checkLogin(@PathVariable("scene") String scene) {
-        // 根据scene_str查询数据库，获取对应记录
-        // SELECT * FROM wechat_user_info WHERE event_key='scene_str';
-        Map<String, Object> returnMap = new HashMap<String, Object>();
-        if (true) {
-            returnMap.put("result", "true");
-        } else {
-            returnMap.put("result", "false");
-        }
-        return returnMap;
+    public Map checkLogin(@RequestBody String scene_str) {
+        WxUserInfo user = userCache.get(scene_str);
+        return user != null ? wechatBinder.bindWechat(user) : Collections.singletonMap("success", false);
     }
 
     // 通过openid获取用户信息
-    public WxUserInfo getUserInfoByOpenid(String openid) {
+    public WxUserInfo getUserInfo(String openid) {
         WxAccessToken wxAccessToken = getAccessToken();
         Map req = MapUtil.of(new String[][]{
                 {"access_token", wxAccessToken.getAccess_token()},
@@ -105,21 +124,21 @@ public class WxMPController implements InitializingBean, DisposableBean {
     }
 
     /**
-     * 创建缓存，默认4毫秒过期
+     * 创建缓存，默认30分钟过期
      *
      * @see <a href="https://www.hutool.cn/docs/#/cache/TimedCache">文档</a>
      */
-    private TimedCache<String, String> timedCache = CacheUtil.newTimedCache(4);
+    private TimedCache<String, WxUserInfo> userCache = CacheUtil.newTimedCache(TimeUnit.MINUTES.toMillis(30));
 
     @Override
     public void afterPropertiesSet() throws Exception {
         //启动缓存定时清理任务，每小时一次
-        timedCache.schedulePrune(TimeUnit.HOURS.toMillis(1));
+        userCache.schedulePrune(TimeUnit.HOURS.toMillis(1));
     }
 
     @Override
     public void destroy() throws Exception {
-        timedCache.cancelPruneSchedule();
+        userCache.cancelPruneSchedule();
     }
 
     @Autowired
