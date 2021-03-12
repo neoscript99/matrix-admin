@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 @Slf4j
 class WxMPControllerSpec extends Specification {
     private static WxMPController mpCtrl = new WxMPController();
-    private static final String SERVER_ROOT = 'http://neoscript.wang/'
+    private static final String SERVER_ROOT = 'http://localhost:8080'
     private static final String OPEN_ID = 'ofTwE6J5RKIMMNTd8Jf05ffiR2Kg'
 
     void setupSpec() {
@@ -92,10 +92,9 @@ class WxMPControllerSpec extends Specification {
     }
 
     def checkLogin(){
-
         def check = HttpUtil.createPost("$SERVER_ROOT/wechat/checkLogin")
                 .contentType('application/json')
-                .body(qrRes.scene_str)
+                .body('fe90fe83df33410892ead71d9b733b65')
                 .execute().body();
         log.info("Result: {}", check)
         expect:

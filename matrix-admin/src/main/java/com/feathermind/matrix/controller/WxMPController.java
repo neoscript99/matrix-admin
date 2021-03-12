@@ -98,12 +98,16 @@ public class WxMPController implements InitializingBean, DisposableBean {
     @PostMapping("callback")
     public void callbackPost(@RequestBody SubscribeCallbackReq req) {
         log.info("wechat callback: {}", req);
-        String prefix = "qrscene_";
         String scene_str = req.EventKey;
         //todo Event可能有subscribe和scan两种，prefix可能没有，需再测试
-        if ("event".equals(req.MsgType) && "subscribe".equals(req.Event)
-                && scene_str != null && scene_str.startsWith(prefix)) {
-            userCache.put(scene_str.substring(prefix.length()), getUserInfo(req.FromUserName));
+        if ("event".equals(req.MsgType) && scene_str != null
+                && ("SCAN".equals(req.Event) || "subscribe".equals(req.Event))) {
+            //首次关注的事件类型为subscribe，eventKey有前缀
+            String prefix = "qrscene_";
+            if ("subscribe".equals(req.Event) && scene_str.startsWith(prefix)) {
+                scene_str = scene_str.substring(prefix.length());
+            }
+            userCache.put(scene_str, getUserInfo(req.FromUserName));
             log.info("wechat user cache size: {}", userCache.size());
         }
     }
@@ -133,20 +137,20 @@ public class WxMPController implements InitializingBean, DisposableBean {
     }
 
     /**
-     * 创建缓存，默认30分钟过期
+     * 根据二维码对应的scene_str，对登录成功的用户进行缓存，1分钟过期
      *
      * @see <a href="https://www.hutool.cn/docs/#/cache/TimedCache">文档</a>
      */
-    private TimedCache<String, WxUserInfo> userCache = CacheUtil.newTimedCache(TimeUnit.MINUTES.toMillis(30));
+    private TimedCache<String, WxUserInfo> userCache = CacheUtil.newTimedCache(TimeUnit.MINUTES.toMillis(1));
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        //启动缓存定时清理任务，每小时一次
-        userCache.schedulePrune(TimeUnit.HOURS.toMillis(1));
+    public void afterPropertiesSet() {
+        //启动缓存定时清理任务，每10分钟一次
+        userCache.schedulePrune(TimeUnit.MINUTES.toMillis(10));
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         userCache.cancelPruneSchedule();
     }
 
