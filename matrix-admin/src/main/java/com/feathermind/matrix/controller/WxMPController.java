@@ -13,7 +13,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,35 +91,45 @@ public class WxMPController implements InitializingBean, DisposableBean {
         return echostr;
     }
 
+    /**
+     * 第五步：接收微信回调
+     * https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html
+     */
     @PostMapping("callback")
-    public void callbackPost(@RequestBody SubscribeCallbackReq req, @RequestBody String body) {
-        log.info("wechat callback: {}", body);
+    public void callbackPost(@RequestBody SubscribeCallbackReq req) {
+        log.info("wechat callback: {}", req);
         String prefix = "qrscene_";
-        String scene_str = req.getEventKey();
-        if ("event".equals(req.getMsgType()) && "subscribe".equals(req.getEvent())
+        String scene_str = req.EventKey;
+        //todo Event可能有subscribe和scan两种，prefix可能没有，需再测试
+        if ("event".equals(req.MsgType) && "subscribe".equals(req.Event)
                 && scene_str != null && scene_str.startsWith(prefix)) {
-            userCache.put(scene_str.substring(prefix.length()), getUserInfo(req.getFromUserName()));
+            userCache.put(scene_str.substring(prefix.length()), getUserInfo(req.FromUserName));
+            log.info("wechat user cache size: {}", userCache.size());
         }
     }
 
     /**
-     * 第五步：前台发起检测，一般为定时多次发起
+     * 第六步：通过openid获取用户信息
      */
-    @PostMapping("checkLogin")
-    public Map checkLogin(@RequestBody String scene_str) {
-        WxUserInfo user = userCache.get(scene_str);
-        return user != null ? wechatBinder.bindWechat(user) : Collections.singletonMap("success", false);
-    }
-
-    // 通过openid获取用户信息
     public WxUserInfo getUserInfo(String openid) {
+        log.debug("getUserInfo req: {}", openid);
         WxAccessToken wxAccessToken = getAccessToken();
         Map req = MapUtil.of(new String[][]{
                 {"access_token", wxAccessToken.getAccess_token()},
                 {"openid", openid}
         });
         String json = HttpUtil.get(wxConfigProperties.getUserInfoUrl(), req);
+        log.debug("getUserInfo res: {}", json);
         return JSONUtil.toBean(json, WxUserInfo.class);
+    }
+
+    /**
+     * 第七步：前台发起检测，一般为定时多次发起
+     */
+    @PostMapping("checkLogin")
+    public Map checkLogin(@RequestBody String scene_str) {
+        WxUserInfo user = userCache.get(scene_str);
+        return user != null ? wechatBinder.bindWechat(user) : Collections.singletonMap("success", false);
     }
 
     /**

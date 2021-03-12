@@ -1,11 +1,14 @@
 package com.feathermind.matrix.bean;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
  * 微信用户信息
  * https://developers.weixin.qq.com/doc/offiaccount/User_Management/Get_users_basic_information_UnionID.html#UinonId
  */
+@Data
 public class WxUserInfo {
     //	用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
     private String subscribe;

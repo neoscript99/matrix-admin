@@ -1,6 +1,9 @@
 package com.feathermind.matrix.controller
 
+import cn.hutool.http.HttpUtil
+import com.feathermind.matrix.bean.WxQrcodeCreateRes
 import com.feathermind.matrix.config.WxConfigProperties
+import com.feathermind.matrix.util.JsonUtil
 import groovy.util.logging.Slf4j
 import org.springframework.boot.env.YamlPropertySourceLoader
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
@@ -12,6 +15,8 @@ import java.util.concurrent.TimeUnit
 @Slf4j
 class WxMPControllerSpec extends Specification {
     private static WxMPController mpCtrl = new WxMPController();
+    private static final String SERVER_ROOT = 'http://neoscript.wang/'
+    private static final String OPEN_ID = 'ofTwE6J5RKIMMNTd8Jf05ffiR2Kg'
 
     void setupSpec() {
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
@@ -34,11 +39,66 @@ class WxMPControllerSpec extends Specification {
         m == 1000 * 60 * 60
     }
 
-    def 'wechat api test'() {
+    def 'api test'() {
         given:
-        def t = mpCtrl.createQrcode();
+        def t = mpCtrl.getUserInfo(OPEN_ID);
         log.info("Result: {}", t)
         expect:
-        t.isValid()
+        t.city
+    }
+
+    def 'qrcode'() {
+        given:
+        def qrJson = HttpUtil.post("$SERVER_ROOT/wechat/qrcode", null);
+        log.info("qrJson: {}", qrJson)
+        def qrRes = JsonUtil.fromJson(qrJson, WxQrcodeCreateRes);
+        expect:
+        qrRes.valid
+    }
+
+    def 'callback get'() {
+        given:
+        def echostr = 'echostr';
+        def t = HttpUtil.get("$SERVER_ROOT/wechat/callback", [echostr: echostr, a: 1, b: 'bbb']);
+        log.info("Result: {}", t)
+        expect:
+        t == echostr
+    }
+
+    def 'callback post'() {
+        given:
+        def qrJson = HttpUtil.post("$SERVER_ROOT/wechat/qrcode", null);
+        log.info("qrJson: {}", qrJson)
+        def qrRes = JsonUtil.fromJson(qrJson, WxQrcodeCreateRes);
+        def cbReq = """<xml>
+  <ToUserName><![CDATA[toUser]]></ToUserName>
+  <FromUserName><![CDATA[${OPEN_ID}]]></FromUserName>
+  <CreateTime>123456789</CreateTime>
+  <MsgType><![CDATA[event]]></MsgType>
+  <Event><![CDATA[subscribe]]></Event>
+  <EventKey><![CDATA[qrscene_${qrRes.scene_str}]]></EventKey>
+  <Ticket><![CDATA[${qrRes.ticket}]]></Ticket>
+</xml>"""
+        def t = HttpUtil.post("$SERVER_ROOT/wechat/callback", cbReq.toString());
+        log.info("Result: {}", t)
+
+        def check = HttpUtil.createPost("$SERVER_ROOT/wechat/checkLogin")
+                .contentType('application/json')
+                .body(qrRes.scene_str)
+                .execute().body();
+        log.info("Result: {}", check)
+        expect:
+        qrRes.isValid()
+    }
+
+    def checkLogin(){
+
+        def check = HttpUtil.createPost("$SERVER_ROOT/wechat/checkLogin")
+                .contentType('application/json')
+                .body(qrRes.scene_str)
+                .execute().body();
+        log.info("Result: {}", check)
+        expect:
+        check
     }
 }

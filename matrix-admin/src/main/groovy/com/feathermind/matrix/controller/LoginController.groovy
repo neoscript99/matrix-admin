@@ -221,7 +221,9 @@ class LoginController implements WechatBinder {
 
     @Override
     Map bindWechat(WxUserInfo wxUserInfo) {
-        User user = userBindService.getOrCreateUser(BeanUtil.toBean(wxUserInfo, UserBind))
+        def bind = BeanUtil.toBean(wxUserInfo, UserBind);
+        bind.source = 'wechat'
+        User user = userBindService.getOrCreateUser(bind)
         return afterLogin(user)
     }
 }

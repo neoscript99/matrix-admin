@@ -2,7 +2,7 @@ package com.feathermind.matrix.bean;
 
 import lombok.Data;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Data
 public class WxQrcodeCreateRes {
@@ -17,9 +17,9 @@ public class WxQrcodeCreateRes {
     //场景值一般为随机字符串，需要返回前台
     private String scene_str;
 
-    private LocalTime createTime = LocalTime.now();
+    private LocalDateTime createTime = LocalDateTime.now();
 
     public boolean isValid() {
-        return createTime.plusSeconds(expire_seconds).isAfter(LocalTime.now());
+        return createTime.plusSeconds(expire_seconds).isAfter(LocalDateTime.now());
     }
 }

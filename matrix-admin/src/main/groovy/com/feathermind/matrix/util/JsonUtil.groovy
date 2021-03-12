@@ -5,11 +5,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groovy.transform.CompileStatic;
 import groovy.util.logging.Slf4j;
 
 
+/**
+ * jackson.json工具类
+ */
 @Slf4j
 @CompileStatic
 public class JsonUtil {
@@ -17,6 +21,7 @@ public class JsonUtil {
 
     public static ObjectMapper createObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
         objectMapper.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
         objectMapper.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);

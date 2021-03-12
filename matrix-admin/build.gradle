@@ -54,6 +54,10 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:3.16'
     implementation 'com.baomidou:kaptcha-spring-boot-starter:1.1.0'
     implementation 'com.auth0:java-jwt:3.8.2'
+    //支持jdk8.LocalDateTime等类型
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    //支持xml解析
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 
     implementation 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
