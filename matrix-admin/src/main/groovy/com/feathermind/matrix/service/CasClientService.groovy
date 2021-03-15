@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class CasClientService {
-    @Value('${gorm.cas.defaultRoles}')
-    String casDefaultRoles
-    @Value('${gorm.cas.client.enabled}')
+    @Value('${matrix.cas.client.enabled}')
     Boolean clientEnabled
     @Autowired(required = false)
     CasClientConfigurationProperties configProps;

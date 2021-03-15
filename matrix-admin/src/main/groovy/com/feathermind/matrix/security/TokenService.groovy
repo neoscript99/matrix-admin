@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 @Slf4j
 class TokenService {
 
-    @Value('${gorm.token.expire.minutes}')
+    @Value('${matrix.token.expire.minutes}')
     long expireMinutes
     @Autowired
     UserService userService

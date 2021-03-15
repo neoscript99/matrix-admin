@@ -1,6 +1,10 @@
 
-gorm:
+matrix:
+  defaultRoles: Public
+  #@see https://github.com/Unicon/cas-client-autoconfig-support
+  cas.client.enabled: false
   token.expire.minutes: 30
+  #微信公众号登录相关配置
   wechat.appId: wx601fa973969006a4
   wechat.appSecret: ee51729f9127038a5d4fd3a06fabcc15
 # token过期时间为固定值，而且没有做缓存，需要查库，客户端需要控制有效性手动刷新
@@ -69,11 +73,6 @@ logging:
     graphql.GraphQL: DEBUG
     com.oembedler: DEBUG
     org.dataloader: DEBUG
-
-#@see https://github.com/Unicon/cas-client-autoconfig-support
-gorm.cas:
-  defaultRoles: Public
-  client.enabled: false
 
 cas:
   server-url-prefix: http://localhost:7007/cas

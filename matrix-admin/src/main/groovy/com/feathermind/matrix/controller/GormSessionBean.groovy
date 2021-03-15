@@ -4,6 +4,7 @@ import com.feathermind.matrix.security.TokenDetails
 import com.feathermind.matrix.security.TokenService
 import com.feathermind.matrix.service.CasClientService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Scope
 import org.springframework.context.annotation.ScopedProxyMode
 import org.springframework.stereotype.Component
@@ -20,12 +21,14 @@ class GormSessionBean {
     CasClientService casClientService
     @Autowired
     TokenService userSecurityService
+    @Value('${matrix.defaultRoles}')
+    String defaultRoles
 
     TokenDetails tokenDetails
 
     TokenDetails getTokenDetails() {
         if (!tokenDetails && casClientService.clientEnabled && casClientService.casAccount) {
-            tokenDetails = userSecurityService.loadUserWithDefaultRoles(casClientService.casAccount, casClientService.casDefaultRoles)
+            tokenDetails = userSecurityService.loadUserWithDefaultRoles(casClientService.casAccount, defaultRoles)
         }
         return tokenDetails
     }

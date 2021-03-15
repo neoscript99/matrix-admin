@@ -25,7 +25,7 @@ class Role implements AutoTime {
             editable: false, description: '普通用户.', authorities: 'UserWriteOne')
 
     //公开用户，可支持匿名用户查看网站通知等开放功能
-    static final Role PUBLIC = new Role(roleName: '默认角色', roleCode: ' Public',
+    static final Role PUBLIC = new Role(roleName: '默认角色', roleCode: 'Public',
             editable: false, description: '默认角色可开放给CAS登录用户和匿名用户.')
 
     String id

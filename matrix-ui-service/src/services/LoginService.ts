@@ -51,6 +51,9 @@ const USERNAME_KEY = 'loginUsername';
 const PASSWORD_KEY = 'loginPassword';
 const LOGOUT_ERRORS = ['NoUser', 'NoToken'];
 
+/**
+ * afterLogins初始化后不能为null，可以是[]
+ */
 export class LoginService extends StoreService<LoginStore> {
   store = new LoginStore();
   //用户的初始化密码，可在new LoginService的时候修改
@@ -176,5 +179,9 @@ export class LoginService extends StoreService<LoginStore> {
 
   get initPasswordHash() {
     return StringUtil.sha256(this.initPassword);
+  }
+
+  addAfterLogin(fun: AfterLogin) {
+    this.afterLogins.push(fun);
   }
 }

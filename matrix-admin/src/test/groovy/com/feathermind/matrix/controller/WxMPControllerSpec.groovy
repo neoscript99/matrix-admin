@@ -25,8 +25,8 @@ class WxMPControllerSpec extends Specification {
         def ps = new YamlPropertySourceLoader().load('main', res).get(0)
 
         WxConfigProperties wcp = new WxConfigProperties();
-        wcp.setAppId(ps.getProperty('gorm.wechat.appId'))
-        wcp.setAppSecret(ps.getProperty('gorm.wechat.appSecret'))
+        wcp.setAppId(ps.getProperty('matrix.wechat.appId'))
+        wcp.setAppSecret(ps.getProperty('matrix.wechat.appSecret'))
         log.info("WxConfigProperties: {}", wcp)
         mpCtrl.setWxConfigProperties(wcp)
     }

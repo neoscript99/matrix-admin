@@ -193,7 +193,7 @@ class LoginController implements WechatBinder {
     ResponseEntity<CasConfig> getCasConfig() {
         return ResponseEntity.ok(new CasConfig([clientEnabled: casClientService.clientEnabled,
                                                 casServerRoot: casClientService.configProps?.serverUrlPrefix,
-                                                defaultRoles : casClientService.casDefaultRoles]))
+                                                defaultRoles : gormSessionBean.defaultRoles]))
     }
 
     String getClientIP(HttpServletRequest request) {

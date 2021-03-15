@@ -7,12 +7,14 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.feathermind.matrix.bean.*;
 import com.feathermind.matrix.config.WxConfigProperties;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +37,12 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/wechat")
 public class WxMPController implements InitializingBean, DisposableBean {
-    @Autowired
+    @Autowired(required = false)
+    @Setter
     private WechatBinder wechatBinder;
+
+    @Autowired
+    @Setter
     private WxConfigProperties wxConfigProperties;
     private WxAccessToken wxAccessToken;
 
@@ -107,8 +113,8 @@ public class WxMPController implements InitializingBean, DisposableBean {
             if ("subscribe".equals(req.Event) && scene_str.startsWith(prefix)) {
                 scene_str = scene_str.substring(prefix.length());
             }
-            userCache.put(scene_str, getUserInfo(req.FromUserName));
-            log.info("wechat user cache size: {}", userCache.size());
+            openidCache.put(scene_str, req.FromUserName);
+            log.info("wechat user cache size: {}", openidCache.size());
         }
     }
 
@@ -129,11 +135,25 @@ public class WxMPController implements InitializingBean, DisposableBean {
 
     /**
      * 第七步：前台发起检测，一般为定时多次发起
+     * 如果微信扫码成功
+     * - 如果wechatBinder bean存在，进行绑定处理，建议返回map包含：{"success": true}
+     * - 如果wechatBinder bean不存在，返回{"success": true, "user": 微信对应的用户信息}
+     * 否则
+     * - 返回json：{"success": false}
      */
-    @PostMapping("checkLogin")
-    public Map checkLogin(@RequestBody String scene_str) {
-        WxUserInfo user = userCache.get(scene_str);
-        return user != null ? wechatBinder.bindWechat(user) : Collections.singletonMap("success", false);
+    @PostMapping(value = "checkLogin")
+    public Map checkLogin(@RequestBody Map<String, String> req) {
+        //log.debug("checkLogin: {}", scene_str);
+        String openid = openidCache.get(req.get("scene_str"));
+        if (openid != null) {
+            WxUserInfo user = getUserInfo(openid);
+            return wechatBinder != null ?
+                    wechatBinder.bindWechat(user) : MapUtil.of(new Object[][]{
+                    {"success", true},
+                    {"user", user}
+            });
+        } else
+            return Collections.singletonMap("success", false);
     }
 
     /**
@@ -141,21 +161,16 @@ public class WxMPController implements InitializingBean, DisposableBean {
      *
      * @see <a href="https://www.hutool.cn/docs/#/cache/TimedCache">文档</a>
      */
-    private TimedCache<String, WxUserInfo> userCache = CacheUtil.newTimedCache(TimeUnit.MINUTES.toMillis(1));
+    private TimedCache<String, String> openidCache = CacheUtil.newTimedCache(TimeUnit.MINUTES.toMillis(1));
 
     @Override
     public void afterPropertiesSet() {
         //启动缓存定时清理任务，每10分钟一次
-        userCache.schedulePrune(TimeUnit.MINUTES.toMillis(10));
+        openidCache.schedulePrune(TimeUnit.MINUTES.toMillis(10));
     }
 
     @Override
     public void destroy() {
-        userCache.cancelPruneSchedule();
-    }
-
-    @Autowired
-    public void setWxConfigProperties(WxConfigProperties wxConfigProperties) {
-        this.wxConfigProperties = wxConfigProperties;
+        openidCache.cancelPruneSchedule();
     }
 }
