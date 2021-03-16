@@ -54,12 +54,12 @@ class User {
     }
 
 
-    static final User ADMIN = (new User(account: 'admin', name: '系统管理员', dept: Department.HEAD_OFFICE,
-            editable: false))
-    static final User ANONYMOUS = (new User(account: 'anonymous', name: '匿名帐号', dept: Department.HEAD_OFFICE,
-            editable: false))
-    static final User TEST_USER = (new User(account: 'test.user', name: '测试用户', dept: Department.HEAD_OFFICE,
-            editable: true))
+    static final User ADMIN = new User(account: 'admin', name: '系统管理员', dept: Department.HEAD_OFFICE,
+            editable: false)
+    static final User ANONYMOUS = new User(account: 'anonymous', name: '匿名帐号', dept: Department.HEAD_OFFICE,
+            editable: false)
+    static final User TEST_USER = new User(account: 'test.user', name: '测试用户', dept: Department.HEAD_OFFICE,
+            editable: true)
 
     static final initList = [ADMIN, ANONYMOUS, TEST_USER]
 }

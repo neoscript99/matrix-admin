@@ -1,6 +1,8 @@
 package com.feathermind.matrix.service
 
 import com.feathermind.matrix.domain.sys.*
+import com.feathermind.matrix.repositories.GormRepository
+import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -84,5 +86,22 @@ class UserService extends AbstractService<User> {
     Number deleteByIds(List idList) {
         userRoleService.deleteByUserIds(idList)
         super.deleteByIds(idList)
+    }
+    /**
+     * 用户信息迁移
+     * 由于User可能会被依赖系统继承，微信绑定的是基类，需要做迁移
+     * 这里只处理了UserRole和UserBind，如果该用户产生了业务依赖不应该做删除处理
+     * @param newId
+     * @param oldId
+     */
+    void migrate(String oldId, User newUser) {
+        getUserRoles(oldId).each {
+            new UserRole(newUser, it).save()
+        }
+        generalRepository.list(UserBind, [eq: [['user.id', oldId]]]).each { ub ->
+            ub.user = newUser;
+            ub.save(flush: true);
+        }
+        deleteById(oldId)
     }
 }

@@ -88,7 +88,7 @@ class GormRepository implements GeneralRepository {
             saveEntity(newEntity)
     }
 
-    static String[] domainUpdateIgnores = ['id', 'version', 'metaClass', 'lastUpdated', 'dateCreated']
+    static final String[] domainUpdateIgnores = ['id', 'version', 'metaClass', 'lastUpdated', 'dateCreated']
 
     /**
      * 可能可以直接用attach，有案例的时候测试

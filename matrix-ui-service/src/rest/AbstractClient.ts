@@ -33,7 +33,7 @@ export abstract class AbstractClient {
    * @param data
    */
   post(uri: string, data?: any): Promise<any> {
-    if (typeof data === 'string') throw 'string类型做json序列化和反序列化会有问题';
+    if (typeof data === 'string') throw '不支持string类型做为参数，json转化过程会有多余双引号问题';
     return (
       this.doFetch(uri, data && { body: JSON.stringify(data) })
         //返回为空时，如果直接调用res.json()报错，所以先拿到text

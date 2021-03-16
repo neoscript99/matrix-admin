@@ -8,7 +8,7 @@ import lombok.ToString;
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html">文档</a>
  */
 @ToString
-public class SubscribeCallbackReq {
+public class WxCallbackReq {
     //微信返回xml报文字段都是大写，不符合get、set规范，所以直接用public的field
     //开发者微信号
     public String ToUserName;

@@ -14,7 +14,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableConfigurationProperties({WxConfigProperties.class})
 @RestController
-@RequestMapping("/wechat")
+@RequestMapping("/wechat/mp")
 public class WxMPController implements InitializingBean, DisposableBean {
     @Autowired(required = false)
     @Setter
@@ -102,7 +101,7 @@ public class WxMPController implements InitializingBean, DisposableBean {
      * https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html
      */
     @PostMapping("callback")
-    public void callbackPost(@RequestBody SubscribeCallbackReq req) {
+    public void callbackPost(@RequestBody WxCallbackReq req) {
         log.info("wechat callback: {}", req);
         String scene_str = req.EventKey;
         //todo Event可能有subscribe和scan两种，prefix可能没有，需再测试
@@ -141,10 +140,10 @@ public class WxMPController implements InitializingBean, DisposableBean {
      * 否则
      * - 返回json：{"success": false}
      */
-    @PostMapping(value = "checkLogin")
-    public Map checkLogin(@RequestBody Map<String, String> req) {
+    @PostMapping(value = "checkBind")
+    public Map checkBind(@RequestBody WxBindReq req) {
         //log.debug("checkLogin: {}", scene_str);
-        String openid = openidCache.get(req.get("scene_str"));
+        String openid = openidCache.get(req.getScene_str());
         if (openid != null) {
             WxUserInfo user = getUserInfo(openid);
             return wechatBinder != null ?
