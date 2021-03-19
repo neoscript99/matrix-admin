@@ -20,7 +20,7 @@ plugins {
 }
 
 group = 'com.feathermind.matrix'
-version = '1.6.6'
+version = '1.6.7-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
