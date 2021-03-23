@@ -6,7 +6,8 @@ import com.baomidou.kaptcha.exception.KaptchaException
 import com.baomidou.kaptcha.exception.KaptchaIncorrectException
 import com.baomidou.kaptcha.exception.KaptchaNotFoundException
 import com.baomidou.kaptcha.exception.KaptchaTimeoutException
-import com.feathermind.matrix.bean.WxUserInfo
+import com.feathermind.matrix.wechat.bean.WxUserInfo
+import com.feathermind.matrix.config.MatrixConfigProperties
 import com.feathermind.matrix.controller.bean.CasConfig
 import com.feathermind.matrix.controller.bean.LoginInfo
 import com.feathermind.matrix.controller.bean.ResBean
@@ -16,10 +17,10 @@ import com.feathermind.matrix.security.TokenService
 import com.feathermind.matrix.service.CasClientService
 import com.feathermind.matrix.service.UserBindService
 import com.feathermind.matrix.service.UserService
+import com.feathermind.matrix.wechat.WechatBinder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
 import org.springframework.core.env.Environment
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -39,6 +40,8 @@ import java.util.concurrent.ConcurrentHashMap
 @RequestMapping("/api/login")
 class LoginController implements WechatBinder {
     @Autowired
+    MatrixConfigProperties matrixConfigProperties
+    @Autowired
     CasClientService casClientService
     @Autowired
     UserService userService
@@ -56,13 +59,13 @@ class LoginController implements WechatBinder {
     Map<String, Integer> loginErrorMap = new ConcurrentHashMap()
 
     @PostMapping("/login")
-    ResponseEntity<LoginInfo> login(@RequestBody Map reqBody, HttpServletRequest request) {
+    LoginInfo login(@RequestBody Map reqBody, HttpServletRequest request) {
         String ip = getClientIP(request)
         String username = reqBody.username;
         if (!isSafe(ip, username)) {
             def kResult = kaptchaValid(reqBody.kaptchaCode);
             if (!kResult.success) {
-                return ResponseEntity.ok(new LoginInfo(kResult))
+                return new LoginInfo(kResult)
             }
         }
         def result = userService.login(username, reqBody.passwordHash);
@@ -71,7 +74,7 @@ class LoginController implements WechatBinder {
             clearLoginError(ip, username)
         } else
             result.kaptchaFree = newLoginError(ip, username)
-        ResponseEntity.ok(new LoginInfo(result))
+        new LoginInfo(result)
     }
 
     Map afterLogin(User user) {
@@ -120,9 +123,9 @@ class LoginController implements WechatBinder {
      * @return 如果不需要，返回{success: true}
      */
     @PostMapping("/kaptchaFree")
-    ResponseEntity<ResBean> kaptchaFree(@RequestBody Map reqBody, HttpServletRequest request) {
+    ResBean kaptchaFree(@RequestBody Map reqBody, HttpServletRequest request) {
         String ip = getClientIP(request)
-        ResponseEntity.ok(new ResBean(success: reqBody.username ? isSafe(ip, reqBody.username) : isSafe(ip)))
+        new ResBean(success: reqBody.username ? isSafe(ip, reqBody.username) : isSafe(ip))
     }
     /**
      * 设置错误次数，key值为用户名或客户端IP
@@ -164,7 +167,7 @@ class LoginController implements WechatBinder {
      * @return
      */
     @PostMapping("/sessionLogin")
-    ResponseEntity<LoginInfo> sessionLogin() {
+    LoginInfo sessionLogin() {
         def tokenDetails = gormSessionBean.tokenDetails
         def result
         if (tokenDetails) {
@@ -178,22 +181,22 @@ class LoginController implements WechatBinder {
         } else
             result = [success: false,
                       error  : '服务端没有session信息']
-        ResponseEntity.ok(new LoginInfo(result))
+        new LoginInfo(result)
     }
 
 
     @PostMapping("/logout")
-    ResponseEntity<ResBean> logout(HttpSession session) {
+    ResBean logout(HttpSession session) {
         gormSessionBean.tokenDetails = null;
         session.invalidate()
-        ResponseEntity.ok(new ResBean([success: true]))
+        new ResBean([success: true])
     }
 
     @PostMapping("/getCasConfig")
-    ResponseEntity<CasConfig> getCasConfig() {
-        return ResponseEntity.ok(new CasConfig([clientEnabled: casClientService.clientEnabled,
-                                                casServerRoot: casClientService.configProps?.serverUrlPrefix,
-                                                defaultRoles : gormSessionBean.defaultRoles]))
+    CasConfig getCasConfig() {
+        return new CasConfig([clientEnabled: matrixConfigProperties.casClientEnabled,
+                              casServerRoot: casClientService.configProps?.serverUrlPrefix,
+                              defaultRoles : matrixConfigProperties.defaultRoles])
     }
 
     String getClientIP(HttpServletRequest request) {
@@ -209,14 +212,14 @@ class LoginController implements WechatBinder {
 
     @PostMapping("/devLogin")
     @Profile('dev')
-    ResponseEntity<LoginInfo> devLogin(@RequestBody Map reqBody) {
+    LoginInfo devLogin(@RequestBody Map reqBody) {
         def result = [success: false, error: "非开发环境，无法登录"]
         if (env.activeProfiles.contains('dev')) {
             String username = reqBody.username;
             def user = username ? userService.findByAccount(username) : null;
             result = user ? afterLogin(user) : [success: false, error: "$username 用户不存在"]
         }
-        ResponseEntity.ok(new LoginInfo(result))
+        new LoginInfo(result)
     }
 
     @Override

@@ -1,19 +1,18 @@
-package com.feathermind.matrix.controller;
+package com.feathermind.matrix.wechat.controller;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.feathermind.matrix.bean.*;
-import com.feathermind.matrix.config.WxConfigProperties;
+import com.feathermind.matrix.wechat.WechatBinder;
+import com.feathermind.matrix.wechat.bean.*;
+import com.feathermind.matrix.wechat.config.WxConfigProperties;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +30,6 @@ import java.util.concurrent.TimeUnit;
  * @see < a href="https://mp.weixin.qq.com/debug/">公众平台接口调试</ a>
  */
 @Slf4j
-@Configuration
-@EnableConfigurationProperties({WxConfigProperties.class})
 @RestController
 @RequestMapping("/wechat/mp")
 public class WxMPController implements InitializingBean, DisposableBean {

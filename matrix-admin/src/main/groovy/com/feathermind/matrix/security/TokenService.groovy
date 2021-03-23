@@ -1,5 +1,6 @@
 package com.feathermind.matrix.security
 
+import com.feathermind.matrix.config.MatrixConfigProperties
 import com.feathermind.matrix.domain.sys.User
 import com.feathermind.matrix.service.RoleService
 import com.feathermind.matrix.service.UserService
@@ -15,8 +16,8 @@ import org.springframework.stereotype.Component
 @Slf4j
 class TokenService {
 
-    @Value('${matrix.token.expire.minutes}')
-    long expireMinutes
+    @Autowired
+    MatrixConfigProperties matrixConfigProperties
     @Autowired
     UserService userService
     @Autowired
@@ -40,6 +41,6 @@ class TokenService {
     }
 
     String generateToken(TokenDetails tokenDetails) {
-        JwtUtil.generate(tokenDetails.username, tokenDetails.password, expireMinutes)
+        JwtUtil.generate(tokenDetails.username, tokenDetails.password, matrixConfigProperties.tokenExpireMinutes)
     }
 }

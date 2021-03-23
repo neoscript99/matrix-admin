@@ -1,4 +1,4 @@
-package com.feathermind.matrix.bean;
+package com.feathermind.matrix.wechat.bean;
 
 import lombok.Data;
 

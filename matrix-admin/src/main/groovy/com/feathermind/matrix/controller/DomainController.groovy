@@ -7,13 +7,12 @@ import com.feathermind.matrix.service.UserService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 
 /**
  * SysWrite、SysRead两个为最大的权限，应该只赋值给管理员
- * @param < T >
+ * @param <T >
  */
 abstract class DomainController<T> extends SecureController {
     protected Logger log = LoggerFactory.getLogger(this.getClass())
@@ -28,45 +27,45 @@ abstract class DomainController<T> extends SecureController {
      * @return
      */
     @PostMapping("/get")
-    ResponseEntity<T> get(@RequestBody Map req) {
+    T get(@RequestBody Map req) {
         readOneAuthorize()
-        return ResponseEntity.ok(domainService.get(req.id))
+        return domainService.get(req.id)
     }
 
     @PostMapping("/delete")
-    ResponseEntity<Number> delete(@RequestBody Map req) {
+    Number delete(@RequestBody Map req) {
         writeOneAuthorize()
-        return ResponseEntity.ok(domainService.deleteById(req.id))
+        return domainService.deleteById(req.id)
     }
 
     @PostMapping("/deleteByIds")
-    ResponseEntity<Number> deleteByIds(@RequestBody Map req) {
+    Number deleteByIds(@RequestBody Map req) {
         writeAuthorize()
-        return ResponseEntity.ok(domainService.deleteByIds(req.ids))
+        return domainService.deleteByIds(req.ids)
     }
 
     @PostMapping("/deleteMatch")
-    ResponseEntity<Number> deleteMatch(@RequestBody Map criteria) {
+    Number deleteMatch(@RequestBody Map criteria) {
         writeAuthorize()
-        return ResponseEntity.ok(domainService.deleteMatch(criteria))
+        return domainService.deleteMatch(criteria)
     }
 
     @PostMapping("/save")
-    ResponseEntity<T> save(@RequestBody Map entityMap) {
+    T save(@RequestBody Map entityMap) {
         writeOneAuthorize()
-        return ResponseEntity.ok(domainService.save(entityMap))
+        return domainService.save(entityMap)
     }
 
     @PostMapping("/list")
-    ResponseEntity<List<T>> list(@RequestBody Map criteria) {
+    List<T> list(@RequestBody Map criteria) {
         readAuthorize()
-        return ResponseEntity.ok(domainService.list(preList(criteria)))
+        return domainService.list(preList(criteria))
     }
 
     @PostMapping("/count")
-    ResponseEntity<Integer> count(@RequestBody Map criteria) {
+    Integer count(@RequestBody Map criteria) {
         readAuthorize()
-        return ResponseEntity.ok(domainService.count(preList(criteria)))
+        return domainService.count(preList(criteria))
     }
 
     Map preList(Map criteria) {

@@ -1,5 +1,6 @@
 package com.feathermind.matrix.controller
 
+import com.feathermind.matrix.config.MatrixConfigProperties
 import com.feathermind.matrix.security.TokenDetails
 import com.feathermind.matrix.security.TokenService
 import com.feathermind.matrix.service.CasClientService
@@ -21,14 +22,14 @@ class GormSessionBean {
     CasClientService casClientService
     @Autowired
     TokenService userSecurityService
-    @Value('${matrix.defaultRoles}')
-    String defaultRoles
+    @Autowired
+    MatrixConfigProperties matrixConfigProperties
 
     TokenDetails tokenDetails
 
     TokenDetails getTokenDetails() {
-        if (!tokenDetails && casClientService.clientEnabled && casClientService.casAccount) {
-            tokenDetails = userSecurityService.loadUserWithDefaultRoles(casClientService.casAccount, defaultRoles)
+        if (!tokenDetails && matrixConfigProperties.casClientEnabled && casClientService.casAccount) {
+            tokenDetails = userSecurityService.loadUserWithDefaultRoles(casClientService.casAccount, matrixConfigProperties.defaultRoles)
         }
         return tokenDetails
     }

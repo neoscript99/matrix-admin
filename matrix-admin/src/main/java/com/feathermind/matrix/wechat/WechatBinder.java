@@ -1,6 +1,6 @@
-package com.feathermind.matrix.controller;
+package com.feathermind.matrix.wechat;
 
-import com.feathermind.matrix.bean.WxUserInfo;
+import com.feathermind.matrix.wechat.bean.WxUserInfo;
 
 import java.util.Map;
 

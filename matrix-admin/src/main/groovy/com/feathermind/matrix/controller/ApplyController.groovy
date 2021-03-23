@@ -4,7 +4,6 @@ import com.feathermind.matrix.domain.wf.Apply
 import com.feathermind.matrix.service.AbstractService
 import com.feathermind.matrix.service.ApplyService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,10 +16,10 @@ class ApplyController extends DomainController<Apply> {
     ApplyService applyService
 
     @PostMapping("/saveWithLog")
-    ResponseEntity<Apply> saveWithLog(@RequestBody Map req) {
+    Apply saveWithLog(@RequestBody Map req) {
         writeOneAuthorize()
         def apply = applyService.saveWithLog(req.apply, currentUser, req.info)
-        return ResponseEntity.ok(apply)
+        return apply
     }
 
     @Override

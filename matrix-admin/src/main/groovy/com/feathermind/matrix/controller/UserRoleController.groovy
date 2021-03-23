@@ -1,6 +1,5 @@
 package com.feathermind.matrix.controller
 
-import com.feathermind.matrix.domain.sys.Role
 import com.feathermind.matrix.domain.sys.UserRole
 import com.feathermind.matrix.service.AbstractService
 import com.feathermind.matrix.service.UserRoleService

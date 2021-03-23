@@ -1,9 +1,9 @@
 
 matrix:
-  defaultRoles: Public
+  default-roles: Public
   #@see https://github.com/Unicon/cas-client-autoconfig-support
-  cas.client.enabled: false
-  token.expire.minutes: 30
+  cas-client-enabled: false
+  token-expire-minutes: 30
   #微信公众号登录相关配置
   wechat.appId: wx601fa973969006a4
   wechat.appSecret: ee51729f9127038a5d4fd3a06fabcc15

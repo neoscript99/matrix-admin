@@ -1,14 +1,9 @@
 package com.feathermind.matrix.security
 
-import com.feathermind.matrix.controller.bean.ResBean
 import com.feathermind.matrix.domain.sys.User
 import com.feathermind.matrix.util.MatrixException
-import com.sun.org.apache.bcel.internal.generic.NEW
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import org.springframework.core.MethodParameter
-import org.springframework.http.converter.HttpMessageNotReadableException
-import org.springframework.web.bind.MissingPathVariableException
 
 /**
  * SysAdmin、SysWrite、SysRead为最大的权限，应该只赋值给管理员
