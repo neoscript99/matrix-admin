@@ -86,6 +86,8 @@ bootRun {
 
 task sourceJar(type: Jar) {
     from(sourceSets.main.allSource, sourceSets.test.allSource)
+    exclude('com/feathermind/matrix/repositories/GormRepository.groovy')
+    exclude('com/feathermind/matrix/util/GormCriteriaUtil.groovy')
 }
 jar {
     enabled = true

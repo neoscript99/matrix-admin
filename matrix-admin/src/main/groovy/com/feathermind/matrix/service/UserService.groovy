@@ -104,4 +104,17 @@ class UserService extends AbstractService<User> {
         }
         deleteById(oldId)
     }
+
+    /**
+     * 检查手机号是否重复
+     * @param userId
+     * @param cellPhone
+     * @return
+     */
+    boolean checkAccountUnique(String userId,  String account) {
+        def param = [eq: ['account', account]]
+        if (userId)
+            param.ne = [['id', userId]]
+        return count(param) == 0
+    }
 }
