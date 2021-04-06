@@ -1,9 +1,9 @@
-import { StoreService } from './StoreService';
-import { AfterLogin, LoginInfo, LoginService } from './LoginService';
+import { StoreService, LoginInfo, LoginService } from './index';
 import { SpringBootClient } from '../rest';
 
 export interface WechatStore {
   qrcodeInfo?: QrcodeRes;
+  qrValid?: boolean;
 }
 
 export interface QrcodeRes {
@@ -23,6 +23,7 @@ export interface QrcodeRes {
 export class WechatService extends StoreService<WechatStore> {
   store: WechatStore = {};
   timer;
+  checkTimes = 60;
 
   constructor(restClient: SpringBootClient, private loginService: LoginService, private interval: number = 3000) {
     super(restClient);
@@ -30,38 +31,58 @@ export class WechatService extends StoreService<WechatStore> {
   }
 
   getApiUri(operator: string): string {
-    return `/wechat/${operator}`;
+    return `/wechat/mp/${operator}`;
   }
 
   /**
    * 第一步：获取二维码，并展示给客户端
+   *
+   * checkTimes：轮询次数，二维码展示给用户后，需等待扫码并轮询后台
    */
-  getQrcodeInfo(): Promise<QrcodeRes> {
-    return this.postApi('qrcode').then((res) => {
-      this.store.qrcodeInfo = res;
-      this.startLoginCheck();
-      this.fireStoreChange();
-      return res;
-    });
-  }
-
-  startLoginCheck() {
-    this.stopLoginCheck();
-    this.timer = setInterval(this.runLoginCheck, this.interval);
+  getQrcodeInfo(checkTimes = 60): Promise<QrcodeRes | void> {
+    if (this.loginService.store.loginInfo.success) return Promise.resolve();
+    else
+      return this.postApi('qrcode').then((res) => {
+        this.store.qrcodeInfo = res;
+        this.checkTimes = checkTimes;
+        this.store.qrValid = true;
+        this.startBindCheck();
+        this.fireStoreChange();
+        return res;
+      });
   }
 
   /**
+   * 第二步：启动轮询任务
+   */
+  startBindCheck() {
+    this.stopBindCheck();
+    this.timer = setInterval(this.runBindCheck, this.interval);
+  }
+
+  /**
+   * 第三步：检查用户是否已扫描
+   * 二维码对应scene_str，用户扫码成功后，后台应返回登录信息
    * 用闭包，不用bind this
    */
-  runLoginCheck = () => {
-    const sceneStr = this.store?.qrcodeInfo.scene_str;
-    if (sceneStr)
-      this.postApi('checkLogin', sceneStr).then((res: LoginInfo) => {
-        this.loginService.doAfterLogin(res);
+  runBindCheck = () => {
+    const scene_str = this.store?.qrcodeInfo.scene_str;
+    if (scene_str && this.checkTimes > 0)
+      this.postApi('checkBind', { scene_str }).then((res: LoginInfo) => {
+        res.success && this.loginService.doAfterLogin(res);
       });
+    this.checkTimes--;
+    if (this.checkTimes === 0) {
+      this.store.qrValid = false;
+      this.stopBindCheck();
+      this.fireStoreChange();
+    }
   };
 
-  stopLoginCheck() {
+  /**
+   * 第四步：停止轮询
+   */
+  stopBindCheck() {
     if (this.timer) clearInterval(this.timer);
   }
 
@@ -70,8 +91,7 @@ export class WechatService extends StoreService<WechatStore> {
    * 考虑到其它途径登录的场景，所以在构造函数中传递给loginService
    * @param loginInfo
    */
-  afterLogin = (loginInfo: LoginInfo) => {
-    this.stopLoginCheck();
-    return Promise.resolve();
+  afterLogin = () => {
+    this.stopBindCheck();
   };
 }

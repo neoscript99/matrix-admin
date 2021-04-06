@@ -8,3 +8,4 @@
 
 - matrix-admin@1.6.7
   - 增加MatrixConfigProperties，配置改为matrix.default-roles, matrix.cas-client-enabled, matrix.token-expire-minutes
+  - 微信登录优化

@@ -1,5 +1,9 @@
-import { Criteria, CriteriaOrder, PageInfo, SomeFetch } from '../services';
+import { Criteria, CriteriaOrder, DomainService, PageInfo, SomeFetch } from '../services';
 
+/**
+ * Taro在小程序中支持cookie
+ * https://www.jianshu.com/p/2663ac10d471
+ */
 declare const Taro: { request: (any) => Promise<any> };
 export const taroFetch: SomeFetch = (url: RequestInfo, { body: data, ...fetchOptions }: any) => {
   return Taro.request({

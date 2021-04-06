@@ -21,12 +21,13 @@ export class DeptService extends DomainService<DeptEntity, DeptStore> {
   get packageName() {
     return 'sys';
   }
-  afterLogin = (loginInfo: LoginInfo) => {
+  afterLogin(loginInfo: LoginInfo) {
+    super.afterLogin(loginInfo);
     if (this.readAuthorize(loginInfo.authorities))
-      return this.list({ orders: ['seq'] }).then((res) => {
+      this.list({ orders: ['seq'] }).then((res) => {
         this.store.completeList = res.results;
         this.store.enabledList = res.results.filter((dept) => dept.enabled);
+        this.fireStoreChange();
       });
-    return Promise.resolve();
-  };
+  }
 }

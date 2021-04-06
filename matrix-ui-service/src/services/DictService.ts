@@ -31,7 +31,9 @@ export class DictService extends DomainService<Dict> {
     const dict = this.getDict(typeId).find((dict) => dict.code === code);
     return dict ? dict.name : code;
   };
-  afterLogin = (loginInfo: LoginInfo) => {
-    return this.listAll({ orders: ['type', 'seq'] });
-  };
+
+  afterLogin(loginInfo: LoginInfo) {
+    super.afterLogin(loginInfo);
+    this.listAll({ orders: ['type', 'seq'] });
+  }
 }

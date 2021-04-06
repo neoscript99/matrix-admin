@@ -1,6 +1,6 @@
 import { DeptEntity, ResBean, StoreService, UserEntity } from './index';
 import { SpringBootClient, SpringErrorHandler } from '../rest';
-import { StringUtil, MessageUtil, StorageUtil } from '../utils';
+import { StringUtil, MessageUtil, StorageUtil, ObjectUtil } from '../utils';
 
 /**
  * 如果是系统自己认证：user 有 ， account 有
@@ -24,7 +24,6 @@ export interface CasConfig {
 }
 
 export class LoginStore {
-  lastRoutePath = '/';
   //clientEnabled默认为true，不显示登录框，后台查询如果为false，再显示出来
   casConfig: CasConfig = { clientEnabled: true };
   loginInfo: LoginInfo = { success: false };
@@ -32,11 +31,14 @@ export class LoginStore {
 }
 
 /**
- * 如果返回promise，在登录后将被await顺序执行
- * 如不依赖其它数据，可不将promise返回
+ * 在登录后将被执行
+ * 数据依赖通过StoreService.fireStoreChange处理
  */
 export interface AfterLogin {
-  (loginInfo: LoginInfo): Promise<any>;
+  (loginInfo?: LoginInfo): Promise<any> | void;
+}
+export interface AfterLoginService {
+  afterLogin: AfterLogin;
 }
 
 export interface LoginEntity {
@@ -59,16 +61,19 @@ export class LoginService extends StoreService<LoginStore> {
   //用户的初始化密码，可在new LoginService的时候修改
   //如果用户密码登录初始密码，跳转到密码修改页面
   initPassword = 'abc000';
+  private afterLogins: AfterLogin[] = [];
 
-  constructor(restClient: SpringBootClient, private afterLogins: AfterLogin[]) {
+  constructor(restClient: SpringBootClient) {
     super(restClient);
     restClient.registerErrorHandler(this.springErrorHandler);
     //cas默认为true，初始化时去获取服务端的配置信息，如果为false，再显示登录界面
     this.getCasConfig();
   }
+
   springErrorHandler: SpringErrorHandler = (e) => {
-    if (e.errorCode && LOGOUT_ERRORS.includes(e.errorCode)) this.store.loginInfo = { success: false };
+    if (e.errorCode && LOGOUT_ERRORS.includes(e.errorCode)) this.logout();
   };
+
   getApiUri(operator: string) {
     return `/api/login/${operator}`;
   }
@@ -113,7 +118,6 @@ export class LoginService extends StoreService<LoginStore> {
     StorageUtil.removeItem(USERNAME_KEY);
     StorageUtil.removeItem(PASSWORD_KEY);
     this.store.loginInfo = { success: false };
-    this.store.lastRoutePath = '/';
     this.fireStoreChange();
   }
 
@@ -132,12 +136,16 @@ export class LoginService extends StoreService<LoginStore> {
   }
 
   logout() {
-    return this.postApi('logout');
+    this.clearLoginInfoLocal();
+    //丢弃Token
+    ObjectUtil.set(this.restClient.fetchOptions, 'reqInit.headers.Authorization', `Bearer anonymous`);
+    this.postApi('logout');
   }
 
   getCasConfig(): Promise<CasConfig> {
     return this.postApi('getCasConfig').then((data) => {
       this.store.casConfig = data;
+      this.fireStoreChange();
       return data;
     });
   }
@@ -147,20 +155,22 @@ export class LoginService extends StoreService<LoginStore> {
     this.doAfterLogin({ user: { account, dept }, account, token, success: true, roles: ['Public'] });
   }
 
-  async doAfterLogin(loginInfo: LoginInfo) {
+  doAfterLogin(loginInfo: LoginInfo) {
     if (loginInfo.success) {
+      if (!loginInfo.token) throw 'token不能为空';
+      //必须最先执行，否则验证错误
+      ObjectUtil.set(this.restClient.fetchOptions, 'reqInit.headers.Authorization', `Bearer ${loginInfo.token}`);
       //cas登录，可以不要求必须存在数据库user
       if (!loginInfo.user)
         loginInfo.user = { account: loginInfo.account || '', dept: { name: '外部临时用户', seq: 0, enabled: true } };
-      for (const fun of this.afterLogins) await fun(loginInfo);
+      //并行执行，不依赖执行顺序
+      this.afterLogins.forEach((fun) => fun(loginInfo));
     } else {
       console.debug('LoginService.doAfterLogin: ', loginInfo.error);
     }
-    //等待上面的初始化操作全部执行后
-    //store信息最后更新，触发界面刷新，保证初始化已完成
+    //store更新，触发登录界面刷新
     this.store.loginInfo = loginInfo;
     this.fireStoreChange();
-    return loginInfo;
   }
 
   hasRole(role: string): boolean {
@@ -183,5 +193,12 @@ export class LoginService extends StoreService<LoginStore> {
 
   addAfterLogin(fun: AfterLogin) {
     this.afterLogins.push(fun);
+  }
+
+  updateLoginInfo(newInfo: Partial<LoginInfo>) {
+    this.store.loginInfo = { ...this.store.loginInfo, ...newInfo };
+    //保存一次肯定不需要再强制修改密码
+    this.store.forcePasswordChange = false;
+    this.fireStoreChange();
   }
 }

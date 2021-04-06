@@ -1,7 +1,7 @@
-import React, { Component, ComponentType, ReactNode, useCallback, useMemo, useState } from 'react';
+import React, { ComponentType, ReactNode, useCallback, useMemo, useState } from 'react';
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Layout } from 'antd';
-import { RouteComponentProps, useHistory, useLocation, useRouteMatch } from 'react-router';
+import { useHistory, useLocation, useRouteMatch } from 'react-router';
 import { MenuEntity, AdminServices } from 'matrix-ui-service';
 import { MenuTree } from '../layout';
 import { useServiceStore } from '../../utils';
@@ -15,7 +15,6 @@ export interface HomeProps {
   logoRender: ReactNode;
   footRender: ReactNode;
   PageSwitch: ComponentType<PageSwitchProps>;
-  loginPath: string;
   profilePath?: string;
   headerCss?: React.CSSProperties;
   contentCss?: React.CSSProperties;
@@ -27,7 +26,7 @@ export interface PageSwitchProps {
 }
 
 export function Home(props: HomeProps) {
-  const { serverLogout, serverRoot, PageSwitch, loginPath, adminServices } = props;
+  const { serverLogout, serverRoot, PageSwitch, adminServices } = props;
   const { logoRender, footRender, headerCss, contentCss, siderCss, profilePath } = props;
   const { loginService, menuService, paramService } = adminServices;
   const history = useHistory();
@@ -42,13 +41,9 @@ export function Home(props: HomeProps) {
   ]);
 
   const logout = useCallback(() => {
-    loginService.clearLoginInfoLocal();
+    loginService.logout();
     if (serverLogout) window.location.href = `${serverRoot}/logout`;
-    else {
-      loginService.logout();
-      //清除store缓存信息,例如needRefresh等
-      window.location.reload();
-    }
+    else history.push('/');
   }, [serverLogout, loginService]);
 
   const goProfile = useCallback(() => {
@@ -68,11 +63,7 @@ export function Home(props: HomeProps) {
     [loginStore, paramStore],
   );
   const { loginInfo } = loginStore;
-  if (!loginInfo.success) {
-    loginStore.lastRoutePath = location.pathname;
-    history.push(loginPath);
-    return null;
-  } else if (needChangePassword && goProfile()) {
+  if (needChangePassword && goProfile()) {
     return null;
   }
   const buttonCss: React.CSSProperties = { padding: '3px' };
@@ -95,7 +86,9 @@ export function Home(props: HomeProps) {
         <div>
           <Avatar icon={<UserOutlined />} style={{ backgroundColor: '#f56a00' }} />
           <div style={{ display: 'inline-block' }}>
-            <span style={{ marginLeft: '0.5rem', lineHeight: '1.2rem' }}>{loginInfo.account}(</span>
+            <span style={{ marginLeft: '0.5rem', lineHeight: '1.2rem' }}>
+              {loginInfo?.user?.name || loginInfo.account}(
+            </span>
             <Button type="link" onClick={goProfile} style={buttonCss}>
               个人设置
             </Button>

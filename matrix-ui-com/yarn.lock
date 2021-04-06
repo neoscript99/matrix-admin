@@ -3668,10 +3668,10 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-matrix-ui-service@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npm.taobao.org/matrix-ui-service/download/matrix-ui-service-1.0.2.tgz#c99de83fcd7e237503cf4ad5545a2ed7b16e2b4d"
-  integrity sha1-yZ3oP81+I3UDz0rVVFou17FuK00=
+matrix-ui-service@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npm.taobao.org/matrix-ui-service/download/matrix-ui-service-1.0.4.tgz?cache=0&sync_timestamp=1617671728347&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmatrix-ui-service%2Fdownload%2Fmatrix-ui-service-1.0.4.tgz#7ee432b3a8bccd92578abee4f28c1bab2303c53b"
+  integrity sha1-fuQys6i8zZJXir7k8owbqyMDxTs=
   dependencies:
     js-sha256 "^0.9.0"
     lodash "^4.17.20"

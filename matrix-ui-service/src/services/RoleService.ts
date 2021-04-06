@@ -15,11 +15,10 @@ export class RoleService extends DomainService<RoleEntity> {
   constructor(restClient: AbstractClient) {
     super({ domain: 'role', storeClass: DomainStore, restClient });
   }
-  afterLogin = (loginInfo: LoginInfo) => {
-    return this.readAuthorize(loginInfo.authorities)
-      ? this.listAll({ orders: [['lastUpdated', 'desc']] })
-      : Promise.resolve();
-  };
+  afterLogin(loginInfo: LoginInfo) {
+    super.afterLogin(loginInfo);
+    this.readAuthorize(loginInfo.authorities) && this.listAll({ orders: [['lastUpdated', 'desc']] });
+  }
   get packageName() {
     return 'sys';
   }

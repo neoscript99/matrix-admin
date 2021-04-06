@@ -1,10 +1,9 @@
-import React, { Component, ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { CodeOutlined, DownOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form } from 'antd';
 import { Input, Button, Checkbox, Spin, Dropdown, Menu } from 'antd';
 import { AdminServices, StringUtil } from 'matrix-ui-service';
 import { LoginPage, LoginBox, LoginBoxTitle, LoginBoxItem } from './LoginStyled';
-import { useHistory } from 'react-router';
 import { commonRules, useServiceStore } from '../../../utils';
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { useForm } from 'antd/lib/form/Form';
@@ -14,8 +13,7 @@ export interface LoginFormProps {
   title: ReactNode;
   introRender: ReactNode;
   backgroundImage?: any;
-  demoUsers?: any[];
-  isDev?: boolean;
+  demoUsers?: { name: string; username: string }[];
 }
 interface S {
   kaptchaId: string;
@@ -28,14 +26,19 @@ interface S {
  */
 export function Login(props: LoginFormProps) {
   const { adminServices } = props;
-  const { title, introRender, backgroundImage, demoUsers, isDev } = props;
-  const { loginService } = adminServices;
-  const history = useHistory();
+  const { title, introRender, backgroundImage, demoUsers } = props;
+  const { loginService, paramService } = adminServices;
   const [kaptchaId, setKaptchaId] = useState('none');
   const [kaptchaFree, setKaptchaFree] = useState(true);
   const [form] = useForm();
   const loginStore = useServiceStore(loginService);
-  const { casConfig, lastRoutePath, loginInfo } = loginStore;
+  const paramStore = useServiceStore(paramService);
+  //依赖paramStore
+  const profiles = useMemo(() => paramService.getByCode('EnvironmentProfiles')?.value, [paramStore]);
+  console.debug('EnvironmentProfiles: ', profiles);
+  const isDev = useMemo(() => profiles && profiles.split(',').includes('dev'), [profiles]);
+
+  const { casConfig, loginInfo } = loginStore;
   /*检查当前状态是否需要验证码*/
   const checkKaptchaFree = useCallback((e: any, noUser?: boolean) => {
     loginService
@@ -46,10 +49,6 @@ export function Login(props: LoginFormProps) {
   useEffect(() => {
     checkKaptchaFree(null, true);
   }, []);
-
-  useEffect(() => {
-    if (loginInfo.success) history.push(lastRoutePath);
-  }, [loginStore]);
 
   const refreshKaptchaId = useCallback(() => {
     //生成一个随机码，作为验证码id，从后台获取新的验证码（不是直接作为验证码）
@@ -74,7 +73,7 @@ export function Login(props: LoginFormProps) {
   const demoUserClick = useCallback(
     ({ key }: MenuInfo) => {
       const item = demoUsers!.find((user) => user.username === key);
-      loginService.loginHash({ ...item, isDev });
+      loginService.loginHash({ ...item, isDev, password: 'none' });
     },
     [demoUsers, isDev],
   );
@@ -120,7 +119,7 @@ export function Login(props: LoginFormProps) {
               <Form.Item name="remember" valuePropName="checked" initialValue={true} style={{ marginBottom: 0 }}>
                 <Checkbox>自动登录</Checkbox>
               </Form.Item>
-              {demoUsers && <DemoUserDropdown demoUsers={demoUsers} demoUserClick={demoUserClick} />}
+              {isDev && demoUsers && <DemoUserDropdown demoUsers={demoUsers} demoUserClick={demoUserClick} />}
             </div>
             <Button type="primary" htmlType="submit" style={{ width: '100%', marginTop: 10 }}>
               登录

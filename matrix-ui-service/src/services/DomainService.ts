@@ -1,4 +1,4 @@
-import { Criteria, Entity, ListOptions, ListResult, PageInfo, AfterLogin, StoreService, AbstractClient } from './';
+import { Criteria, Entity, ListOptions, ListResult, PageInfo, StoreService, AbstractClient, LoginInfo } from './';
 import { DomainStore } from './DomainStore';
 import { LangUtil, ServiceUtil, StringUtil } from '../utils';
 
@@ -10,8 +10,7 @@ export interface DomainServiceOptions<D extends DomainStore = DomainStore> {
 }
 
 /**
- * Mobx Store基类
- * 内部的属性会被JSON.stringify序列化，如果是嵌套结构或大对象，可以用Promise包装，规避序列化
+ * 领域业务基类
  */
 export class DomainService<
   T extends Entity = Entity,
@@ -19,7 +18,6 @@ export class DomainService<
 > extends StoreService<D> {
   public store: D;
   domain: string;
-  afterLogin?: AfterLogin;
 
   /**
    *
@@ -179,7 +177,7 @@ export class DomainService<
   }
 
   get readAuthorities() {
-    const name = StringUtil.capitalize(this.domain);
+    const name = StringUtil.upperFirst(this.domain);
     const pName = this.packageName;
     return ['SysAdmin', 'SysRead', `${pName}PackageAll`, `${pName}PackageRead`, `${name}All`, `${name}Read`];
   }
@@ -188,7 +186,7 @@ export class DomainService<
     const needOneList = this.readAuthorities;
     const has = !!hasList?.find((au) => needOneList.includes(au));
     if (!has)
-      console.log(
+      console.warn(
         `${LangUtil.getClassName(this)}.readAuthorize不通过: 当前用户(${hasList})无其中任一权限${needOneList}`,
       );
     return has;
@@ -214,5 +212,9 @@ export class DomainService<
     const { allList, pageList } = this.store;
     this.store.allList = allList.filter((item) => !ids.includes(item.id));
     this.store.pageList = pageList.filter((item) => !ids.includes(item.id));
+  }
+
+  afterLogin(loginInfo: LoginInfo) {
+    this.store.needRefresh = true;
   }
 }

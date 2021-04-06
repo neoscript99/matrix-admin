@@ -16,11 +16,8 @@ export function UserProfile(props: AdminPageProps) {
   const handleSave = useCallback((item: UserEntity) => {
     if (item.password === services.loginService.initPasswordHash) message.error('新密码不能和初始密码相同');
     else
-      services.userService.save(item).then((item) => {
-        //todo 更新后处理需改造
-        services.loginService.store.forcePasswordChange = false;
-        services.loginService.store.loginInfo.user = item as UserEntity;
-        services.loginService.fireStoreChange();
+      services.userService.save(item).then((user) => {
+        services.loginService.updateLoginInfo({ user });
         message.success('保存成功');
       });
   }, []);
@@ -71,7 +68,7 @@ export function ProfileFrom(props: ProfileFormProps) {
   };
   return (
     <Form {...itemCol} onFinish={handleSubmit} initialValues={inputItem}>
-      <InputField formItemProps={{ label: '单位' }} value={inputItem?.dept.name} readonly />
+      <InputField formItemProps={{ label: '单位' }} value={inputItem?.dept?.name} readonly />
       <InputField formItemProps={{ label: '帐号' }} value={inputItem?.account} readonly />
       <InputField fieldId="name" formItemProps={{ label: '姓名', rules: [required] }} maxLength={10} minLength={2} />
       <InputField

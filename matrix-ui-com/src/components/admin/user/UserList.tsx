@@ -71,7 +71,7 @@ export class UserList<
     const base = super.getOperatorEnable();
     return {
       ...base,
-      update: base.update && this.getSelectItem()!.editable,
+      update: base.update && this.getSelectItem()?.editable,
       delete: base.delete && this.getSelectItems().every((item) => item.editable),
     };
   }

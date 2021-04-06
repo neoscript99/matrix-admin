@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ColumnProps, TableProps } from 'antd/lib/table';
 import { CloseOutlined } from '@ant-design/icons';
 import { Button, message, Modal, Result, Table, Tag } from 'antd';
-import { TableUtil } from '../../utils';
+import { Consts, TableUtil } from '../../utils';
 import { EntityForm, EntityFormProps } from './EntityForm';
 import { OperatorBar, OperatorBarProps } from './OperatorBar';
 import { SearchBar, SearchFromBarProps } from './SearchBar';
@@ -44,10 +44,10 @@ export interface EntityListTableProps extends TableProps<Entity> {
   pagination: TablePaginationConfig;
 }
 
-export interface EntityColumnProps extends ColumnProps<Entity> {
+export interface EntityColumnProps<P = Entity> extends ColumnProps<P> {
   fieldType?: typeof InputField | typeof SelectField | typeof CheckboxField;
   valueTransfer?: (value: any) => any;
-  renderExport?: (text: any, record: Entity, index?: number) => React.ReactNode;
+  renderExport?: (text: any, record: P, index?: number) => React.ReactNode;
   //导出到excel的宽度（英文字符数）
   cellWidth?: number;
   /**
@@ -390,9 +390,10 @@ export abstract class EntityList<
   /**
    * 可以通过props传入，也可以重载本方法
    */
-  getOperatorVisible(): OperatorSwitch | undefined {
-    return this.props.operatorVisible;
+  getOperatorVisible(): OperatorSwitch {
+    return this.props.operatorVisible || Consts.allOperator;
   }
+
   getOperatorProps(): Partial<OperatorBarProps> | undefined {
     return undefined;
   }

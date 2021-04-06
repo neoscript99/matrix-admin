@@ -16,6 +16,7 @@ export * from './DictService';
 export * from './AttachmentService';
 export * from './ApplyService';
 export * from './ApplyLogService';
+export * from './ServiceYard';
 
 //排序支持传字段名列表，或者字段名+顺序类型
 export type CriteriaOrder = string | [string, 'asc' | 'desc'];

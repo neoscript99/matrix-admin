@@ -1,4 +1,4 @@
-import { Entity } from './index';
+import { Entity, LoginInfo } from './index';
 import { DomainStore } from './DomainStore';
 import { DomainService } from './DomainService';
 import { AbstractClient } from '../rest';
@@ -25,6 +25,15 @@ export class MenuService extends DomainService<MenuEntity, MenuStore> {
   }
 
   getMenuTree() {
-    return this.postApi('menuTree').then((data) => (this.store.menuTree = data));
+    this.postApi('menuTree').then((data) => {
+      this.store.menuTree = data;
+      this.fireStoreChange();
+      return data;
+    });
+  }
+
+  afterLogin(loginInfo: LoginInfo) {
+    super.afterLogin(loginInfo);
+    this.getMenuTree();
   }
 }
