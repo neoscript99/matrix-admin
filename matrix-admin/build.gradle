@@ -19,7 +19,7 @@ plugins {
 }
 
 group = 'com.feathermind.matrix'
-version = '1.6.7'
+version = '1.6.8-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
@@ -85,8 +85,8 @@ bootRun {
 
 task sourceJar(type: Jar) {
     from(sourceSets.main.allSource, sourceSets.test.allSource)
-    exclude('com/feathermind/matrix/repositories/GormRepository.groovy')
-    exclude('com/feathermind/matrix/util/GormCriteriaUtil.groovy')
+    //exclude('com/feathermind/matrix/repositories/GormRepository.groovy')
+    //exclude('com/feathermind/matrix/util/GormCriteriaUtil.groovy')
 }
 jar {
     enabled = true

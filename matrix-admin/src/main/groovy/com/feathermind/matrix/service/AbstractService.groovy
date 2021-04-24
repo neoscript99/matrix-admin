@@ -1,6 +1,7 @@
 package com.feathermind.matrix.service
 
 import com.feathermind.matrix.repositories.GeneralRepository
+import com.feathermind.matrix.util.JsonUtil
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -76,8 +77,24 @@ abstract class AbstractService<T> {
         list(param)
     }
 
+    /**
+     * 将指定的字段，转化为json保存，加后缀Json，domain进行如下配置：
+     * @JsonProperty (access = JsonProperty.Access.WRITE_ONLY)<br>
+     * String scoresJson<br>
+     * @JsonProperty (access = JsonProperty.Access.READ_ONLY)<br>
+     * List<Map> getScores() {<br>
+     *     return scoresJson ? JsonUtil.json2Collection(scoresJson, List, Map) : null<br>
+     *}
+     */
+    List<String> getJsonFields() { return [] }
+
     T save(Map map) {
         log.debug("save map: {}", map)
+        jsonFields.each { field ->
+            def value = map.get(field);
+            if (value)
+                map.put("${field}Json".toString(), JsonUtil.toJson(value))
+        }
         generalRepository.saveMap domain, map
     }
 
