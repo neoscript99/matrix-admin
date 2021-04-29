@@ -112,7 +112,7 @@ class UserService extends AbstractService<User> {
      * @return
      */
     boolean checkAccountUnique(String userId,  String account) {
-        def param = [eq: ['account', account]]
+        def param = [eq: [['account', account]]]
         if (userId)
             param.ne = [['id', userId]]
         return count(param) == 0
