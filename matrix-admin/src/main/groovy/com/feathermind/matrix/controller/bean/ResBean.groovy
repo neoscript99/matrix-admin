@@ -7,6 +7,10 @@ class ResBean {
         success = true
     }
 
+    ResBean(Boolean success) {
+        this.success = success
+    }
+
     ResBean(String code, String error) {
         success = false
         this.code = code

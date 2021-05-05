@@ -1,9 +1,9 @@
 package com.feathermind.matrix.controller
 
 import cn.hutool.http.HttpUtil
-import com.feathermind.matrix.bean.WxQrcodeCreateRes
-import com.feathermind.matrix.config.WxConfigProperties
 import com.feathermind.matrix.util.JsonUtil
+import com.feathermind.matrix.wechat.config.WxConfigProperties
+import com.feathermind.matrix.wechat.controller.WxMPController
 import groovy.util.logging.Slf4j
 import org.springframework.boot.env.YamlPropertySourceLoader
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver

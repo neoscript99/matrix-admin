@@ -13,4 +13,9 @@ public class MatrixConfigProperties {
     private String defaultRoles;
     private boolean casClientEnabled = false;
     private long tokenExpireMinutes;
+    private String kkFileViewRoot = "http://localhost:8012";
+    /**
+     * 支持内网访问
+     */
+    private String kkFileVieDownloadUrl = "http://localhost:8080/download";
 }
