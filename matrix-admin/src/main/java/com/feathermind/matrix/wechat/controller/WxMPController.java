@@ -66,7 +66,13 @@ public class WxMPController implements InitializingBean, DisposableBean {
     @PostMapping("qrcode")
     public WxQrcodeCreateRes createQrcode() {
         WxQrcodeCreateReq req = new WxQrcodeCreateReq();
-        Map urlParam = Collections.singletonMap("access_token", getAccessToken().getAccess_token());
+        WxAccessToken token = getAccessToken();
+        if (!token.isValid()) {
+            WxQrcodeCreateRes errorRes = new WxQrcodeCreateRes();
+            errorRes.setError(token.getErrmsg());
+            return errorRes;
+        }
+        Map urlParam = Collections.singletonMap("access_token", token.getAccess_token());
         //access_token拼到url中
         String url = HttpUtil.urlWithForm(wxConfigProperties.getQrcodeCreateUrl(), urlParam, StandardCharsets.UTF_8, false);
 

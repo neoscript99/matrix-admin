@@ -12,10 +12,12 @@ public class WxAccessToken {
     //获取到的凭证
     private String access_token;
     //凭证有效时间，单位：秒
-    private Integer expires_in;
+    private int expires_in;
     private LocalDateTime createTime = LocalDateTime.now();
+    private String errcode;
+    private String errmsg;
 
     public boolean isValid() {
-        return createTime.plusSeconds(expires_in).isAfter(LocalDateTime.now());
+        return errcode==null && createTime.plusSeconds(expires_in).isAfter(LocalDateTime.now());
     }
 }
