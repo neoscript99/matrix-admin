@@ -1,7 +1,6 @@
 package com.feathermind.matrix.controller
 
 import cn.hutool.core.io.FileUtil
-import cn.hutool.http.HttpUtil
 import com.feathermind.matrix.config.MatrixConfigProperties
 import com.feathermind.matrix.controller.bean.ResBean
 import com.feathermind.matrix.domain.sys.AttachmentInfo
@@ -66,26 +65,17 @@ class GormController {
     public void filePreview(@PathVariable("id") String id, HttpServletResponse res) throws IOException {
         def info = attachmentService.get(id)
         if (info) {
-            String fileUrl = "${matrixConfigProperties.kkFileVieDownloadUrl}/${info.id}?fullfilename=${info.fileId}.${FileUtil.extName(info.name)}".toString()
+            String fileUrl = "${matrixConfigProperties.fileDownloadUrl}/${info.id}?fullfilename=${info.fileId}.${FileUtil.extName(info.name)}".toString()
             String fileUrlEncode = URLEncoder.encode(Base64Utils.encodeToString(fileUrl.getBytes(StandardCharsets.UTF_8)), "UTF-8");
 
-            def url = "${matrixConfigProperties.kkFileViewRoot}/onlinePreview?url=${fileUrlEncode}"
+            def url = "${matrixConfigProperties.filePreviewRoot}/onlinePreview?url=${fileUrlEncode}"
             res.sendRedirect(url)
         }
     }
 
     @PostMapping("previewCheck")
     public ResBean previewCheck() {
-        try {
-            def url = matrixConfigProperties.kkFileViewRoot;
-            def entity = restTemplate.headForHeaders(url);
-            log.info('GormController.previewCheck: {}', entity)
-        }
-        catch (Exception  e) {
-            log.warn('文件预览服务器未启动')
-            return new ResBean(false)
-        }
-        return new ResBean(true)
+        return new ResBean(matrixConfigProperties.filePreviewEnable)
     }
 
     @PostMapping("upload")

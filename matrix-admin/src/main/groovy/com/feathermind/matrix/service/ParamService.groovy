@@ -11,15 +11,8 @@ import org.springframework.stereotype.Service
  */
 @Service
 class ParamService extends AbstractService<Param> {
-    @Value('${spring.profiles.active}')
-    String profiles
-
     String getValue(String typeCode, String code) {
         log.info("ParamService.getByTypeAndCode $typeCode $code");
         findFirst([eq: [['type.code', typeCode], ['code', code]]])?.value
-    }
-
-    String getProfiles(){
-        return profiles
     }
 }

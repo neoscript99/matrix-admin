@@ -9,7 +9,6 @@ import com.baomidou.kaptcha.exception.KaptchaTimeoutException
 import com.feathermind.matrix.util.MatrixException
 import com.feathermind.matrix.wechat.bean.WxUserInfo
 import com.feathermind.matrix.config.MatrixConfigProperties
-import com.feathermind.matrix.controller.bean.CasConfig
 import com.feathermind.matrix.controller.bean.LoginInfo
 import com.feathermind.matrix.controller.bean.ResBean
 import com.feathermind.matrix.domain.sys.User
@@ -20,7 +19,6 @@ import com.feathermind.matrix.service.UserBindService
 import com.feathermind.matrix.service.UserService
 import com.feathermind.matrix.wechat.WechatBinder
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Profile
 import org.springframework.core.env.Environment
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -193,13 +191,6 @@ class LoginController implements WechatBinder {
         new ResBean([success: true])
     }
 
-    @PostMapping("/getCasConfig")
-    CasConfig getCasConfig() {
-        return new CasConfig([clientEnabled: matrixConfigProperties.casClientEnabled,
-                              casServerRoot: casClientService.configProps?.serverUrlPrefix,
-                              defaultRoles : matrixConfigProperties.defaultRoles])
-    }
-
     String getClientIP(HttpServletRequest request) {
         def heads = ['X-Forwarded-For', 'X-Real-IP', 'Proxy-Client-IP', 'WL-Proxy-Client-IP']
         for (String h : heads) {
@@ -208,19 +199,6 @@ class LoginController implements WechatBinder {
                 return v
         }
         return request.remoteAddr
-    }
-
-
-    @PostMapping("/devLogin")
-    @Profile('dev')
-    LoginInfo devLogin(@RequestBody Map reqBody) {
-        def result = [success: false, error: "非开发环境，无法登录"]
-        if (env.activeProfiles.contains('dev')) {
-            String username = reqBody.username;
-            def user = username ? userService.findByAccount(username) : null;
-            result = user ? afterLogin(user) : [success: false, error: "$username 用户不存在"]
-        }
-        new LoginInfo(result)
     }
 
     @Override
