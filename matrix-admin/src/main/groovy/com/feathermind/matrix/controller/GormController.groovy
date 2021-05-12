@@ -65,7 +65,7 @@ class GormController {
     public void filePreview(@PathVariable("id") String id, HttpServletResponse res) throws IOException {
         def info = attachmentService.get(id)
         if (info) {
-            String fileUrl = "${matrixConfigProperties.fileDownloadUrl}/${info.id}?fullfilename=${info.fileId}.${FileUtil.extName(info.name)}".toString()
+            String fileUrl = "${matrixConfigProperties.fileDownloadRoot}/download/${info.id}?fullfilename=${info.fileId}.${FileUtil.extName(info.name)}".toString()
             String fileUrlEncode = URLEncoder.encode(Base64Utils.encodeToString(fileUrl.getBytes(StandardCharsets.UTF_8)), "UTF-8");
 
             def url = "${matrixConfigProperties.filePreviewRoot}/onlinePreview?url=${fileUrlEncode}"
@@ -75,7 +75,18 @@ class GormController {
 
     @PostMapping("previewCheck")
     public ResBean previewCheck() {
-        return new ResBean(matrixConfigProperties.filePreviewEnable)
+        try {
+            //配置项设置为true时，再检查下服务是否开启
+            if (matrixConfigProperties.filePreviewEnable) {
+                log.info('GormController.previewCheck - filePreviewRoot: {}', restTemplate.headForHeaders(matrixConfigProperties.filePreviewRoot))
+                log.info('GormController.previewCheck - fileDownloadUrl: {}', restTemplate.headForHeaders(matrixConfigProperties.fileDownloadRoot))
+                return new ResBean(true)
+            }
+        }
+        catch (Exception e) {
+            log.warn('文件预览服务器未启动或下载链接未穿透：{}', e.message)
+        }
+        return new ResBean(false)
     }
 
     @PostMapping("upload")
