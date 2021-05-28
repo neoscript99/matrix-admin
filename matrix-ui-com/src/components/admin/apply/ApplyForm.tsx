@@ -18,7 +18,7 @@ export interface ApplyFormProps {
   apply: ApplyEntity;
   applyDictType: string;
   adminServices: AdminServices;
-  ownerRender: React.ReactNode;
+  ownerRender?: React.ReactNode;
   onSubmit: (res: ApplyFormResult) => void;
   onCancel: () => void;
   actions: ApplyFormAction[];

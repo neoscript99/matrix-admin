@@ -42,7 +42,7 @@ export class DictView extends React.Component<DictViewProps> {
       title,
       dataIndex,
       render: (text) => <DictView dictService={dictService} dictType={typeId} dictCode={text} multipleMode={true} />,
-      renderExport: (text) => {
+      renderText: (text) => {
         if (!text) return null;
         const codes = text.split(',');
         return codes.map((code) => dictService.getName(typeId, code)).join(',');

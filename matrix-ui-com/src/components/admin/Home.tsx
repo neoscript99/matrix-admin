@@ -1,4 +1,4 @@
-import React, { ComponentType, ReactNode, useCallback, useMemo, useState } from 'react';
+import React, { ComponentType, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Layout } from 'antd';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
@@ -9,52 +9,30 @@ import { useServiceStore } from '../../utils';
 const { Header, Content, Footer, Sider } = Layout;
 
 export interface HomeProps {
-  serverLogout: boolean;
   serverRoot: string;
   adminServices: AdminServices;
   logoRender: ReactNode;
   footRender: ReactNode;
-  PageSwitch: ComponentType<PageSwitchProps>;
   profilePath?: string;
   headerCss?: React.CSSProperties;
   contentCss?: React.CSSProperties;
   siderCss?: React.CSSProperties;
 }
-
-export interface PageSwitchProps {
-  pathPrefix: string;
-}
-
-export function Home(props: HomeProps) {
-  const { serverLogout, serverRoot, PageSwitch, adminServices } = props;
+export const Home: React.FC<HomeProps> = (props) => {
+  const { adminServices } = props;
   const { logoRender, footRender, headerCss, contentCss, siderCss, profilePath } = props;
   const { loginService, menuService, paramService } = adminServices;
   const history = useHistory();
   const location = useLocation();
-  const match = useRouteMatch();
   const [collapsed, setCollapsed] = useState(false);
 
-  const pathPrefix = useMemo(() => match.path, [match]);
-  const onMenuClick = useCallback((menu: MenuEntity) => history.push(`${pathPrefix}${menu.app}`), [
+  const onMenuClick = useCallback((menu: MenuEntity) => history.push(`/${menu.app}`), [history]);
+
+  const goProfile = useCallback(() => location.pathname !== profilePath && history.push(profilePath), [
+    profilePath,
+    location.pathname,
     history,
-    pathPrefix,
   ]);
-
-  const logout = useCallback(() => {
-    loginService.logout();
-    if (serverLogout) window.location.href = `${serverRoot}/logout`;
-    else history.push('/');
-  }, [serverLogout, loginService]);
-
-  const goProfile = useCallback(() => {
-    const pathname = profilePath || '/Profile';
-    if (location.pathname !== pathname) {
-      console.debug('Home.goProfile: ', location.pathname, pathname);
-      history.push(pathname);
-      return true;
-    }
-    return false;
-  }, [profilePath, location, history]);
   const menuStore = useServiceStore(menuService);
   const loginStore = useServiceStore(loginService);
   const paramStore = useServiceStore(paramService);
@@ -62,10 +40,11 @@ export function Home(props: HomeProps) {
     () => loginStore.forcePasswordChange && paramService.getByCode('ChangeInitPassword')?.value === 'true',
     [loginStore, paramStore],
   );
+  useEffect(() => {
+    needChangePassword && goProfile();
+  }, [needChangePassword, location.pathname]);
   const { loginInfo } = loginStore;
-  if (needChangePassword && goProfile()) {
-    return null;
-  }
+  const logout = useCallback(() => loginService.logout(history), [history]);
   const buttonCss: React.CSSProperties = { padding: '3px' };
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -121,11 +100,15 @@ export function Home(props: HomeProps) {
               ...contentCss,
             }}
           >
-            <PageSwitch pathPrefix={pathPrefix} />
+            {props.children}
           </Content>
           <Footer style={{ textAlign: 'center' }}>{footRender}</Footer>
         </Layout>
       </Layout>
     </Layout>
   );
-}
+};
+
+Home.defaultProps = {
+  profilePath: '/Profile',
+};

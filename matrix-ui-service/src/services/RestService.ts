@@ -11,5 +11,8 @@ export abstract class RestService {
     return this.restClient.post(uri, data);
   }
 
+  get rootUrl() {
+    return this.restClient.fetchOptions.rootUrl;
+  }
   abstract getApiUri(operator: string): string;
 }

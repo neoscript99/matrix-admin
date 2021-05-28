@@ -37,6 +37,9 @@ export class ServiceUtil {
 
   /**
    * 将字符串嵌套排序字段转化为gorm可处理的格式
+   * 注意：如果多个排序字段包含嵌套属性，criteria应该先占好位置，嵌套属性可以为空
+   *  如：const orders: CriteriaOrder[] = [['plan.planBeginDay', 'desc'], 'plan.id', 'dept.seq', 'initialCode']
+   *  因按照plan -> dept顺序先初始化：const criteria: Criteria = {plan: {}, dept: {}};
    * @param param 传入是为了在原参数上做增量修改，如:
    *  processOrderParam({user:{eq:[['name','admin']]}},[['user.age','desc']])=>{user:{eq:[['name','admin']],order:[['age','desc']]}}
    * @param orders

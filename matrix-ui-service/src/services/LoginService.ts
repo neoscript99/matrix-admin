@@ -1,4 +1,4 @@
-import { DeptEntity, ResBean, StoreService, UserEntity } from './index';
+import { ResBean, StoreService, UserEntity } from './index';
 import { SpringBootClient, SpringErrorHandler } from '../rest';
 import { StringUtil, MessageUtil, StorageUtil, ObjectUtil } from '../utils';
 
@@ -17,15 +17,8 @@ export interface LoginInfo {
   kaptchaFree?: boolean;
 }
 
-export interface CasConfig {
-  clientEnabled: boolean;
-  casServerRoot?: string;
-  defaultRoles?: string;
-}
-
 export class LoginStore {
   //clientEnabled默认为true，不显示登录框，后台查询如果为false，再显示出来
-  casConfig: CasConfig = { clientEnabled: true };
   loginInfo: LoginInfo = { success: false };
   forcePasswordChange = false;
 }
@@ -66,8 +59,6 @@ export class LoginService extends StoreService<LoginStore> {
   constructor(restClient: SpringBootClient) {
     super(restClient);
     restClient.registerErrorHandler(this.springErrorHandler);
-    //cas默认为true，初始化时去获取服务端的配置信息，如果为false，再显示登录界面
-    this.getCasConfig();
   }
 
   springErrorHandler: SpringErrorHandler = (e) => {
@@ -84,6 +75,7 @@ export class LoginService extends StoreService<LoginStore> {
   kaptchaFree(username: string): Promise<ResBean> {
     return this.postApi('kaptchaFree', { username });
   }
+
   login(loginEntity: LoginEntity): Promise<LoginInfo> {
     return this.loginHash({ ...loginEntity, passwordHash: StringUtil.sha256(loginEntity.password) });
   }
@@ -135,25 +127,13 @@ export class LoginService extends StoreService<LoginStore> {
     });
   }
 
-  logout() {
+  logout = (history?: any) => {
     this.clearLoginInfoLocal();
     //丢弃Token
     ObjectUtil.set(this.restClient.fetchOptions, 'reqInit.headers.Authorization', `Bearer anonymous`);
     this.postApi('logout');
-  }
-
-  getCasConfig(): Promise<CasConfig> {
-    return this.postApi('getCasConfig').then((data) => {
-      this.store.casConfig = data;
-      this.fireStoreChange();
-      return data;
-    });
-  }
-
-  devLogin(account: string, token: string) {
-    const dept: DeptEntity = { name: 'not important', seq: 1, enabled: true };
-    this.doAfterLogin({ user: { account, dept }, account, token, success: true, roles: ['Public'] });
-  }
+    history?.push && history.push('/');
+  };
 
   doAfterLogin(loginInfo: LoginInfo) {
     if (loginInfo.success) {

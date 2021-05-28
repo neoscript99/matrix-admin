@@ -3,7 +3,8 @@ import { SpringBootClient } from '../rest';
 
 export interface WechatStore {
   qrcodeInfo?: QrcodeRes;
-  qrValid?: boolean;
+  //检查次数限制
+  checkTimesUp?: boolean;
 }
 
 export interface QrcodeRes {
@@ -19,6 +20,7 @@ export interface QrcodeRes {
   scene_str: string;
   //LocalDateTime,默认格式字符串
   createTime: string;
+  error: string;
 }
 export class WechatService extends StoreService<WechatStore> {
   store: WechatStore = {};
@@ -45,7 +47,7 @@ export class WechatService extends StoreService<WechatStore> {
       return this.postApi('qrcode').then((res) => {
         this.store.qrcodeInfo = res;
         this.checkTimes = checkTimes;
-        this.store.qrValid = true;
+        this.store.checkTimesUp = false;
         this.startBindCheck();
         this.fireStoreChange();
         return res;
@@ -56,7 +58,7 @@ export class WechatService extends StoreService<WechatStore> {
    * 第二步：启动轮询任务
    */
   startBindCheck() {
-    this.stopBindCheck();
+    if (this.timer) clearInterval(this.timer);
     this.timer = setInterval(this.runBindCheck, this.interval);
   }
 
@@ -66,16 +68,15 @@ export class WechatService extends StoreService<WechatStore> {
    * 用闭包，不用bind this
    */
   runBindCheck = () => {
-    const scene_str = this.store?.qrcodeInfo.scene_str;
+    const { scene_str, error } = this.store.qrcodeInfo;
     if (scene_str && this.checkTimes > 0)
       this.postApi('checkBind', { scene_str }).then((res: LoginInfo) => {
         res.success && this.loginService.doAfterLogin(res);
       });
+    else console.log('WechatService.runBindCheck: ', this.checkTimes, error);
     this.checkTimes--;
     if (this.checkTimes === 0) {
-      this.store.qrValid = false;
       this.stopBindCheck();
-      this.fireStoreChange();
     }
   };
 
@@ -83,7 +84,9 @@ export class WechatService extends StoreService<WechatStore> {
    * 第四步：停止轮询
    */
   stopBindCheck() {
+    this.store.checkTimesUp = true;
     if (this.timer) clearInterval(this.timer);
+    this.fireStoreChange();
   }
 
   /**

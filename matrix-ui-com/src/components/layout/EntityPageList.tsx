@@ -41,7 +41,7 @@ export abstract class EntityPageList<
     const { criteria } = this.getQueryParam();
     //用list方法，不改变store中的变量
     this.domainService.list({ criteria }).then((res) => {
-      this.setState({ exportList: res.results, showExportPop: true });
+      this.setState({ exportList: res.results });
     });
   }
 }

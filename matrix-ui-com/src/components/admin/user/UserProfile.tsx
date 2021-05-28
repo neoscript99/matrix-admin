@@ -51,7 +51,7 @@ interface ProfileFormProps {
 export function ProfileFrom(props: ProfileFormProps) {
   const { onSave, inputItem } = props;
   const [firstPassword, setFirstPassword] = useState<string>();
-  //todo 个人设置接口应该单独开发，防止恶意修改“帐号”等重要信息
+  //个人设置接口单独开发，防止恶意修改“帐号”等重要信息
   const handleSubmit = useCallback(
     (saveItem) => {
       if (saveItem.showPassword) {

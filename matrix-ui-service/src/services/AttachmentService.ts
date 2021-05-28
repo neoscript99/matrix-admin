@@ -14,15 +14,20 @@ export interface AttachmentEntity extends Entity {
 
 export class AttachmentService extends DomainService {
   maxSizeMB = 20;
+  previewEnable = false;
   constructor(restClient: AbstractClient) {
     super({ domain: 'attachment', storeClass: DomainStore, restClient });
     this.getMaxSizeMB().then((mb) => (this.maxSizeMB = mb));
+    this.post(`/previewCheck`).then((res) => (this.previewEnable = res.success));
   }
   get uploadUrl() {
-    return `${this.restClient.fetchOptions.rootUrl}/upload`;
+    return `${this.rootUrl}/upload`;
   }
   get downloadUrl() {
-    return `${this.restClient.fetchOptions.rootUrl}/download`;
+    return `${this.rootUrl}/download`;
+  }
+  get previewUrl() {
+    return this.previewEnable && `${this.rootUrl}/preview`;
   }
   getMaxSizeMB(): Promise<number> {
     return this.postApi('getMaxSizeMB');

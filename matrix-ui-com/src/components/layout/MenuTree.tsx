@@ -28,7 +28,7 @@ export class MenuTree extends Component<P> {
 function getTree(menuNode: MenuNode, clickHandle: MenuClickHandler) {
   return menuNode.menu.app ? (
     <Menu.Item key={menuNode.menu.id} onClick={clickHandle.bind(null, menuNode.menu)}>
-      <Icon type={menuNode.menu.icon || 'file'} />
+      <Icon type={menuNode.menu.icon} />
       <span>{menuNode.menu.label}</span>
     </Menu.Item>
   ) : (
@@ -36,7 +36,7 @@ function getTree(menuNode: MenuNode, clickHandle: MenuClickHandler) {
       key={menuNode.menu.id}
       title={
         <span>
-          <Icon type={menuNode.menu.icon || 'folder'} />
+          <Icon type={menuNode.menu.icon} />
           <span>{menuNode.menu.label}</span>
         </span>
       }

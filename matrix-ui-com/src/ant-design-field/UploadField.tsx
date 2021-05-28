@@ -1,6 +1,6 @@
 import React from 'react';
 import { UploadOutlined } from '@ant-design/icons';
-import { Upload, Button, message } from 'antd';
+import { Upload, Button, message, Modal } from 'antd';
 import { FieldProps } from './FieldProps';
 import { AbstractField } from './AbstractField';
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/lib/upload';
@@ -54,6 +54,7 @@ export interface UploadWrapProps extends UploadProps {
 }
 interface UploadWrapState {
   fileList?: Array<UploadFile>;
+  previewFile?: UploadFile;
 }
 export class UploadWrap extends React.Component<UploadWrapProps, UploadWrapState> {
   static defaultProps = { valueType: 'array', maxSizeMB: 20, maxNumber: 10 };
@@ -84,13 +85,15 @@ export class UploadWrap extends React.Component<UploadWrapProps, UploadWrapState
     } else attList = maxNumber === 1 ? [value] : value;
     //服务端domain转换为文件列表
     this.setState({
-      fileList: attList.map((res) => ({
-        uid: res.id,
-        name: res.name,
-        status: 'done',
-        response: res,
-        url: `${attachmentService.downloadUrl}/${res.id}`,
-      })),
+      fileList: attList
+        .filter((v) => !!v)
+        .map((res) => ({
+          uid: res.id,
+          name: res.name,
+          status: 'done',
+          response: res,
+          url: `${attachmentService.downloadUrl}/${res.id}`,
+        })),
     });
   }
 
@@ -102,7 +105,10 @@ export class UploadWrap extends React.Component<UploadWrapProps, UploadWrapState
     console.debug('UploadWrap.handleChange: ', info);
     //去除beforeUpload校验不通过的附件，目前观察status为空
     const fileList = info.fileList.filter((file) => {
-      if (file.response) file.url = `${attachmentService.downloadUrl}/${file.response.id}`;
+      if (file.response) {
+        file.uid = file.response.id;
+        file.url = `${attachmentService.downloadUrl}/${file.response.id}`;
+      }
       return !!file.status;
     });
     this.setState({ fileList });
@@ -133,6 +139,13 @@ export class UploadWrap extends React.Component<UploadWrapProps, UploadWrapState
     }
     return true;
   }
+  handlePreview = (previewFile: UploadFile) => {
+    const { previewUrl, downloadUrl } = this.props.attachmentService;
+    const { uid, name } = previewFile;
+    if (previewUrl) window.open(`${previewUrl}/${previewFile.uid}`);
+    else if (name.endsWith('.jpg') || name.endsWith('.png')) this.setState({ previewFile });
+    else window.open(`${downloadUrl}/${previewFile.uid}`);
+  };
   render() {
     const { disabled, maxNumber, attachmentService, showUploadList, ...uploadProps } = this.props;
 
@@ -140,20 +153,32 @@ export class UploadWrap extends React.Component<UploadWrapProps, UploadWrapState
     let listSwitch: boolean | ShowUploadListInterface = { showRemoveIcon: !disabled };
     if (isObject(showUploadList)) listSwitch = { ...(showUploadList as ShowUploadListInterface), ...listSwitch };
     else if (showUploadList === false) listSwitch = false;
+    const previewFile = this.state?.previewFile;
     return (
-      <Upload
-        fileList={this.state?.fileList}
-        action={attachmentService.uploadUrl}
-        //服务端接收的报文中，file是其中一个属性，所以必须传入其它参数组成对象，但后台目前没用
-        data={({ uid, name, lastModified, size, type }) => ({ uid, name, lastModified, size, type })}
-        showUploadList={listSwitch}
-        onRemove={this.handleRemove.bind(this)}
-        {...uploadProps}
-        onChange={this.handleChange.bind(this)}
-        beforeUpload={this.beforeUpload.bind(this)}
-      >
-        {!disabled && underLimit && <Button icon={<UploadOutlined />}>选择文件</Button>}
-      </Upload>
+      <>
+        <Upload
+          fileList={this.state?.fileList}
+          action={attachmentService.uploadUrl}
+          //服务端接收的报文中，file是其中一个属性，所以必须传入其它参数组成对象，但后台目前没用
+          data={({ uid, name, lastModified, size, type }) => ({ uid, name, lastModified, size, type })}
+          showUploadList={listSwitch}
+          onRemove={this.handleRemove.bind(this)}
+          onPreview={this.handlePreview}
+          {...uploadProps}
+          onChange={this.handleChange.bind(this)}
+          beforeUpload={this.beforeUpload.bind(this)}
+        >
+          {!disabled && underLimit && <UploadButton listType={uploadProps.listType} />}
+        </Upload>
+        {previewFile && (
+          <Modal visible title={previewFile.name} footer={null} onCancel={() => this.setState({ previewFile: null })}>
+            <img style={{ width: '100%' }} src={previewFile.url} />
+          </Modal>
+        )}
+      </>
     );
   }
+}
+function UploadButton({ listType }: Pick<UploadProps, 'listType'>) {
+  return listType === 'picture-card' ? <span>+ 上传</span> : <Button icon={<UploadOutlined />}>选择文件</Button>;
 }

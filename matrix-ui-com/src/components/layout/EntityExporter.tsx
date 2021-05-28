@@ -1,58 +1,77 @@
 import React from 'react';
-import ReactExport from 'react-data-export';
-import { EntityColumnProps } from './EntityList';
-import { DownloadOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
-import { ObjectUtil } from 'matrix-ui-service';
+import { CloseOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Button, Modal, Result, Space } from 'antd';
+import { NamePath, ObjectUtil } from 'matrix-ui-service';
+import { CSVLink } from 'react-csv';
+import { ModalProps } from 'antd/es';
 
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+/**
+ * 由于ant和pro组件的兼容性问题，没有指定强制类型
+ */
+export interface EntityExporterColumn {
+  title?: any;
+  dataIndex?: NamePath;
+  //antd可以用render
+  render?: (text: any, record: any, index: number, four?: any, five?: any) => any;
+  //antd-pro只能用renderText
+  renderText?: (text: any, record: any, index: number, four?: any) => any;
+}
 export interface EntityExporterProps {
   dataSource?: any[];
-  columns: EntityColumnProps[];
-  name?: string;
-  actionText?: string;
-  filename?: string;
+  columns: EntityExporterColumn[];
+  filename: string;
 }
 
 /**
+ * react-data-export必须依赖xlsx导致编译文件太大，2021-05-14 改用 react-csv
  * react-data-export依赖xlsx，下级项目自行安装
  * react-data-export/types/index.d.ts类型有问题，以文档为准
  * https://www.npmjs.com/package/react-data-export
  */
-export class EntityExporter extends React.Component<EntityExporterProps> {
-  static defaultProps = { actionText: '保存', name: '列表' };
-
-  render() {
-    const { dataSource, columns, name, actionText, filename } = this.props;
-    const element = (
-      <Button icon={<DownloadOutlined />} type="primary">
-        {actionText}
+export const EntityExporter: React.FC<EntityExporterProps> = (props) => {
+  const { dataSource, columns, filename } = props;
+  const headers = columns.map((col, idx) => ({
+    label: col.title || idx,
+    key: col.title || idx,
+  }));
+  if (!dataSource) return null;
+  const data = dataSource.map((item, itemIdx) => {
+    const row: Record<string, string> = {};
+    columns.forEach((col, idx) => {
+      let value = col.dataIndex && ObjectUtil.get(item, col.dataIndex);
+      if (col.renderText) value = col.renderText(value, item, itemIdx);
+      else if (col.render) value = col.render(value, item, itemIdx);
+      row[col.title || idx] = value || '';
+    });
+    return row;
+  });
+  return (
+    <CSVLink data={data} headers={headers} filename={`${filename}.csv`}>
+      <Button icon={<DownloadOutlined />} type="primary" disabled={data.length === 0}>
+        保存
       </Button>
-    );
-    /**
-     * https://github.com/securedeveloper/react-data-export/blob/HEAD/examples/styled_excel_sheet.md
-     */
-    const bs = { style: 'thin', color: { rgb: 'black' } };
-    const excelStyle = { border: { top: bs, bottom: bs, left: bs, right: bs } };
-    const dataSet = {
-      columns: columns.map((col) => ({
-        title: col.title,
-        width: { wch: col.cellWidth || 12 },
-      })),
-      data: (dataSource || []).map((item, itemIdx) =>
-        columns.map((col) => {
-          let value = col.dataIndex && ObjectUtil.get(item, col.dataIndex);
-          if (col.renderExport) value = col.renderExport(value, item, itemIdx);
-          else if (col.render) value = col.render(value, item, itemIdx);
-          return { value: value || '', style: { ...excelStyle, ...col.cellStyle } };
-        }),
-      ),
-    };
-    return (
-      <ExcelFile element={element} filename={filename || `${name}导出`}>
-        <ExcelSheet dataSet={[dataSet]} name={name} />
-      </ExcelFile>
-    );
-  }
-}
+    </CSVLink>
+  );
+};
+
+export type EntityExporterPopProps = Pick<ModalProps, 'onCancel'> & EntityExporterProps;
+export const EntityExporterPop: React.FC<EntityExporterPopProps> = (props) => {
+  const { onCancel, ...rest } = props;
+  return (
+    <Modal title="导出完成" visible={!!rest.dataSource} footer={null} maskClosable={false} onCancel={onCancel}>
+      <Result
+        status="success"
+        title="导出完成，请下载保存!"
+        subTitle={rest.dataSource && `记录数：${rest.dataSource.length}`}
+        extra={
+          <Space>
+            <EntityExporter {...rest} />
+            <Button icon={<CloseOutlined />} onClick={onCancel}>
+              关闭
+            </Button>
+          </Space>
+        }
+      />
+    </Modal>
+  );
+};

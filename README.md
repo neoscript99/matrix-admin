@@ -6,6 +6,10 @@
 
 ## 更新日志
 
+- matrix-admin@1.6.8
+  - 支持json字段处理
+  - 支持文件预览功能
+  - 微信登录优化
 - matrix-admin@1.6.7
   - 增加MatrixConfigProperties，配置改为matrix.default-roles, matrix.cas-client-enabled, matrix.token-expire-minutes
   - 微信登录优化

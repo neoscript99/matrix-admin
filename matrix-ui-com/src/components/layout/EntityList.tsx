@@ -10,7 +10,7 @@ import { SearchForm, SearchFormProps } from './SearchForm';
 import { DomainService, Entity, ListOptions, ListResult, LangUtil } from 'matrix-ui-service';
 import { CheckboxField, InputField, SelectField } from '../../ant-design-field';
 import { RouteChildrenProps } from 'react-router';
-import { EntityExporter, EntityExporterProps } from './EntityExporter';
+import { EntityExporterPop, EntityExporterProps } from './EntityExporter';
 import { TablePaginationConfig } from 'antd/lib/table/interface';
 import { EntityTable } from './EntityTable';
 
@@ -36,7 +36,6 @@ export interface EntityListState {
   formProps?: EntityFormProps;
   searchParam?: any;
   exportList?: Entity[];
-  showExportPop?: boolean;
   tableLoading?: boolean;
 }
 
@@ -47,7 +46,7 @@ export interface EntityListTableProps extends TableProps<Entity> {
 export interface EntityColumnProps<P = Entity> extends ColumnProps<P> {
   fieldType?: typeof InputField | typeof SelectField | typeof CheckboxField;
   valueTransfer?: (value: any) => any;
-  renderExport?: (text: any, record: P, index?: number) => React.ReactNode;
+  renderText?: (text: any, record?: P, index?: number) => string;
   //导出到excel的宽度（英文字符数）
   cellWidth?: number;
   /**
@@ -406,36 +405,23 @@ export abstract class EntityList<
   }
 
   handleExportSelected() {
-    this.setState({ exportList: this.getSelectItems(), showExportPop: true });
+    this.setState({ exportList: this.getSelectItems() });
   }
 
   handleExportAll() {
-    this.setState({ exportList: this.dataList, showExportPop: true });
+    this.setState({ exportList: this.dataList });
   }
 
-  exportRender(exProps?: Partial<EntityExporterProps>): React.ReactNode {
-    const { exportList } = this.state;
-    return <EntityExporter dataSource={exportList} columns={this.exportColumns} name={this.props.name} {...exProps} />;
+  getExportProps(): EntityExporterProps {
+    return {
+      dataSource: this.state.exportList,
+      columns: this.exportColumns,
+      filename: `${this.props.name}导出`,
+    };
   }
   getExportPop() {
-    const { exportList, showExportPop } = this.state;
-    const cancel = () => this.setState({ exportList: undefined, showExportPop: false });
-    return (
-      <Modal title="导出完成" visible={showExportPop} footer={null} maskClosable={false} onCancel={cancel}>
-        <Result
-          status="success"
-          title="导出完成，请下载保存!"
-          subTitle={exportList && `记录数：${exportList.length}`}
-          extra={
-            <div>
-              {this.exportRender()}{' '}
-              <Button icon={<CloseOutlined />} onClick={cancel}>
-                关闭
-              </Button>
-            </div>
-          }
-        />
-      </Modal>
-    );
+    const { exportList } = this.state;
+    const cancel = () => this.setState({ exportList: undefined });
+    return <EntityExporterPop onCancel={cancel} {...this.getExportProps()} />;
   }
 }

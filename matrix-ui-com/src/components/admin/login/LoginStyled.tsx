@@ -26,6 +26,9 @@ export const LoginBox = styled.div`
 `;
 
 export const LoginBoxItem = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   width: 25em;
   background-color: #fff;
   padding: 2em;

@@ -40,8 +40,8 @@ export class DomainService<
 
   findFirst(criteria?: Criteria) {
     const pageInfo = { pageSize: 1, currentPage: 1 };
-    return this.list({ criteria, pageInfo }).then(
-      (data) => data.totalCount > 0 && this.changeCurrentItem(data.results[0]),
+    return this.list({ criteria, pageInfo }).then((data) =>
+      this.changeCurrentItem(data.totalCount > 0 ? data.results[0] : ({} as T)),
     );
   }
 
@@ -94,7 +94,7 @@ export class DomainService<
    * @param {{criteria?: Criteria; orders?: CriteriaOrder[]}} rest
    * @returns {Promise<ListResult>}
    */
-  listPage({ isAppend = false, pageInfo, ...rest }: ListOptions): Promise<ListResult> {
+  listPage({ isAppend = false, pageInfo, ...rest }: ListOptions): Promise<ListResult<T>> {
     //查询第一页的时候，清空allList
     if (pageInfo) this.store.pageInfo = pageInfo;
     if (this.store.pageInfo.currentPage === 1) this.store.allList = [];
@@ -112,7 +112,7 @@ export class DomainService<
     });
   }
 
-  listNextPage(param: ListOptions): string | Promise<ListResult> {
+  listNextPage(param: ListOptions): string | Promise<ListResult<T>> {
     if (this.store.pageInfo.isLastPage) return '已经到底了';
     else {
       this.store.pageInfo.currentPage++;
@@ -120,7 +120,7 @@ export class DomainService<
     }
   }
 
-  listFirstPage(param: ListOptions): Promise<ListResult> {
+  listFirstPage(param: ListOptions): Promise<ListResult<T>> {
     this.store.pageInfo.currentPage = 1;
     return this.listPage(param);
   }

@@ -1,5 +1,9 @@
 ## 更新记录
 
+matrix-ui-com@1.0.2:
+- 导出改为CSV，xlsx依赖导致js太大
+- Login改造为React Hook
+
 matrix-ui-com@1.0.1:
 - Home和Login改造，通过React Hook管理状态，不再依赖React Route
 

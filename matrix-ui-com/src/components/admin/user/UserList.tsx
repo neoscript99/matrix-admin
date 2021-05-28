@@ -30,6 +30,7 @@ export class UserList<
       { title: '所属机构', dataIndex: ['dept', 'name'] },
       DictView.dictColumn(dictService, '性别', 'sexCode', 'pub_sex'),
       { title: '手机号码', dataIndex: 'cellPhone' },
+      commonColumns.enabled,
       ...this.getExtraColumns(),
       commonColumns.lastUpdated,
       { title: '操作', key: 'operator', render: this.opCol.bind(this) },
@@ -39,7 +40,7 @@ export class UserList<
   }
 
   getExtraColumns(): EntityColumnProps[] {
-    return [commonColumns.enabled, commonColumns.editable];
+    return [commonColumns.editable];
   }
   opCol(text: string, record: any) {
     return (

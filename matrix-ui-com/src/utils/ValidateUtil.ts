@@ -34,6 +34,12 @@ export const commonRules: Readonly<{ [key: string]: Rule }> = {
     },
   },
   idCardSimple: { pattern: /^\d{15,17}[\dX]$/, message: '身份证格式错误' },
+  dateOrString: {
+    required: true,
+    validator: async (rule: Rule, value: any) => {
+      if (!value) throw new Error('不能为空');
+    },
+  },
 };
 
 export const genRules = {

@@ -1,3 +1,4 @@
 export * from './Login';
 export * from './LoginStyled';
-export * from './WechatLogin';
+export * from './LoginWechat';
+export * from './LoginForm';
