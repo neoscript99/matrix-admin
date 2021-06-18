@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil
 import com.feathermind.matrix.config.MatrixConfigProperties
 import com.feathermind.matrix.controller.bean.ResBean
 import com.feathermind.matrix.domain.sys.AttachmentInfo
+import com.feathermind.matrix.security.SecureController
 import com.feathermind.matrix.service.AttachmentService
 import com.feathermind.matrix.service.CasClientService
 import groovy.util.logging.Slf4j
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeUnit
 
 @RestController
 @Slf4j
-class GormController {
+class GormController extends SecureController{
     @Autowired
     MatrixConfigProperties matrixConfigProperties
     @Autowired
@@ -43,6 +44,7 @@ class GormController {
 
     @GetMapping("download/{id}")
     public ResponseEntity<byte[]> getAttach(@PathVariable("id") String id) throws IOException {
+        authorize('FileDownload')
         def info = attachmentService.get(id)
         if (info) {
             def file = attachmentService.getFile(info.fileId)

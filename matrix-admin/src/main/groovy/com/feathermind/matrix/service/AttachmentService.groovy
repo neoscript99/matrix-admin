@@ -1,6 +1,7 @@
 package com.feathermind.matrix.service
 
 import cn.hutool.core.date.DateUtil
+import cn.hutool.core.util.ZipUtil
 import com.feathermind.matrix.domain.sys.AttachmentFile
 import com.feathermind.matrix.domain.sys.AttachmentInfo
 import com.feathermind.matrix.util.EncoderUtil
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.support.ResourcePatternResolver
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -56,6 +56,17 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
 
     AttachmentFile getFile(String fileId) {
         generalRepository.get(AttachmentFile, fileId);
+    }
+
+    File getZipFile(List<AttachmentInfo> infoList, String zipName) {
+        String[] paths = new String[infoList.size()];
+        InputStream[] ins = new InputStream[infoList.size()];
+        infoList.eachWithIndex { info, idx ->
+            def file = generalRepository.get(AttachmentFile, info.fileId);
+            paths[idx] = "${idx}.$info.name".toString()
+            ins[idx] = new ByteArrayInputStream(file.data)
+        }
+        return ZipUtil.zip("zipTemp/${zipName}.zip", paths, ins)
     }
 
     InfoAndFile getInfoAndFile(String ownerId, String fileId) {

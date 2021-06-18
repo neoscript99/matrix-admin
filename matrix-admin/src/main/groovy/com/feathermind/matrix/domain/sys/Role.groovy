@@ -22,11 +22,11 @@ class Role implements AutoTime {
             editable: false, description: '系统参数管理.', authorities: 'SysAdmin')
 
     static final Role NORMAL_USERS = new Role(roleName: '普通用户', roleCode: 'NormalUsers',
-            editable: false, description: '普通用户.', authorities: 'UserWriteOne')
+            editable: false, description: '普通用户.', authorities: 'UserWriteOne,FileDownload')
 
-    //公开用户，可支持匿名用户查看网站通知等开放功能
+    //公开用户，可支持匿名用户查看网站通知、下载附件等开放功能
     static final Role PUBLIC = new Role(roleName: '默认角色', roleCode: 'Public',
-            editable: false, description: '默认角色可开放给CAS登录用户和匿名用户.')
+            editable: false, description: '默认角色可开放给CAS登录用户和匿名用户.', authorities: 'FileDownload')
 
     String id
     String roleName
