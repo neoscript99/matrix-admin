@@ -1,6 +1,7 @@
 package com.feathermind.matrix.service
 
 import cn.hutool.core.date.DateUtil
+import cn.hutool.core.io.FileUtil
 import cn.hutool.core.util.ZipUtil
 import com.feathermind.matrix.domain.sys.AttachmentFile
 import com.feathermind.matrix.domain.sys.AttachmentInfo
@@ -58,15 +59,24 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
         generalRepository.get(AttachmentFile, fileId);
     }
 
-    File getZipFile(List<AttachmentInfo> infoList, String zipName) {
+    File getZipFile(List<AttachmentInfo> infoList) {
+        //根据包含的所有文件信息，创建唯一性的zip
+        //由于要保存所有文件的排序信息，如果顺序不同需要重新打包
+        String zipName = EncoderUtil.sha256(String.join(',', infoList.collect { it.id }))
+        //保存到当前目录
+        File file = FileUtil.file("${System.getProperty("user.dir")}/zipTemp/${zipName}.zip")
+        if (FileUtil.exist(file)) {
+            log.info('文件已存在，直接返回：{}', zipName)
+            return file
+        }
         String[] paths = new String[infoList.size()];
         InputStream[] ins = new InputStream[infoList.size()];
         infoList.eachWithIndex { info, idx ->
-            def file = generalRepository.get(AttachmentFile, info.fileId);
-            paths[idx] = "${idx}.$info.name".toString()
-            ins[idx] = new ByteArrayInputStream(file.data)
+            def infoFile = generalRepository.get(AttachmentFile, info.fileId);
+            paths[idx] = "${idx + 1}.$info.name".toString()
+            ins[idx] = new ByteArrayInputStream(infoFile.data)
         }
-        return ZipUtil.zip("zipTemp/${zipName}.zip", paths, ins)
+        return ZipUtil.zip(file, paths, ins)
     }
 
     InfoAndFile getInfoAndFile(String ownerId, String fileId) {
