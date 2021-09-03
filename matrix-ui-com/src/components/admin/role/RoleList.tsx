@@ -15,6 +15,10 @@ const columns: EntityColumnProps[] = [
 ];
 
 export class RoleList extends EntityList<AdminPageProps> {
+  static defaultProps: Partial<AdminPageProps> = {
+    name: '角色',
+    operatorVisible: {},
+  };
   constructor(props: AdminPageProps) {
     super(props);
   }

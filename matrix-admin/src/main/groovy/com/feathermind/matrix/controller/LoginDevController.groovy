@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/api/login")
-@ConditionalOnProperty(prefix = "matrix", name = "dev-login", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "matrix", name = "dev-login", havingValue = "true", matchIfMissing = false)
 class LoginDevController {
     @Autowired
     UserService userService

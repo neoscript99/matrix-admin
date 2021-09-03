@@ -1,25 +1,46 @@
-import { Criteria, CriteriaOrder, DomainService, PageInfo, SomeFetch } from '../services';
+import { Criteria, CriteriaOrder, PageInfo, SomeFetch, StoreService } from '../services';
 
-/**
- * Taro在小程序中支持cookie
- * https://www.jianshu.com/p/2663ac10d471
- */
-declare const Taro: { request: (any) => Promise<any> };
-export const taroFetch: SomeFetch = (url: RequestInfo, { body: data, ...fetchOptions }: any) => {
-  return Taro.request({
-    url,
-    data,
-    header: fetchOptions.headers,
-    dataType: 'txt',
-    responseType: 'text',
-    ...fetchOptions,
-  }).then((res: any) => {
-    res.ok = res.statusCode < 400;
-    res.text = () => Promise.resolve(res.data);
-    return res;
-  });
-};
+interface ReactType {
+  useState: <S>(initialState: S) => [S, (prevState: S) => S];
+  useEffect: (effect: () => any, deps?: ReadonlyArray<any>) => void;
+}
 export class ServiceUtil {
+  /**
+   * 通过本方法和react解绑
+   */
+  static initReactUseStore(react: ReactType) {
+    const useServiceStore = <D>(service: StoreService<D>) => {
+      const [store, setStore] = react.useState(service.store);
+      react.useEffect(() => {
+        service.addChangeListener(setStore);
+        return () => service.removeChangeListener(setStore);
+      }, [service]);
+      return store;
+    };
+    return useServiceStore;
+  }
+  /**
+   * 通过本方法和taro解绑
+   * Taro在小程序中支持cookie
+   * https://www.jianshu.com/p/2663ac10d471
+   */
+  static initTaroFetch(taroRequest: any): SomeFetch {
+    const taroFetch: SomeFetch = (url: RequestInfo, { body: data, ...fetchOptions }: any) => {
+      return taroRequest({
+        url,
+        data,
+        header: fetchOptions.headers,
+        dataType: 'txt',
+        responseType: 'text',
+        ...fetchOptions,
+      }).then((res: any) => {
+        res.ok = res.statusCode < 400;
+        res.text = () => Promise.resolve(res.data);
+        return res;
+      });
+    };
+    return taroFetch;
+  }
   /**
    * 转换为gorm的分页模式
    *

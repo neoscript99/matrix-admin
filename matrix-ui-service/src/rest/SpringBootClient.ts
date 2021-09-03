@@ -1,4 +1,5 @@
 import { AbstractClient, FetchOptions } from './AbstractClient';
+import { MessageUtil } from '../utils';
 
 export interface SpringError {
   error: string;
@@ -10,7 +11,8 @@ export interface SpringError {
   path: string;
 }
 export type SpringErrorHandler = (e: SpringError) => void;
-
+//默认的错误处理
+const defaultErrorHandler: SpringErrorHandler = (error) => MessageUtil.error('错误信息：' + error.message);
 export class SpringBootClient extends AbstractClient {
   errorHandlers: SpringErrorHandler[];
   constructor(fetchOptions: FetchOptions) {
@@ -30,7 +32,7 @@ export class SpringBootClient extends AbstractClient {
       ...fetchOptions,
       reqInit: req,
     });
-    this.errorHandlers = [];
+    this.errorHandlers = [defaultErrorHandler];
   }
 
   registerErrorHandler(handler: SpringErrorHandler) {

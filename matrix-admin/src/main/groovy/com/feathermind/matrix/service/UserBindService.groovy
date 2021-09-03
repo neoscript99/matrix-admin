@@ -39,7 +39,8 @@ class UserBindService extends AbstractService<UserBind> {
             }
         }
         //新用户
-        newBind.user = new User(account: newBind.openid, name: newBind.nickname, dept: Department.findBySeq(1)).save()
+        def dept = Department.findBySeq(1) ?: Department.find {}
+        newBind.user = new User(account: newBind.openid, name: newBind.nickname, dept: dept).save()
         saveEntity(newBind)
         roleService.findByCodes(matrixConfigProperties.defaultRoles.split(',')).each {
             new UserRole(newBind.user, it).save()

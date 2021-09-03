@@ -15,6 +15,10 @@ const columns: EntityColumnProps[] = [
 ];
 
 export class ParamList extends EntityPageList<AdminPageProps> {
+  static defaultProps: Partial<AdminPageProps> = {
+    name: '系统参数',
+    operatorVisible: {},
+  };
   get columns(): EntityColumnProps[] {
     return columns;
   }

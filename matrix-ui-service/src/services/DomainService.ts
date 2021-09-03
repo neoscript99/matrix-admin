@@ -217,4 +217,8 @@ export class DomainService<
   afterLogin(loginInfo: LoginInfo) {
     this.store.needRefresh = true;
   }
+
+  setCurrentItem(newItem: Partial<T>) {
+    this.changeCurrentItem({ ...this.store.currentItem, ...newItem });
+  }
 }

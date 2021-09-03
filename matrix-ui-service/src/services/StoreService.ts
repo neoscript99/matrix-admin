@@ -22,7 +22,10 @@ export abstract class StoreService<D = any> extends RestService {
       }
     }
   }
-
+  setStore(newStore: Partial<D>) {
+    this.store = { ...this.store, ...newStore };
+    this.fireStoreChange();
+  }
   fireStoreChange() {
     //必须用一个新实例，否则用===判断无法获知更新，如react.setState hooks
     const newStore = { ...this.store };

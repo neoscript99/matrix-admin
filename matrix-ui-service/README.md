@@ -1,6 +1,10 @@
 
 ## 更新日志
-
+- v1.0.6 （兼容上一个版本）
+  - 增加taroFetch和useServiceStore的初始化功能
+  - service增加 setStore 和 setCurrentItem
+  - 默认错误处理：MessageUtil.error 和 loginService.logout
+  
 - v1.0.5
   - CasConfig合并到MatrixConfig
   - 微信登录优化

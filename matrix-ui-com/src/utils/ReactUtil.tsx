@@ -1,17 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleUtil } from './StyleUtil';
 import { Form } from 'antd';
 import { FormInstance } from 'antd/lib/form';
-import { StoreService } from 'matrix-ui-service';
-
-export function useServiceStore<D>(service: StoreService<D>) {
-  const [store, setStore] = useState(service.store);
-  useEffect(() => {
-    service.addChangeListener(setStore);
-    return () => service.removeChangeListener(setStore);
-  }, [service]);
-  return store;
-}
 
 export interface FormComponentProps {
   form: FormInstance;
