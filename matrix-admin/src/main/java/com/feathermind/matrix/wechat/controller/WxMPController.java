@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
+ * 微信公众号扫码（关注+登录）
  * @see < a href="https://blog.csdn.net/qq_42851002/article/details/81327770">例1</ a>
  * @see < a href="https://learnku.com/articles/26718">例2</ a>
  * @see < a href="https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html">生成带参数的二维码</ a>
@@ -34,11 +35,9 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/wechat/mp")
 public class WxMPController implements InitializingBean, DisposableBean {
     @Autowired(required = false)
-    @Setter
     private WechatBinder wechatBinder;
 
     @Autowired
-    @Setter
     private WxConfigProperties wxConfigProperties;
     private WxAccessToken wxAccessToken;
 

@@ -16,6 +16,7 @@ class UserBind implements AutoTime {
     User user
     String openid
     String unionid
+    //不能为空，user.name需要
     String nickname
     String headimgurl
     //	用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
@@ -34,8 +35,8 @@ class UserBind implements AutoTime {
     }
     static constraints = {
         openid unique: true
-        headimgurl nullable: true, maxSize: 256
         unionid nullable: true
+        headimgurl nullable: true, maxSize: 256
         sex nullable: true
         city nullable: true
         country nullable: true

@@ -22,22 +22,18 @@ class UserBindService extends AbstractService<UserBind> {
 
     User getOrCreateUser(@NotNull UserBind newBind) {
         //根据openid查找，如果已经绑定，更新信息
-        def bind = UserBind.findByOpenid(newBind.openid);
-        if (bind) {
-            newBind.user = bind.user
-            BeanUtils.copyProperties(newBind, bind, GormRepository.domainUpdateIgnores)
-            saveEntity(bind)
-            return bind.user;
-        }
+        def oldBind = UserBind.findByOpenid(newBind.openid);
         //根据union查找
-        if (StringUtils.hasText(newBind.unionid)) {
-            def uBind = UserBind.findByUnionid(newBind.unionid)
-            if (uBind) {
-                newBind.user = uBind.user
-                saveEntity(newBind)
-                return uBind.user
-            }
+        if (!oldBind && StringUtils.hasText(newBind.unionid))
+            oldBind = UserBind.findByUnionid(newBind.unionid)
+
+        if (oldBind) {
+            newBind.user = oldBind.user
+            BeanUtils.copyProperties(newBind, oldBind, GormRepository.domainUpdateIgnores)
+            saveEntity(oldBind)
+            return oldBind.user
         }
+
         //新用户
         def dept = Department.findBySeq(1) ?: Department.find {}
         newBind.user = new User(account: newBind.openid, name: newBind.nickname, dept: dept).save()
