@@ -1,4 +1,4 @@
-package com.feathermind.matrix.wechat.config;
+package com.feathermind.matrix.wechat.mp.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -6,10 +6,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration;
 
 @Data
-@Configuration
-@EnableConfigurationProperties({WxConfigProperties.class})
 @ConfigurationProperties(prefix = "matrix.wechat")
-public class WxConfigProperties {
+public class WxMpProperties {
     private String appId;
     private String appSecret;
     private String accessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token";

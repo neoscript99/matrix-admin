@@ -20,18 +20,14 @@ class UserBindService extends AbstractService<UserBind> {
     @Autowired
     MatrixConfigProperties matrixConfigProperties
 
-    User getOrCreateUser(@NotNull UserBind newBind) {
-        //根据openid查找，如果已经绑定，更新信息
-        def oldBind = UserBind.findByOpenid(newBind.openid);
-        //根据union查找
-        if (!oldBind && StringUtils.hasText(newBind.unionid))
-            oldBind = UserBind.findByUnionid(newBind.unionid)
+    UserBind getOrCreateUser(@NotNull UserBind newBind) {
+        def oldBind = findBind(newBind.openid, newBind.unionid, null)
 
         if (oldBind) {
             newBind.user = oldBind.user
             BeanUtils.copyProperties(newBind, oldBind, GormRepository.domainUpdateIgnores)
             saveEntity(oldBind)
-            return oldBind.user
+            return oldBind
         }
 
         //新用户
@@ -41,6 +37,22 @@ class UserBindService extends AbstractService<UserBind> {
         roleService.findByCodes(matrixConfigProperties.defaultRoles.split(',')).each {
             new UserRole(newBind.user, it).save()
         }
-        return newBind.user
+        return newBind
+    }
+
+    UserBind findBind(String openId, String unionId, String phoneNumber) {
+        //根据openid查找，如果已经绑定，更新信息
+        //根据union查找
+        def nope = '0x00'
+        UserBind.findByOpenidOrUnionidOrPhoneNumber(openId ?: nope, unionId ?: nope, phoneNumber ?: nope)
+    }
+    //通过openId绑定手机号，修改user表account和cellPhone
+    UserBind bindPhone(String openId, String unionId, String phoneNumber) {
+        def bind = findBind(openId, unionId, null);
+        if (bind) {
+            bind.phoneNumber = phoneNumber;
+            bind.user.account = phoneNumber;
+            bind.user.cellPhone = phoneNumber;
+        }
     }
 }

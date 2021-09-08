@@ -27,8 +27,24 @@ class UserBind implements AutoTime {
     String country
     //用户所在省份
     String province
+    //通过微信认证或短信认证的电话号码
+    String phoneNumber
     //wechat, dingtalk等
     String source
+
+    //小程序和公众号的命名方式有差别
+    public void setNickName(String nickName) {
+        this.nickname = nickName;
+    }
+    public void setAvatarUrl(String avatarUrl) {
+        this.headimgurl = avatarUrl;
+    }
+    public void setOpenId(String openId) {
+        this.openid = openId;
+    }
+    public void setUnionId(String unionId) {
+        this.unionid = unionId;
+    }
     static mapping = {
         user lazy: false, fetch: 'join'
         tablePerHierarchy true
@@ -41,5 +57,6 @@ class UserBind implements AutoTime {
         city nullable: true
         country nullable: true
         province nullable: true
+        phoneNumber nullable: true
     }
 }

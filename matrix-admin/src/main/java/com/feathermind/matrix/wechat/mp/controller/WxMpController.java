@@ -1,15 +1,15 @@
-package com.feathermind.matrix.wechat.controller;
+package com.feathermind.matrix.wechat.mp.controller;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.feathermind.matrix.wechat.WechatBinder;
-import com.feathermind.matrix.wechat.bean.*;
-import com.feathermind.matrix.wechat.config.WxConfigProperties;
-import lombok.Setter;
+import com.feathermind.matrix.wechat.WxMpBinder;
+import com.feathermind.matrix.wechat.mp.bean.WxQrcodeCreateReq;
+import com.feathermind.matrix.wechat.mp.config.WxMpProperties;
 import lombok.extern.slf4j.Slf4j;
+import com.feathermind.matrix.wechat.mp.bean.*;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +33,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RestController
 @RequestMapping("/wechat/mp")
-public class WxMPController implements InitializingBean, DisposableBean {
+public class WxMpController implements InitializingBean, DisposableBean {
     @Autowired(required = false)
-    private WechatBinder wechatBinder;
+    private WxMpBinder wxMpBinder;
 
     @Autowired
-    private WxConfigProperties wxConfigProperties;
+    private WxMpProperties wxMpProperties;
     private WxAccessToken wxAccessToken;
 
     /**
@@ -50,10 +50,10 @@ public class WxMPController implements InitializingBean, DisposableBean {
 
         Map req = MapUtil.of(new String[][]{
                 {"grant_type", "client_credential"},
-                {"appid", wxConfigProperties.getAppId()},
-                {"secret", wxConfigProperties.getAppSecret()}
+                {"appid", wxMpProperties.getAppId()},
+                {"secret", wxMpProperties.getAppSecret()}
         });
-        String json = HttpUtil.get(wxConfigProperties.getAccessTokenUrl(), req);
+        String json = HttpUtil.get(wxMpProperties.getAccessTokenUrl(), req);
         log.info(" 获取微信access_token结果：{}", json);
         wxAccessToken = JSONUtil.toBean(json, WxAccessToken.class);
         return wxAccessToken;
@@ -73,7 +73,7 @@ public class WxMPController implements InitializingBean, DisposableBean {
         }
         Map urlParam = Collections.singletonMap("access_token", token.getAccess_token());
         //access_token拼到url中
-        String url = HttpUtil.urlWithForm(wxConfigProperties.getQrcodeCreateUrl(), urlParam, StandardCharsets.UTF_8, false);
+        String url = HttpUtil.urlWithForm(wxMpProperties.getQrcodeCreateUrl(), urlParam, StandardCharsets.UTF_8, false);
 
         String json = HttpUtil.createPost(url).body(JSONUtil.toJsonStr(req)).execute().body();
         log.info("createQrcode res: {}", json);
@@ -81,7 +81,7 @@ public class WxMPController implements InitializingBean, DisposableBean {
         res.setScene_str(req.getAction_info().getScene().getScene_str());
 
         Map imgUrlParam = Collections.singletonMap("ticket", res.getTicket());
-        res.setWxImgUrl(HttpUtil.urlWithForm(wxConfigProperties.getQrcodeShowUrl(), imgUrlParam, StandardCharsets.UTF_8, false));
+        res.setWxImgUrl(HttpUtil.urlWithForm(wxMpProperties.getQrcodeShowUrl(), imgUrlParam, StandardCharsets.UTF_8, false));
         return res;
     }
 
@@ -129,7 +129,7 @@ public class WxMPController implements InitializingBean, DisposableBean {
                 {"access_token", wxAccessToken.getAccess_token()},
                 {"openid", openid}
         });
-        String json = HttpUtil.get(wxConfigProperties.getUserInfoUrl(), req);
+        String json = HttpUtil.get(wxMpProperties.getUserInfoUrl(), req);
         log.debug("getUserInfo res: {}", json);
         return JSONUtil.toBean(json, WxUserInfo.class);
     }
@@ -148,8 +148,8 @@ public class WxMPController implements InitializingBean, DisposableBean {
         String openid = openidCache.get(req.getScene_str());
         if (openid != null) {
             WxUserInfo user = getUserInfo(openid);
-            return wechatBinder != null ?
-                    wechatBinder.bindWechat(user) : MapUtil.of(new Object[][]{
+            return wxMpBinder != null ?
+                    wxMpBinder.bindWxMpUser(user) : MapUtil.of(new Object[][]{
                     {"success", true},
                     {"user", user}
             });

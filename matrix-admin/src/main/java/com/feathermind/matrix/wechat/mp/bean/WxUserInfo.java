@@ -1,4 +1,4 @@
-package com.feathermind.matrix.wechat.bean;
+package com.feathermind.matrix.wechat.mp.bean;
 
 import lombok.Data;
 
@@ -45,14 +45,4 @@ public class WxUserInfo {
     //二维码扫码场景描述（开发者自定义）
     private String qr_scene_str;
 
-    //小程序和公众号的命名方式有差别
-    public void setNickName(String nickName) {
-        this.nickname = nickName;
-    }
-    public void setAvatarUrl(String avatarUrl) {
-        this.headimgurl = avatarUrl;
-    }
-    public void setOpenId(String openId) {
-        this.openid = openId;
-    }
 }

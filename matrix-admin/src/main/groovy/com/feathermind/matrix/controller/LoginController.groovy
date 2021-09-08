@@ -1,23 +1,17 @@
 package com.feathermind.matrix.controller
 
-import cn.hutool.core.bean.BeanUtil
 import com.baomidou.kaptcha.Kaptcha
 import com.baomidou.kaptcha.exception.KaptchaException
 import com.baomidou.kaptcha.exception.KaptchaIncorrectException
 import com.baomidou.kaptcha.exception.KaptchaNotFoundException
 import com.baomidou.kaptcha.exception.KaptchaTimeoutException
-import com.feathermind.matrix.util.MatrixException
-import com.feathermind.matrix.wechat.bean.WxUserInfo
 import com.feathermind.matrix.config.MatrixConfigProperties
 import com.feathermind.matrix.controller.bean.LoginInfo
 import com.feathermind.matrix.controller.bean.ResBean
 import com.feathermind.matrix.domain.sys.User
-import com.feathermind.matrix.domain.sys.UserBind
 import com.feathermind.matrix.security.TokenService
 import com.feathermind.matrix.service.CasClientService
-import com.feathermind.matrix.service.UserBindService
 import com.feathermind.matrix.service.UserService
-import com.feathermind.matrix.wechat.WechatBinder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
 import org.springframework.web.bind.annotation.GetMapping
@@ -37,15 +31,13 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @RestController
 @RequestMapping("/api/login")
-class LoginController implements WechatBinder {
+class LoginController {
     @Autowired
     MatrixConfigProperties matrixConfigProperties
     @Autowired
     CasClientService casClientService
     @Autowired
     UserService userService
-    @Autowired
-    UserBindService userBindService
     @Autowired
     TokenService userSecurityService
     @Autowired
@@ -199,15 +191,5 @@ class LoginController implements WechatBinder {
                 return v
         }
         return request.remoteAddr
-    }
-
-    @Override
-    Map bindWechat(WxUserInfo wxUserInfo) {
-        def bind = BeanUtil.toBean(wxUserInfo, UserBind);
-        bind.source = 'wechat'
-        User user = userBindService.getOrCreateUser(bind)
-        if (!user.enabled)
-            throw new MatrixException('UserDisabled', '用户帐号失效')
-        return afterLogin(user)
     }
 }

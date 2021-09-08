@@ -1,4 +1,4 @@
-package com.feathermind.matrix.wechat.bean;
+package com.feathermind.matrix.wechat.mp.bean;
 
 import lombok.ToString;
 
