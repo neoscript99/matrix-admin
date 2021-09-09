@@ -7,6 +7,7 @@ import com.baomidou.kaptcha.exception.KaptchaNotFoundException
 import com.baomidou.kaptcha.exception.KaptchaTimeoutException
 import com.feathermind.matrix.config.MatrixConfigProperties
 import com.feathermind.matrix.controller.bean.LoginInfo
+import com.feathermind.matrix.controller.bean.LoginReq
 import com.feathermind.matrix.controller.bean.ResBean
 import com.feathermind.matrix.domain.sys.User
 import com.feathermind.matrix.security.TokenService
@@ -50,35 +51,37 @@ class LoginController {
     Map<String, Integer> loginErrorMap = new ConcurrentHashMap()
 
     @PostMapping("/login")
-    LoginInfo login(@RequestBody Map reqBody, HttpServletRequest request) {
+    LoginInfo login(@RequestBody LoginReq reqBean, HttpServletRequest request) {
         String ip = getClientIP(request)
-        String username = reqBody.username;
+        String username = reqBean.username;
         if (!isSafe(ip, username)) {
-            def kResult = kaptchaValid(reqBody.kaptchaCode);
+            def kResult = kaptchaValid(reqBean.kaptchaCode);
             if (!kResult.success) {
-                return new LoginInfo(kResult)
+                return kResult
             }
         }
-        def result = userService.login(username, reqBody.passwordHash);
+        def result = userService.login(username, reqBean.passwordHash);
         if (result.success) {
-            result << afterLogin(result.user)
             clearLoginError(ip, username)
-        } else
-            result.kaptchaFree = newLoginError(ip, username)
-        new LoginInfo(result)
+            return afterLogin(result.user);
+        } else {
+            def loginInfo = new LoginInfo(result)
+            loginInfo.kaptchaFree = newLoginError(ip, username)
+            return loginInfo;
+        }
     }
 
-    Map afterLogin(User user) {
+    LoginInfo afterLogin(User user) {
         def tokenDetails = userSecurityService.loadUserByUsername(user.account)
         if (gormSessionBean)
             gormSessionBean.tokenDetails = tokenDetails
-        return [
+        return new LoginInfo([
                 success    : true,
                 user       : user,
                 account    : user.account,
                 roles      : tokenDetails.roles,
                 authorities: tokenDetails.authorities,
-                token      : userSecurityService.generateToken(tokenDetails)]
+                token      : userSecurityService.generateToken(tokenDetails)])
     }
 
     /**
@@ -90,8 +93,8 @@ class LoginController {
     }
 
 
-    Map kaptchaValid(String code) {
-        def result = [success: false]
+    LoginInfo kaptchaValid(String code) {
+        def result = new LoginInfo(success: false)
         try {
             kaptcha.validate(code, 300);
             result.success = true;

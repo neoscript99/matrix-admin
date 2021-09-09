@@ -1,8 +1,7 @@
 package com.feathermind.matrix.service
 
 import com.feathermind.matrix.domain.sys.*
-import com.feathermind.matrix.repositories.GormRepository
-import org.springframework.beans.BeanUtils
+import com.feathermind.matrix.service.bean.LoginResult
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,7 +17,7 @@ class UserService extends AbstractService<User> {
     UserRoleService userRoleService
 
     @Transactional(readOnly = true)
-    Map login(String account, String password) {
+    LoginResult login(String account, String password) {
         def user = findByAccount(account)
         String msg;
         if (user) {
@@ -31,9 +30,9 @@ class UserService extends AbstractService<User> {
 
         if (msg) {
             log.warn("用户登录失败：$msg")
-            [success: false, error: msg]
+            new LoginResult(success: false, error: msg)
         } else
-            [success: true, user: user]
+            new LoginResult(success: true, user: user)
     }
 
     @Transactional(readOnly = true)
@@ -111,7 +110,7 @@ class UserService extends AbstractService<User> {
      * @param cellPhone
      * @return
      */
-    boolean checkAccountUnique(String userId,  String account) {
+    boolean checkAccountUnique(String userId, String account) {
         def param = [eq: [['account', account]]]
         if (userId)
             param.ne = [['id', userId]]

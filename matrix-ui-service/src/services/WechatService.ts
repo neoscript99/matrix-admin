@@ -1,4 +1,4 @@
-import { StoreService, LoginInfo, LoginService } from './index';
+import { StoreService, LoginInfo, LoginService, UserBindRes } from './index';
 import { SpringBootClient } from '../rest';
 
 export interface WechatStore {
@@ -70,8 +70,8 @@ export class WechatService extends StoreService<WechatStore> {
   runBindCheck = () => {
     const { scene_str, error } = this.store.qrcodeInfo;
     if (scene_str && this.checkTimes > 0)
-      this.postApi('checkBind', { scene_str }).then((res: LoginInfo) => {
-        res.success && this.loginService.doAfterLogin(res);
+      this.postApi('checkBind', { scene_str }).then((res: UserBindRes) => {
+        res.loginInfo?.success && this.loginService.doAfterLogin(res.loginInfo);
       });
     else console.log('WechatService.runBindCheck: ', this.checkTimes, error);
     this.checkTimes--;

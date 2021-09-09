@@ -5,7 +5,7 @@ import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.feathermind.matrix.wechat.WxMpBinder;
+import com.feathermind.matrix.wechat.WxBinder;
 import com.feathermind.matrix.wechat.mp.bean.WxQrcodeCreateReq;
 import com.feathermind.matrix.wechat.mp.config.WxMpProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 微信公众号扫码（关注+登录）
+ *
  * @see < a href="https://blog.csdn.net/qq_42851002/article/details/81327770">例1</ a>
  * @see < a href="https://learnku.com/articles/26718">例2</ a>
  * @see < a href="https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html">生成带参数的二维码</ a>
@@ -35,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/wechat/mp")
 public class WxMpController implements InitializingBean, DisposableBean {
     @Autowired(required = false)
-    private WxMpBinder wxMpBinder;
+    private WxBinder wxBinder;
 
     @Autowired
     private WxMpProperties wxMpProperties;
@@ -143,18 +144,11 @@ public class WxMpController implements InitializingBean, DisposableBean {
      * - 返回json：{"success": false}
      */
     @PostMapping(value = "checkBind")
-    public Map checkBind(@RequestBody WxBindReq req) {
+    public Object checkBind(@RequestBody WxBindReq req) {
         //log.debug("checkLogin: {}", scene_str);
         String openid = openidCache.get(req.getScene_str());
-        if (openid != null) {
-            WxUserInfo user = getUserInfo(openid);
-            return wxMpBinder != null ?
-                    wxMpBinder.bindWxMpUser(user) : MapUtil.of(new Object[][]{
-                    {"success", true},
-                    {"user", user}
-            });
-        } else
-            return Collections.singletonMap("success", false);
+        WxUserInfo user = getUserInfo(openid);
+        return wxBinder.bindWxMpUser(user);
     }
 
     /**

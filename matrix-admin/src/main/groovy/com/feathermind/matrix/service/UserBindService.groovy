@@ -18,9 +18,14 @@ class UserBindService extends AbstractService<UserBind> {
     @Autowired
     RoleService roleService
     @Autowired
+    UserService userService
+    @Autowired
     MatrixConfigProperties matrixConfigProperties
 
     UserBind getOrCreateUser(@NotNull UserBind newBind) {
+        if (!newBind.openid && !newBind.nickname)
+            throw new RuntimeException('openid和nickname不能为空')
+        
         def oldBind = findBind(newBind.openid, newBind.unionid, null)
 
         if (oldBind) {
@@ -43,16 +48,25 @@ class UserBindService extends AbstractService<UserBind> {
     UserBind findBind(String openId, String unionId, String phoneNumber) {
         //根据openid查找，如果已经绑定，更新信息
         //根据union查找
-        def nope = '0x00'
-        UserBind.findByOpenidOrUnionidOrPhoneNumber(openId ?: nope, unionId ?: nope, phoneNumber ?: nope)
+        def nope = '0x00000'
+        return UserBind.findByOpenidOrUnionidOrPhoneNumber(openId ?: nope, unionId ?: nope, phoneNumber ?: nope)
     }
     //通过openId绑定手机号，修改user表account和cellPhone
     UserBind bindPhone(String openId, String unionId, String phoneNumber) {
+        if (!openId && !phoneNumber)
+            throw new RuntimeException('openId和phoneNumber不能为空')
         def bind = findBind(openId, unionId, null);
         if (bind) {
             bind.phoneNumber = phoneNumber;
-            bind.user.account = phoneNumber;
-            bind.user.cellPhone = phoneNumber;
+            def existUser = userService.findByAccount(phoneNumber)
+            if (existUser)
+                bind.user = existUser;
+            else {
+                bind.user.account = phoneNumber;
+                bind.user.cellPhone = phoneNumber;
+            }
+            saveEntity(bind)
         }
+        return bind;
     }
 }

@@ -24,7 +24,6 @@ class LoginDevController {
     LoginInfo devLogin(@RequestBody Map reqBody) {
         String username = reqBody.username;
         def user = username ? userService.findByAccount(username) : null;
-        def result = user ? loginController.afterLogin(user) : [success: false, error: "$username 用户不存在"]
-        new LoginInfo(result)
+        user ? loginController.afterLogin(user) : new LoginInfo(success: false, error: "$username 用户不存在")
     }
 }

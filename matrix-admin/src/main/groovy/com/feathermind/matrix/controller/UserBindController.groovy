@@ -2,28 +2,34 @@ package com.feathermind.matrix.controller
 
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo
 import cn.hutool.core.bean.BeanUtil
+import com.feathermind.matrix.controller.bean.LoginInfo
+import com.feathermind.matrix.controller.bean.UserBindRes
 import com.feathermind.matrix.domain.sys.UserBind
 import com.feathermind.matrix.service.AbstractService
 import com.feathermind.matrix.service.UserBindService
 import com.feathermind.matrix.wechat.mp.bean.WxUserInfo
-import com.feathermind.matrix.wechat.WxMaBinder
-import com.feathermind.matrix.wechat.WxMpBinder
-import com.feathermind.matrix.wechat.WxPhoneBinder
+import com.feathermind.matrix.wechat.WxBinder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/userBind")
-class UserBindController extends DomainController<UserBind> implements WxMpBinder, WxMaBinder, WxPhoneBinder {
+class UserBindController extends DomainController<UserBind> implements WxBinder<UserBindRes> {
     @Autowired
     UserBindService userBindService
     @Autowired
     LoginController loginController
 
 
+    /**
+     * 微信公众号绑定
+     * 这个方法写在小程序登录之前，暂时只要返回loginInfo
+     * @param wxUserInfo
+     * @return
+     */
     @Override
-    Map bindWxMpUser(WxUserInfo wxUserInfo) {
+    UserBindRes bindWxMpUser(WxUserInfo wxUserInfo) {
         def bind = BeanUtil.toBean(wxUserInfo, UserBind);
         bind.source = 'wechat'
         return bindUser(bind)
@@ -34,8 +40,8 @@ class UserBindController extends DomainController<UserBind> implements WxMpBinde
      * @return
      */
     @Override
-    Map bindWxMaUser(WxMaUserInfo userInfo) {
-        def bind = BeanUtil.toBean(wxUserInfo, UserBind);
+    UserBindRes bindWxMaUser(WxMaUserInfo userInfo) {
+        def bind = BeanUtil.toBean(userInfo, UserBind);
         bind.source = 'wechat'
         return bindUser(bind)
     }
@@ -47,7 +53,7 @@ class UserBindController extends DomainController<UserBind> implements WxMpBinde
      * @return
      */
     @Override
-    Map wxMaLogin(String openId, String unionId) {
+    UserBindRes wxMaLogin(String openId, String unionId) {
         UserBind bind = userBindService.findBind(openId, unionId, null)
         if (!bind)
             return afterFail('未绑定帐号', bind);
@@ -61,7 +67,8 @@ class UserBindController extends DomainController<UserBind> implements WxMpBinde
      *
      */
     @Override
-    Map bindWxPhone(String openId, String unionId, String phoneNumber) {
+    UserBindRes bindWxPhone(String openId, String unionId, String phoneNumber) {
+        if (!openId) return afterFail('请传入openId')
         UserBind bind = userBindService.bindPhone(openId, unionId, phoneNumber)
         if (!bind)
             return afterFail('未绑定帐号')
@@ -70,20 +77,21 @@ class UserBindController extends DomainController<UserBind> implements WxMpBinde
         return afterSuccess(bind)
     }
 
-    Map bindUser(UserBind bind) {
+    UserBindRes bindUser(UserBind bind) {
+        if (!bind.openid) return afterFail('请传入openId')
         UserBind newBind = userBindService.getOrCreateUser(bind)
         if (!newBind.user.enabled)
             return afterFail('用户帐号失效')
         return afterSuccess(newBind)
     }
 
-    Map afterSuccess(UserBind bind) {
-        Map loginInfo = loginController.afterLogin(bind.user);
-        return [loginInfo: loginInfo, userBind: bind];
+    UserBindRes afterSuccess(UserBind bind) {
+        LoginInfo loginInfo = loginController.afterLogin(bind.user);
+        return new UserBindRes([loginInfo: loginInfo, userBind: bind]);
     }
 
-    Map afterFail(String error, UserBind bind = null) {
-        return [loginInfo: [success: false, error: error], userBind: bind];
+    UserBindRes afterFail(String error, UserBind bind = null) {
+        return new UserBindRes([loginInfo: [success: false, error: error], userBind: bind]);
     }
 
     @Override
