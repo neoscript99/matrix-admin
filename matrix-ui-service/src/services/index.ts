@@ -7,7 +7,7 @@ export * from './DomainService';
 export * from './AdminServices';
 export * from './UserService';
 export * from './LoginService';
-export * from './WechatService';
+export * from './WxMpService';
 export * from './MenuService';
 export * from './ParamService';
 export * from './DeptService';

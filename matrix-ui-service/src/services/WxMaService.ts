@@ -19,27 +19,25 @@ export interface WxMaUser {
   openId?: string;
   unionId?: string;
 }
-export class WxMaStore {
-  bindRes?: UserBindRes;
-}
-export class WxMaService extends StoreService<WxMaStore> {
+export class WxMaService extends StoreService<UserBindRes> {
   constructor(restClient: AbstractClient, private loginService: LoginService) {
     super(restClient);
+    this.store = { loginInfo: { success: false } };
   }
 
   getApiUri(operator: string): string {
-    return `/wechat/mp/${operator}`;
+    return `/wechat/ma/${operator}`;
   }
 
   bindUser(userInfo: WxMaUser) {
-    const { bindRes } = this.store;
-    if (!bindRes?.userBind?.openid) throw '微信openId未获取，请先调用WxMaService.wxMaLogin';
-    const wxMaUser = { ...userInfo, openId: bindRes.userBind.openid, unionId: bindRes.userBind.unionid };
+    const { userBind } = this.store;
+    if (!userBind?.openid) throw '微信openId未获取，请先调用WxMaService.wxMaLogin';
+    const wxMaUser = { ...userInfo, openId: userBind.openid, unionId: userBind.unionid };
     return this.postApi('bindUser', wxMaUser).then(this.afterBind);
   }
 
   bindPhone(code, encryptedData, ivStr) {
-    this.postApi('bindPhone', {
+    return this.postApi('bindPhone', {
       code: code,
       encryptedData: encryptedData,
       ivStr: ivStr,
@@ -53,8 +51,7 @@ export class WxMaService extends StoreService<WxMaStore> {
 
   afterBind = (bindRes: UserBindRes) => {
     this.loginService.doAfterLogin(bindRes.loginInfo);
-    this.store.bindRes = bindRes;
-    this.fireStoreChange();
+    this.setStore(bindRes);
     return bindRes;
   };
 }

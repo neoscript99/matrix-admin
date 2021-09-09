@@ -62,7 +62,10 @@ export class LoginService extends StoreService<LoginStore> {
   }
 
   springErrorHandler: SpringErrorHandler = (e) => {
-    if (e.errorCode && LOGOUT_ERRORS.includes(e.errorCode)) this.logout();
+    if (e.errorCode && LOGOUT_ERRORS.includes(e.errorCode)) {
+      console.error('登录信息错误：', e.errorCode, e.message);
+      this.logout();
+    }
   };
 
   getApiUri(operator: string) {

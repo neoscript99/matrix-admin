@@ -9,6 +9,7 @@ import com.feathermind.matrix.service.AbstractService
 import com.feathermind.matrix.service.UserBindService
 import com.feathermind.matrix.wechat.mp.bean.WxUserInfo
 import com.feathermind.matrix.wechat.WxBinder
+import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -41,7 +42,8 @@ class UserBindController extends DomainController<UserBind> implements WxBinder<
      */
     @Override
     UserBindRes bindWxMaUser(WxMaUserInfo userInfo) {
-        def bind = BeanUtil.toBean(userInfo, UserBind);
+        def bind = new UserBind();
+        BeanUtils.copyProperties(userInfo, bind);
         bind.source = 'wechat'
         return bindUser(bind)
     }
@@ -56,7 +58,7 @@ class UserBindController extends DomainController<UserBind> implements WxBinder<
     UserBindRes wxMaLogin(String openId, String unionId) {
         UserBind bind = userBindService.findBind(openId, unionId, null)
         if (!bind)
-            return afterFail('未绑定帐号', bind);
+            return afterFail('未绑定帐号', new UserBind(openid: openId, unionid: unionId));
         if (!bind.user.enabled)
             return afterFail('用户帐号失效', bind);
         return afterSuccess(bind)

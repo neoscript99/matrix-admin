@@ -23,7 +23,7 @@ export interface UserBindEntity extends Entity {
 
 export interface UserBindRes {
   loginInfo: LoginInfo;
-  userBind: UserBindEntity;
+  userBind?: UserBindEntity;
 }
 export class UserBindService extends DomainService<UserBindEntity> {
   constructor(restClient: AbstractClient) {

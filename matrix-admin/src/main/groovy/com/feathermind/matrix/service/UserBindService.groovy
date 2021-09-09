@@ -9,7 +9,6 @@ import com.feathermind.matrix.repositories.GormRepository
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.util.StringUtils
 
 import javax.validation.constraints.NotNull
 
@@ -25,7 +24,7 @@ class UserBindService extends AbstractService<UserBind> {
     UserBind getOrCreateUser(@NotNull UserBind newBind) {
         if (!newBind.openid && !newBind.nickname)
             throw new RuntimeException('openid和nickname不能为空')
-        
+
         def oldBind = findBind(newBind.openid, newBind.unionid, null)
 
         if (oldBind) {
@@ -35,14 +34,18 @@ class UserBindService extends AbstractService<UserBind> {
             return oldBind
         }
 
-        //新用户
-        def dept = Department.findBySeq(1) ?: Department.find {}
-        newBind.user = new User(account: newBind.openid, name: newBind.nickname, dept: dept).save()
-        saveEntity(newBind)
-        roleService.findByCodes(matrixConfigProperties.defaultRoles.split(',')).each {
-            new UserRole(newBind.user, it).save()
+        def existUser = userService.findByAccount(newBind.openid)
+        if (existUser) {
+            newBind.user = existUser
+        } else {
+            //新用户
+            def dept = Department.findBySeq(1) ?: Department.find {}
+            newBind.user = new User(account: newBind.openid, name: newBind.nickname, dept: dept).save()
+            roleService.findByCodes(matrixConfigProperties.defaultRoles.split(',')).each {
+                new UserRole(newBind.user, it).save()
+            }
         }
-        return newBind
+        return saveEntity(newBind)
     }
 
     UserBind findBind(String openId, String unionId, String phoneNumber) {
@@ -58,14 +61,23 @@ class UserBindService extends AbstractService<UserBind> {
         def bind = findBind(openId, unionId, null);
         if (bind) {
             bind.phoneNumber = phoneNumber;
+            //绑定account为当前手机号的user，可以支持先添加user设权限，再做绑定
             def existUser = userService.findByAccount(phoneNumber)
-            if (existUser)
+            if (existUser) {
+                def oldId = bind.user.id;
                 bind.user = existUser;
-            else {
+                generalRepository.flush();
+                try {
+                    userService.deleteById(oldId)
+                } catch (Throwable t) {
+                    log.error('绑定手机帐号后，无法删除原帐号，流程继续', t)
+                }
+            } else {
                 bind.user.account = phoneNumber;
                 bind.user.cellPhone = phoneNumber;
+
+                userService.saveEntity(bind.user)
             }
-            saveEntity(bind)
         }
         return bind;
     }

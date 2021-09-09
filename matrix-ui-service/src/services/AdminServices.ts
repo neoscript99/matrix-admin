@@ -10,7 +10,8 @@ import {
   AttachmentService,
   ApplyService,
   ApplyLogService,
-  WechatService,
+  WxMpService,
+  WxMaService,
 } from './';
 import { SpringBootClient } from '../rest';
 import { DomainStore } from './DomainStore';
@@ -28,7 +29,8 @@ export class AdminServices {
   attachmentService: AttachmentService;
   applyService: ApplyService;
   applyLogService: ApplyLogService;
-  wechatService: WechatService;
+  wxMpService: WxMpService;
+  wxMaService: WxMaService;
 
   constructor(restClient: SpringBootClient, initServices?: Partial<AdminServices>) {
     this.paramService = new ParamService(restClient);
@@ -43,7 +45,8 @@ export class AdminServices {
     this.dictService = new DictService(restClient);
     //外部设置的afterLogin必须首先执行，需要设置安全认证header
     this.loginService = new LoginService(restClient);
-    this.wechatService = new WechatService(restClient, this.loginService);
+    this.wxMpService = new WxMpService(restClient, this.loginService);
+    this.wxMaService = new WxMaService(restClient, this.loginService);
     this.attachmentService = new AttachmentService(restClient);
     this.applyService = new ApplyService(restClient);
     this.applyLogService = new ApplyLogService(restClient);

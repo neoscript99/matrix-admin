@@ -4,6 +4,7 @@ import com.feathermind.matrix.domain.sys.*
 import com.feathermind.matrix.service.bean.LoginResult
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
 /**
@@ -72,16 +73,20 @@ class UserService extends AbstractService<User> {
     }
     /**
      * 删除角色
+     * 使用嵌套事务，内部回滚，不影响外部事务
      */
     @Override
+    @Transactional(propagation = Propagation.NESTED)
     Number deleteById(Serializable id) {
         userRoleService.deleteByUserId(id)
         super.deleteById(id)
     }
+
     /**
      * 删除角色
      */
     @Override
+    @Transactional(propagation = Propagation.NESTED)
     Number deleteByIds(List idList) {
         userRoleService.deleteByUserIds(idList)
         super.deleteByIds(idList)

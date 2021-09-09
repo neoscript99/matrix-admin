@@ -20,6 +20,6 @@ export class ServiceYard {
     getDomainServices(this.adminServices)
       .concat(getDomainServices(this))
       .forEach((s) => s.afterLogin(loginInfo));
-    this.adminServices.wechatService.afterLogin();
+    this.adminServices.wxMpService.afterLogin();
   };
 }

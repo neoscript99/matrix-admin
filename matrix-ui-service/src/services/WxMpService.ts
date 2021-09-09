@@ -1,4 +1,4 @@
-import { StoreService, LoginInfo, LoginService, UserBindRes } from './index';
+import { StoreService, LoginService, UserBindRes } from './index';
 import { SpringBootClient } from '../rest';
 
 export interface WechatStore {
@@ -22,7 +22,7 @@ export interface QrcodeRes {
   createTime: string;
   error: string;
 }
-export class WechatService extends StoreService<WechatStore> {
+export class WxMpService extends StoreService<WechatStore> {
   store: WechatStore = {};
   timer;
   checkTimes = 60;
@@ -73,7 +73,7 @@ export class WechatService extends StoreService<WechatStore> {
       this.postApi('checkBind', { scene_str }).then((res: UserBindRes) => {
         res.loginInfo?.success && this.loginService.doAfterLogin(res.loginInfo);
       });
-    else console.log('WechatService.runBindCheck: ', this.checkTimes, error);
+    else console.log('WxMpService.runBindCheck: ', this.checkTimes, error);
     this.checkTimes--;
     if (this.checkTimes === 0) {
       this.stopBindCheck();
