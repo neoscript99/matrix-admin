@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit
 
 @RestController
 @Slf4j
-class GormController extends SecureController{
+class GormController extends SecureController {
     @Autowired
     MatrixConfigProperties matrixConfigProperties
     @Autowired
@@ -44,7 +44,8 @@ class GormController extends SecureController{
 
     @GetMapping("download/{id}")
     public ResponseEntity<byte[]> getAttach(@PathVariable("id") String id) throws IOException {
-        authorize('FileDownload')
+        if (!matrixConfigProperties.filePublic)
+            authorize('FileDownload')
         def info = attachmentService.get(id)
         if (info) {
             def file = attachmentService.getFile(info.fileId)

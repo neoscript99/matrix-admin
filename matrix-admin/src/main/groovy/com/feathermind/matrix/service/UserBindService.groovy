@@ -6,6 +6,7 @@ import com.feathermind.matrix.domain.sys.User
 import com.feathermind.matrix.domain.sys.UserBind
 import com.feathermind.matrix.domain.sys.UserRole
 import com.feathermind.matrix.repositories.GormRepository
+import org.hibernate.SessionFactory
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -20,6 +21,8 @@ class UserBindService extends AbstractService<UserBind> {
     UserService userService
     @Autowired
     MatrixConfigProperties matrixConfigProperties
+    @Autowired
+    SessionFactory sessionFactory
 
     UserBind getOrCreateUser(@NotNull UserBind newBind) {
         if (!newBind.openid && !newBind.nickname)
@@ -66,11 +69,14 @@ class UserBindService extends AbstractService<UserBind> {
             if (existUser) {
                 def oldId = bind.user.id;
                 bind.user = existUser;
-                generalRepository.flush();
-                try {
-                    userService.deleteById(oldId)
-                } catch (Throwable t) {
-                    log.error('绑定手机帐号后，无法删除原帐号，流程继续', t)
+                //通过新线程启动新事务，内部回滚不影响外部事务
+                Thread.start {
+                    try {
+                        sleep(200);
+                        userService.deleteById(oldId)
+                    } catch (Throwable t) {
+                        log.error('绑定手机帐号后，无法删除原帐号，不影响业务流程', t)
+                    }
                 }
             } else {
                 bind.user.account = phoneNumber;

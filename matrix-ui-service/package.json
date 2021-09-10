@@ -6,13 +6,13 @@
   "typings": "lib/index.d.ts",
   "jsnext:main": "src/index.ts",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "pub": "tsc && npm publish",
-    "npm_pack": "tsc && npm pack",
-    "test": "jest",
-    "lint": "eslint src/ --ext .ts --ext .tsx",
-    "lintfix": "eslint src/ --ext .ts --ext .tsx --fix"
+    "build": "npx tsc",
+    "watch": "npx tsc -w",
+    "pub": "npx tsc && npm publish",
+    "npm_pack": "npx tsc && npm pack",
+    "test": "npx jest",
+    "lint": "npx eslint src/ --ext .ts --ext .tsx",
+    "lintfix": "npx eslint src/ --ext .ts --ext .tsx --fix"
   },
   "keywords": [
     "matrix restful"

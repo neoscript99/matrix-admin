@@ -1,6 +1,6 @@
 import { AbstractClient } from '../rest';
 import { DomainStore } from './DomainStore';
-import { DomainService, Entity } from './index';
+import { DomainService, Entity, LoginInfo } from './index';
 
 export interface AttachmentEntity extends Entity {
   id: string;
@@ -12,11 +12,15 @@ export interface AttachmentEntity extends Entity {
   dateCreated: Date;
 }
 
-export class AttachmentService extends DomainService {
+export class AttachmentStore extends DomainStore<AttachmentEntity> {
+  loginInfo: LoginInfo = { success: false, token: 'none' };
+}
+
+export class AttachmentService extends DomainService<AttachmentEntity, AttachmentStore> {
   maxSizeMB = 20;
   previewEnable = false;
   constructor(restClient: AbstractClient) {
-    super({ domain: 'attachment', storeClass: DomainStore, restClient });
+    super({ domain: 'attachment', storeClass: AttachmentStore, restClient });
     this.getMaxSizeMB().then((mb) => (this.maxSizeMB = mb));
     this.post(`/previewCheck`).then((res) => (this.previewEnable = res.success));
   }
@@ -26,10 +30,17 @@ export class AttachmentService extends DomainService {
   get downloadUrl() {
     return `${this.rootUrl}/download`;
   }
+  urlWithToken(id: string) {
+    return `${this.downloadUrl}/${id}?token=${this.store.loginInfo.token}`;
+  }
   get previewUrl() {
     return this.previewEnable && `${this.rootUrl}/preview`;
   }
   getMaxSizeMB(): Promise<number> {
     return this.postApi('getMaxSizeMB');
+  }
+
+  afterLogin(loginInfo: LoginInfo) {
+    super.afterLogin(loginInfo);
   }
 }

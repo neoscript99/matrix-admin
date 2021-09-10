@@ -13,6 +13,7 @@ public class MatrixConfigProperties {
     private String defaultRoles;
     private boolean casClientEnabled = false;
     private long tokenExpireMinutes;
+    private boolean filePublic = false;
     private boolean filePreviewEnable = false;
     private String filePreviewRoot = "http://localhost:8012";
 

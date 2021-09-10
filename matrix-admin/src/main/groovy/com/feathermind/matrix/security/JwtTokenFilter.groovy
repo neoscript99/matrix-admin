@@ -65,7 +65,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private String getToken(HttpServletRequest request) {
+        String token = request.getParameter('token');
         String header = request.getHeader("Authorization");
+        if (token) return token;
         if (header && header.startsWith("Bearer "))
             return header.split(" ")[1];
         //POST请求必须包含Authorization头

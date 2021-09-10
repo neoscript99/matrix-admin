@@ -31,7 +31,11 @@ export class WxMaService extends StoreService<UserBindRes> {
 
   bindUser(userInfo: WxMaUser) {
     const { userBind } = this.store;
-    if (!userBind?.openid) throw '微信openId未获取，请先调用WxMaService.wxMaLogin';
+    if (!userBind?.openid) {
+      const reason = '微信openId未获取，请先调用WxMaService.wxMaLogin';
+      console.error(reason);
+      return Promise.reject(reason);
+    }
     const wxMaUser = { ...userInfo, openId: userBind.openid, unionId: userBind.unionid };
     return this.postApi('bindUser', wxMaUser).then(this.afterBind);
   }
