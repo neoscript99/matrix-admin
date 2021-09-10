@@ -1,6 +1,5 @@
 import React, { ReactNode, useMemo, useState } from 'react';
-import { Tabs } from 'antd';
-import { Spin } from 'antd';
+import { Tabs,Spin } from 'antd';
 import { LoginPage, LoginBox, LoginBoxTitle, LoginBoxItem } from './LoginStyled';
 import { useServiceStore } from '../../../utils';
 import { LoginWechat } from './LoginWechat';
@@ -16,7 +15,7 @@ export interface LoginProps extends LoginFormProps {
 
 export function Login(props: LoginProps) {
   const { adminServices, useWechat, demoUsers, title, introRender, backgroundImage } = props;
-  const { loginService, wechatService, paramService } = adminServices;
+  const { loginService, wxMpService, paramService } = adminServices;
   const [type, setType] = useState<string>('account');
   const loginStore = useServiceStore(loginService);
   const paramStore = useServiceStore(paramService);
@@ -56,7 +55,7 @@ export function Login(props: LoginProps) {
             )}
           </Tabs>
           {type === 'account' && <LoginForm adminServices={adminServices} demoUsers={demoUsers} />}
-          {type === 'wechat' && <LoginWechat wechatService={wechatService} />}
+          {type === 'wechat' && <LoginWechat wxMpService={wxMpService} />}
         </LoginBoxItem>
       </LoginBox>
     </LoginPage>

@@ -1,4 +1,6 @@
 ## 更新记录
+matrix-ui-com@1.0.3:
+- 支持微信小程序登录、绑定手机号
 
 matrix-ui-com@1.0.2:
 - 导出改为CSV，xlsx依赖导致js太大

@@ -3554,10 +3554,10 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-matrix-ui-service@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.npmjs.org/matrix-ui-service/-/matrix-ui-service-1.0.5.tgz#e8fa6b6de58a3dc107761203a6fa14e5e38f2747"
-  integrity sha512-7QrCsHtxRwx4eFgftnGRppgBHq9XQVHKCtwgIOF9nS4jKplu0V+HjdkHDZ4SFX2kxsiQ1G+1UIxEC7w5fNYN8g==
+matrix-ui-service@1.0.7:
+  version "1.0.7"
+  resolved "https://registry.nlark.com/matrix-ui-service/download/matrix-ui-service-1.0.7.tgz?cache=0&sync_timestamp=1631239671467&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fmatrix-ui-service%2Fdownload%2Fmatrix-ui-service-1.0.7.tgz#dd7e06e041a60713ae5a9ed05d8e09b0ca8aec31"
+  integrity sha1-3X4G4EGmBxOuWp7QXY4JsMqK7DE=
   dependencies:
     js-sha256 "^0.9.0"
     lodash "^4.17.20"

@@ -13,6 +13,7 @@ const columns: EntityColumnProps[] = [
 ];
 
 export class NoteList extends EntityPageList<AdminPageProps> {
+  static defaultProps = { name: '通知' };
   get columns(): EntityColumnProps[] {
     return columns;
   }

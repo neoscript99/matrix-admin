@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
-import { WechatService } from 'matrix-ui-service';
-import { useServiceStore } from '../../../utils';
+import { WxMpService } from 'matrix-ui-service';
 import styled from 'styled-components';
-import { Button, Card, Tag } from 'antd';
+import { Card } from 'antd';
+import { useServiceStore } from '../../../utils';
 
 export interface LoginWechatProps {
-  wechatService: WechatService;
+  wxMpService: WxMpService;
 }
 
 export const LoginWechatRefresh = styled.div`
@@ -26,15 +26,15 @@ export const LoginWechatRefresh = styled.div`
   background-position: center center;
 `;
 
-export function LoginWechat({ wechatService }: LoginWechatProps) {
-  const store = useServiceStore(wechatService);
+export function LoginWechat({ wxMpService }: LoginWechatProps) {
+  const store = useServiceStore(wxMpService);
   const refresh = useCallback(() => {
-    wechatService.getQrcodeInfo();
+    wxMpService.getQrcodeInfo();
   }, []);
   //从后台获取二维码
   useEffect(() => {
-    wechatService.getQrcodeInfo();
-    return () => wechatService.stopBindCheck();
+    wxMpService.getQrcodeInfo();
+    return () => wxMpService.stopBindCheck();
   }, []);
   const { checkTimesUp, qrcodeInfo } = store;
   return (

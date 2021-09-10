@@ -2,7 +2,9 @@ import React from 'react';
 import { StyleUtil } from './StyleUtil';
 import { Form } from 'antd';
 import { FormInstance } from 'antd/lib/form';
+import { ServiceUtil } from 'matrix-ui-service';
 
+export const useServiceStore = ServiceUtil.initReactUseStore(React);
 export interface FormComponentProps {
   form: FormInstance;
 }
@@ -20,7 +22,6 @@ export class ReactUtil {
     };
     return formWrapper;
   }
-
   static hiddenTextRender(maxSize: number, value: React.ReactNode) {
     const HiddenText = StyleUtil.hiddenText(maxSize);
     return <HiddenText>{value}</HiddenText>;

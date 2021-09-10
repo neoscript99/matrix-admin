@@ -106,7 +106,7 @@ publishing {
         maven {
             credentials {
                 username 'BKfdYT'
-                password 'sO0bwbF3wq'
+                password System.getenv('ALIYUN_PASSWORD')
             }
             def releasesRepoUrl = "https://packages.aliyun.com/maven/repository/2092094-release-IiCP3V/"
             def snapshotsRepoUrl = "https://packages.aliyun.com/maven/repository/2092094-snapshot-5LY1FN/"

@@ -105,7 +105,6 @@ export class UserForm extends EntityForm<UserFormProps, S> {
               label: '性别',
               style: oneSpanFormItemCss,
               initialValue: 'male',
-              rules: req,
             }}
             dataSource={dictService.getDict('pub_sex')}
             valueProp="code"
