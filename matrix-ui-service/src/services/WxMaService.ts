@@ -1,4 +1,4 @@
-import { LoginService, StoreService, AbstractClient } from './index';
+import { LoginService, StoreService, AbstractClient, UserBindEntity } from './index';
 import { UserBindRes } from './UserBindService';
 
 export interface WxMaUser {
@@ -19,10 +19,21 @@ export interface WxMaUser {
   openId?: string;
   unionId?: string;
 }
-export class WxMaService extends StoreService<UserBindRes> {
+export class WxMaStore {
+  wxMaUser?: WxMaUser;
+  userBind?: UserBindEntity;
+
+  get isPhoneBind() {
+    return !!this.userBind?.phoneNumber;
+  }
+  get isWxBind() {
+    return !!this.userBind?.user;
+  }
+}
+export class WxMaService extends StoreService<WxMaStore> {
   constructor(restClient: AbstractClient, private loginService: LoginService) {
     super(restClient);
-    this.store = { loginInfo: { success: false } };
+    this.store = new WxMaStore();
   }
 
   getApiUri(operator: string): string {
@@ -37,6 +48,7 @@ export class WxMaService extends StoreService<UserBindRes> {
       return Promise.reject(reason);
     }
     const wxMaUser = { ...userInfo, openId: userBind.openid, unionId: userBind.unionid };
+    this.store.wxMaUser = wxMaUser;
     return this.postApi('bindUser', wxMaUser).then(this.afterBind);
   }
 
@@ -50,12 +62,13 @@ export class WxMaService extends StoreService<UserBindRes> {
 
   wxMaLogin(code: string) {
     // 发送 res.code 到后台换取 openId, sessionKey, unionId
+    // 不管后台是否有绑定的user，返回的userBind包含openId, unionId，以备bindUser使用
     return this.postApi('wxMaLogin', { code }).then(this.afterBind);
   }
 
   afterBind = (bindRes: UserBindRes) => {
     this.loginService.doAfterLogin(bindRes.loginInfo);
-    this.setStore(bindRes);
+    this.setStore({ userBind: bindRes.userBind });
     return bindRes;
   };
 }

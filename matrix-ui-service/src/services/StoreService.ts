@@ -1,4 +1,5 @@
 import { RestService } from './RestService';
+import clone from 'lodash/clone';
 
 export interface StoreChangeListener<D> {
   (store: D): void;
@@ -23,12 +24,13 @@ export abstract class StoreService<D = any> extends RestService {
     }
   }
   setStore(newStore: Partial<D>) {
-    this.store = { ...this.store, ...newStore };
+    Object.assign(this.store, newStore);
     this.fireStoreChange();
   }
   fireStoreChange() {
     //必须用一个新实例，否则用===判断无法获知更新，如react.setState hooks
-    const newStore = { ...this.store };
+    //用clone保持对象信息，否则都会变成plain对象
+    const newStore = clone(this.store);
     this.changeListeners.forEach((listener) => listener(newStore));
   }
 }

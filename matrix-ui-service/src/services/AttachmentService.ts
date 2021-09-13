@@ -13,7 +13,7 @@ export interface AttachmentEntity extends Entity {
 }
 
 export class AttachmentStore extends DomainStore<AttachmentEntity> {
-  loginInfo: LoginInfo = { success: false, token: 'none' };
+  token?: string;
 }
 
 export class AttachmentService extends DomainService<AttachmentEntity, AttachmentStore> {
@@ -31,7 +31,8 @@ export class AttachmentService extends DomainService<AttachmentEntity, Attachmen
     return `${this.rootUrl}/download`;
   }
   urlWithToken(id: string) {
-    return `${this.downloadUrl}/${id}?token=${this.store.loginInfo.token}`;
+    const url = `${this.downloadUrl}/${id}`;
+    return this.store.token ? `${url}?token=${this.store.token}` : url;
   }
   get previewUrl() {
     return this.previewEnable && `${this.rootUrl}/preview`;
@@ -42,5 +43,6 @@ export class AttachmentService extends DomainService<AttachmentEntity, Attachmen
 
   afterLogin(loginInfo: LoginInfo) {
     super.afterLogin(loginInfo);
+    this.setStore({ token: loginInfo.token });
   }
 }
