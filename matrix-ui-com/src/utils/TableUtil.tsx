@@ -24,7 +24,7 @@ export class TableUtil {
   static commonSortFunctions = { numberSort: TableUtil.numberSort };
 
   static timeFormatter(date: Date): string {
-    return moment(date).format('YYYY-MM-DD hh:mm');
+    return moment(date).format('YYYY-MM-DD HH:mm');
   }
 
   static booleanLabel(value: boolean): string {
