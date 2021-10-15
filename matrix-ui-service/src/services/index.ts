@@ -18,10 +18,12 @@ export * from './ApplyService';
 export * from './ApplyLogService';
 export * from './ServiceYard';
 export * from './UserBindService';
+export * from './UserRoleService';
 export * from './WxMaService';
+export * from './QueryApi';
 
 //排序支持传字段名列表，或者字段名+顺序类型
-export type CriteriaOrder = string | [string, 'asc' | 'desc'];
+export type CriteriaOrder = [string, 'asc' | 'desc'];
 
 export interface Criteria {
   and?: Criteria;
@@ -36,6 +38,7 @@ export interface Criteria {
   between?: [string, any, any][];
   eqProperty?: [string, string][];
   in?: [string, any[]][];
+  inList?: [string, any[]][];
   notIn?: [string, any[]][];
   isEmpty?: [string][];
   isNotEmpty?: [string][];

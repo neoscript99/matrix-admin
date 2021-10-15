@@ -1,4 +1,17 @@
-import { Criteria, Entity, ListOptions, ListResult, PageInfo, StoreService, AbstractClient, LoginInfo } from './';
+import {
+  Criteria,
+  Entity,
+  ListOptions,
+  ListResult,
+  PageInfo,
+  StoreService,
+  AbstractClient,
+  LoginInfo,
+  QueryApi,
+  QueryPage,
+  SortOrder,
+  CriteriaOrder,
+} from './';
 import { DomainStore } from './DomainStore';
 import { LangUtil, ServiceUtil, StringUtil } from '../utils';
 
@@ -12,10 +25,9 @@ export interface DomainServiceOptions<D extends DomainStore = DomainStore> {
 /**
  * 领域业务基类
  */
-export class DomainService<
-  T extends Entity = Entity,
-  D extends DomainStore<T> = DomainStore<T>
-> extends StoreService<D> {
+export class DomainService<T extends Entity = Entity, D extends DomainStore<T> = DomainStore<T>>
+  extends StoreService<D>
+  implements QueryApi<T> {
   public store: D;
   domain: string;
 
@@ -69,10 +81,11 @@ export class DomainService<
    * @returns {Promise<{client: *, fields?: *}>}
    */
   list({ criteria = {}, pageInfo, orders }: ListOptions): Promise<ListResult<T>> {
+    criteria.order = [...criteria.order, ...orders];
+    ServiceUtil.processNestCriteria(criteria);
     const { maxResults, firstResult, order, ...countCriteria } = criteria;
     //先调用count，防止countCriteria被后面的步骤污染
     const countPromise = pageInfo ? (this.postApi('count', countCriteria) as Promise<number>) : Promise.resolve(0);
-    if (orders && orders.length > 0) ServiceUtil.processCriteriaOrder(criteria, orders);
     if (pageInfo) ServiceUtil.processCriteriaPage(criteria, pageInfo);
     const listPromise = this.postApi('list', criteria) as Promise<T[]>;
     if (pageInfo) {
@@ -202,10 +215,14 @@ export class DomainService<
     this.store.pageList = pageList.map((v) => (v.id === item.id ? item : v));
   }
 
+  /**
+   * 新增的放到列表最前
+   * @param item
+   */
   newListItem(item: T) {
     const { allList, pageList } = this.store;
-    this.store.allList = [...allList, item];
-    this.store.pageList = [...pageList, item];
+    this.store.allList = [item, ...allList];
+    this.store.pageList = [item, ...pageList];
   }
 
   deleteListItems(ids: any[]) {
@@ -220,5 +237,48 @@ export class DomainService<
 
   setCurrentItem(newItem: Partial<T>) {
     this.changeCurrentItem({ ...this.store.currentItem, ...newItem });
+  }
+
+  /**
+   * 配合前台（antd）查询功能， 当前params和filter只支持单层，如有嵌套属性请自行处理
+   * pageInfo已处理
+   * @param params 默认后模糊like查询
+   * @param sort 已处理
+   * @param filter 默认in查询
+   */
+  query(
+    params: Partial<T> & QueryPage,
+    sort: Record<string, SortOrder>,
+    filter: Record<keyof T, any[]>,
+  ): Promise<ListResult<T>> {
+    //保存查询信息，可做页面状态恢复
+    this.store.queryOptions = { params, sort, filter };
+    const orders: CriteriaOrder[] = [];
+    for (const [k, v] of Object.entries(sort)) {
+      orders.push([k, v === 'descend' ? 'desc' : 'asc']);
+    }
+    const criteria: Criteria = { eq: [], like: [], inList: [] };
+    this.processQueryParams(params, criteria);
+    this.processQueryFilter(filter, criteria);
+    const pageInfo: PageInfo = params.current && { currentPage: params.current, pageSize: params.pageSize || 10 };
+    const options = { criteria, orders, pageInfo };
+    console.debug('DomainService.query: ', options);
+    return this.listPage(options);
+  }
+
+  processQueryParams(params: Partial<T>, criteria: Criteria) {
+    const eqs = criteria.eq;
+
+    for (const [k, v] of Object.entries(params)) {
+      eqs.push([k, v]);
+    }
+  }
+  processQueryFilter(filter: Record<keyof T, any[]>, criteria: Criteria) {
+    const inLists = criteria.inList;
+
+    for (const [k, v] of Object.entries(filter)) {
+      //如果没有选择v为null
+      v && inLists.push([k, v]);
+    }
   }
 }

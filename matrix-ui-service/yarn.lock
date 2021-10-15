@@ -1219,6 +1219,11 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+data-uri-to-buffer@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npmmirror.com/data-uri-to-buffer/download/data-uri-to-buffer-3.0.1.tgz?cache=0&sync_timestamp=1632737517013&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fdata-uri-to-buffer%2Fdownload%2Fdata-uri-to-buffer-3.0.1.tgz#594b8973938c5bc2c33046535785341abc4f3636"
+  integrity sha1-WUuJc5OMW8LDMEZTV4U0GrxPNjY=
+
 data-urls@^2.0.0:
   version "2.0.0"
   resolved "https://repo.huaweicloud.com/repository/npm/data-urls/-/data-urls-2.0.0.tgz#156485a72963a970f5d5821aaf642bef2bf2db9b"
@@ -1663,6 +1668,13 @@ fb-watchman@^2.0.0:
   integrity sha512-DkPJKQeY6kKwmuMretBhr7G6Vodr7bFwDYTXIkfG1gjvNpaxBTQV3PbXg6bR1c1UP4jPOX0jHUbbHANL9vRjVg==
   dependencies:
     bser "2.1.1"
+
+fetch-blob@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.nlark.com/fetch-blob/download/fetch-blob-3.1.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ffetch-blob%2Fdownload%2Ffetch-blob-3.1.2.tgz#6bc438675f3851ecea51758ac91f6a1cd1bacabd"
+  integrity sha1-a8Q4Z184UezqUXWKyR9qHNG6yr0=
+  dependencies:
+    web-streams-polyfill "^3.0.3"
 
 file-entry-cache@^6.0.0:
   version "6.0.0"
@@ -2941,6 +2953,14 @@ nice-try@^1.0.4:
   resolved "https://repo.huaweicloud.com/repository/npm/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
+node-fetch@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/node-fetch/download/node-fetch-3.0.0.tgz?cache=0&sync_timestamp=1632315355618&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fnode-fetch%2Fdownload%2Fnode-fetch-3.0.0.tgz#79da7146a520036f2c5f644e4a26095f17e411ea"
+  integrity sha1-edpxRqUgA28sX2ROSiYJXxfkEeo=
+  dependencies:
+    data-uri-to-buffer "^3.0.1"
+    fetch-blob "^3.1.2"
+
 node-int64@^0.4.0:
   version "0.4.0"
   resolved "https://repo.huaweicloud.com/repository/npm/node-int64/-/node-int64-0.4.0.tgz#87a9065cdb355d3182d8f94ce11188b825c68a3b"
@@ -4047,6 +4067,11 @@ walker@^1.0.7, walker@~1.0.5:
   integrity sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
   dependencies:
     makeerror "1.0.x"
+
+web-streams-polyfill@^3.0.3:
+  version "3.1.1"
+  resolved "https://registry.nlark.com/web-streams-polyfill/download/web-streams-polyfill-3.1.1.tgz#1516f2d4ea8f1bdbfed15eb65cb2df87098c8364"
+  integrity sha1-FRby1OqPG9v+0V62XLLfhwmMg2Q=
 
 webidl-conversions@^5.0.0:
   version "5.0.0"

@@ -1,4 +1,4 @@
-import { Criteria, CriteriaOrder, PageInfo, SomeFetch, StoreService } from '../services';
+import { Criteria, PageInfo, SomeFetch, StoreService } from '../services';
 
 interface ReactType {
   useState: <S>(initialState: S) => [S, (prevState: S) => S];
@@ -63,31 +63,36 @@ export class ServiceUtil {
    *  因按照plan -> dept顺序先初始化：const criteria: Criteria = {plan: {}, dept: {}};
    * @param param 传入是为了在原参数上做增量修改，如:
    *  processOrderParam({user:{eq:[['name','admin']]}},[['user.age','desc']])=>{user:{eq:[['name','admin']],order:[['age','desc']]}}
-   * @param orders
+   * @param ops
+   * 2021-10-15 支持排序外其它的eq、in处理
    */
-  static processCriteriaOrder(criteria: Criteria, orders: CriteriaOrder[]) {
-    //嵌套字段的排序criteria
-    const orderList = orders.reduce((notNestOrders, order) => {
-      if (typeof order === 'string') order = [order, 'asc'];
-      if (order[0].indexOf('.') === -1) notNestOrders.push(order);
-      else {
-        //['user.age','desc']=>['user','age']
-        const nestFields: string[] = order[0].split('.');
-        //order = ['age','desc']
-        order[0] = nestFields[nestFields.length - 1];
+  static processNestCriteria(criteria: Criteria) {
+    for (const [opKey, ops] of Object.entries(criteria)) {
+      if (!Array.isArray(ops)) continue;
+      //嵌套字段的排序criteria
+      const opList = [];
+      for (const op of ops) {
+        if (!Array.isArray(op)) continue;
+        const [name, ...rest] = op;
+        if (name.indexOf('.') === -1) opList.push(op);
+        else {
+          //['user.age','desc']=>['user','age']
+          const nestFields: string[] = name.split('.');
+          //order = ['age','desc']
+          const newOp = [nestFields[nestFields.length - 1], ...rest];
 
-        let parentParam = criteria;
-        nestFields.slice(0, -1).forEach((field) => {
-          if (!parentParam[field]) parentParam[field] = {};
-          parentParam = parentParam[field] as Criteria;
-        });
+          let parentParam = criteria;
+          nestFields.slice(0, -1).forEach((field) => {
+            if (!parentParam[field]) parentParam[field] = {};
+            parentParam = parentParam[field] as Criteria;
+          });
 
-        if (parentParam.order) parentParam.order.push(order);
-        else parentParam.order = [order];
+          if (parentParam[opKey]) (parentParam[opKey] as any[]).push(newOp);
+          else parentParam[opKey] = [newOp];
+        }
       }
-      return notNestOrders;
-    }, [] as CriteriaOrder[]);
-    if (orderList.length > 0) criteria.order = orderList;
+      criteria[opKey] = opList;
+    }
   }
 
   static clearEntity(entity: any, ...deleteProps: string[]) {

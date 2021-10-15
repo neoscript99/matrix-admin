@@ -15,6 +15,7 @@ import {
 } from './';
 import { SpringBootClient } from '../rest';
 import { DomainStore } from './DomainStore';
+import { UserRoleService } from './UserRoleService';
 
 export class AdminServices {
   userService: UserService;
@@ -23,7 +24,7 @@ export class AdminServices {
   noteService: DomainService;
   menuService: MenuService;
   deptService: DeptService;
-  userRoleService: DomainService;
+  userRoleService: UserRoleService;
   dictService: DictService;
   loginService: LoginService;
   attachmentService: AttachmentService;
@@ -35,7 +36,7 @@ export class AdminServices {
   constructor(restClient: SpringBootClient, initServices?: Partial<AdminServices>) {
     this.paramService = new ParamService(restClient);
     this.noteService = new DomainService({ domain: 'note', storeClass: DomainStore, restClient });
-    this.userRoleService = new DomainService({ domain: 'userRole', storeClass: DomainStore, restClient });
+    this.userRoleService = new UserRoleService(restClient);
     this.roleService = new RoleService(restClient);
     this.menuService = new MenuService(restClient);
     //userService支持替换

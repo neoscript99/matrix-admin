@@ -2,7 +2,7 @@ import nodeFetch from 'node-fetch';
 import { SpringBootClient, UserService, DeptService } from '../src';
 
 const rootUrl = 'http://localhost:8080';
-//@ts-ignore
+// @ts-ignore
 const restClient = new SpringBootClient({ rootUrl, fetch: nodeFetch });
 const userService = new UserService(restClient);
 const deptService = new DeptService(restClient);
@@ -36,6 +36,11 @@ describe('Domain CURD', () => {
     if (firstDept) expect(await deptService.delete(firstDept.id)).toEqual(1);
 
     const listDept = await deptService.listFirstPage({ criteria: { eq: [['seq', 999]] } });
-    expect(await deptService.deleteByIds(listDept.results.map(dept => dept.id))).toEqual(2);
+    expect(await deptService.deleteByIds(listDept.results.map((dept) => dept.id))).toEqual(2);
+  });
+
+  it('query api', async () => {
+    const res = userService.query({ name: 'a' }, { name: null }, { account: ['admin'] });
+    console.debug(res);
   });
 });
