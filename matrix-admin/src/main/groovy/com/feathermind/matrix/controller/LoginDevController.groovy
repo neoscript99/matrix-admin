@@ -3,6 +3,7 @@ package com.feathermind.matrix.controller
 import com.feathermind.matrix.controller.bean.LoginInfo
 import com.feathermind.matrix.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.web.bind.annotation.*
 
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/api/login")
-@ConditionalOnProperty(prefix = "matrix", name = "dev-login", havingValue = "true", matchIfMissing = false)
+@ConditionalOnExpression('"dev".equals("${spring.profiles.active}") or ${matrix.dev-login:false}')
 class LoginDevController {
     @Autowired
     UserService userService

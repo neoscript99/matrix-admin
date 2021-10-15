@@ -34,6 +34,11 @@ export class DictService extends DomainService<Dict> {
 
   afterLogin(loginInfo: LoginInfo) {
     super.afterLogin(loginInfo);
-    this.listAll({ orders: ['type', 'seq'] });
+    this.listAll({
+      orders: [
+        ['type', 'asc'],
+        ['seq', 'asc'],
+      ],
+    });
   }
 }

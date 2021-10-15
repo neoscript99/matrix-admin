@@ -81,7 +81,7 @@ export class DomainService<T extends Entity = Entity, D extends DomainStore<T> =
    * @returns {Promise<{client: *, fields?: *}>}
    */
   list({ criteria = {}, pageInfo, orders }: ListOptions): Promise<ListResult<T>> {
-    criteria.order = [...criteria.order, ...orders];
+    criteria.order = [...(criteria.order || []), ...(orders || [])];
     ServiceUtil.processNestCriteria(criteria);
     const { maxResults, firstResult, order, ...countCriteria } = criteria;
     //先调用count，防止countCriteria被后面的步骤污染
@@ -253,24 +253,30 @@ export class DomainService<T extends Entity = Entity, D extends DomainStore<T> =
   ): Promise<ListResult<T>> {
     //保存查询信息，可做页面状态恢复
     this.store.queryOptions = { params, sort, filter };
-    const orders: CriteriaOrder[] = [];
-    for (const [k, v] of Object.entries(sort)) {
-      orders.push([k, v === 'descend' ? 'desc' : 'asc']);
-    }
-    const criteria: Criteria = { eq: [], like: [], inList: [] };
+    const criteria: Criteria = { eq: [], like: [], inList: [], order: [] };
     this.processQueryParams(params, criteria);
+    this.processQuerySort(sort, criteria);
     this.processQueryFilter(filter, criteria);
     const pageInfo: PageInfo = params.current && { currentPage: params.current, pageSize: params.pageSize || 10 };
-    const options = { criteria, orders, pageInfo };
+    const options = { criteria, pageInfo };
     console.debug('DomainService.query: ', options);
     return this.listPage(options);
   }
 
+  /**
+   * params是嵌套结构，需要先拉平
+   * sort 和 filter的key是逗号份额
+   */
   processQueryParams(params: Partial<T>, criteria: Criteria) {
-    const eqs = criteria.eq;
-
-    for (const [k, v] of Object.entries(params)) {
-      eqs.push([k, v]);
+    const likes = criteria.like;
+    for (const [k, v] of Object.entries(LangUtil.flattenObject(params))) {
+      likes.push([k, v + '%']);
+    }
+  }
+  processQuerySort(sort: Record<string, SortOrder>, criteria: Criteria) {
+    const orders = criteria.order;
+    for (const [k, v] of Object.entries(sort)) {
+      orders.push([k.replace(',', '.'), v === 'descend' ? 'desc' : 'asc']);
     }
   }
   processQueryFilter(filter: Record<keyof T, any[]>, criteria: Criteria) {
@@ -278,7 +284,7 @@ export class DomainService<T extends Entity = Entity, D extends DomainStore<T> =
 
     for (const [k, v] of Object.entries(filter)) {
       //如果没有选择v为null
-      v && inLists.push([k, v]);
+      v && inLists.push([k.replace(',', '.'), v]);
     }
   }
 }

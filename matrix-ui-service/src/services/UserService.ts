@@ -23,7 +23,7 @@ export class UserService extends DomainService<UserEntity> {
               ['enabled', true],
             ],
           },
-          orders: ['name'],
+          orders: [['name', 'asc']],
         })
       ).results as UserEntity[];
 

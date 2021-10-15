@@ -1,11 +1,7 @@
-import nodeFetch from 'node-fetch';
-import { SpringBootClient, UserService, DeptService } from '../src';
+import { yard } from './TestEnv';
 
-const rootUrl = 'http://localhost:8080';
-// @ts-ignore
-const restClient = new SpringBootClient({ rootUrl, fetch: nodeFetch });
-const userService = new UserService(restClient);
-const deptService = new DeptService(restClient);
+const userService = yard.adminServices.userService;
+const deptService = yard.adminServices.deptService;
 
 describe('Domain CURD', () => {
   it('user list and get', async () => {
@@ -13,7 +9,10 @@ describe('Domain CURD', () => {
     const data = await userService.listAll({
       criteria: { dept: { like: [['name', '%']] } },
       pageInfo: { currentPage: 1, pageSize: 2 },
-      orders: ['dept.seq', 'name'],
+      orders: [
+        ['dept.seq', 'asc'],
+        ['name', 'asc'],
+      ],
     });
 
     expect(data).not.toBeNull();
@@ -37,10 +36,5 @@ describe('Domain CURD', () => {
 
     const listDept = await deptService.listFirstPage({ criteria: { eq: [['seq', 999]] } });
     expect(await deptService.deleteByIds(listDept.results.map((dept) => dept.id))).toEqual(2);
-  });
-
-  it('query api', async () => {
-    const res = userService.query({ name: 'a' }, { name: null }, { account: ['admin'] });
-    console.debug(res);
   });
 });

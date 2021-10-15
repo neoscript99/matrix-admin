@@ -24,7 +24,7 @@ export class DeptService extends DomainService<DeptEntity, DeptStore> {
   afterLogin(loginInfo: LoginInfo) {
     super.afterLogin(loginInfo);
     if (this.readAuthorize(loginInfo.authorities))
-      this.list({ orders: ['seq'] }).then((res) => {
+      this.list({ orders: [['seq', 'asc']] }).then((res) => {
         this.store.completeList = res.results;
         this.store.enabledList = res.results.filter((dept) => dept.enabled);
         this.fireStoreChange();

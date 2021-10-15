@@ -75,6 +75,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    testImplementation('org.junit.jupiter:junit-jupiter:5.4.0')
 }
 
 bootRun {
@@ -82,6 +83,16 @@ bootRun {
     systemProperty 'spring.profiles.active', 'dev'
     systemProperty 'init', 'true'
     systemProperties System.properties
+    systemProperty "file.encoding", "UTF-8"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty "file.encoding", "UTF-8"
 }
 
 task sourceJar(type: Jar) {

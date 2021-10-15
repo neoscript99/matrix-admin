@@ -1,4 +1,4 @@
-import { Criteria, CriteriaOrder } from '../src/services';
+import { Criteria } from '../src/services';
 import { StringUtil, ServiceUtil } from '../src/utils';
 
 describe('pureGraphqlObject', () => {

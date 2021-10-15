@@ -21,5 +21,8 @@ public class MatrixConfigProperties {
      * 不下载图片，如果是外网环境，要配置为外网域名
      */
     private String fileDownloadRoot = "http://localhost:8080";
-    private boolean devLogin = true;
+    /**
+     * 是否支持开发登录，不需要用户名
+     */
+    private boolean devLogin = false;
 }
