@@ -67,6 +67,7 @@ export class ServiceUtil {
    * 2021-10-15 支持排序外其它的eq、in处理
    */
   static processNestCriteria(criteria: Criteria) {
+    //console.debug('ServiceUtil.processNestCriteria-before: ', JSON.stringify(criteria));
     for (const [opKey, ops] of Object.entries(criteria)) {
       if (!Array.isArray(ops)) continue;
       //嵌套字段的排序criteria
@@ -93,6 +94,7 @@ export class ServiceUtil {
       }
       criteria[opKey] = opList;
     }
+    //console.debug('ServiceUtil.processNestCriteria-after: ', JSON.stringify(criteria));
   }
 
   static clearEntity(entity: any, ...deleteProps: string[]) {

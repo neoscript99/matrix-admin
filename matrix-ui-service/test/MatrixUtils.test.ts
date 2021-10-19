@@ -1,7 +1,7 @@
 import { Criteria } from '../src/services';
-import { StringUtil, ServiceUtil } from '../src/utils';
+import { StringUtil, ServiceUtil, LangUtil } from '../src/utils';
 
-describe('pureGraphqlObject', () => {
+describe('MatrixUtilsTest', () => {
   it('string util', () => {
     for (let i = 0; i < 10; i++) console.log(StringUtil.randomString(128));
     const str = '';
@@ -44,5 +44,12 @@ describe('pureGraphqlObject', () => {
       order: [['rowOrder', 'desc']],
       portal: { between: [['age', 10, 20]], order: [['seq', 'asc']] },
     });
+  });
+
+  it('flatten object', () => {
+    const obj = { dept: { name: '总', seq: 1, enabled: true } };
+    const fo = LangUtil.flattenObject(obj);
+    console.debug(fo);
+    expect(fo['dept.seq']).toEqual(1);
   });
 });

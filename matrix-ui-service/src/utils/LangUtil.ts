@@ -21,9 +21,10 @@ export class LangUtil {
     for (const key in object) {
       const flattenKey = parentKey ? `${parentKey}.${key}` : key;
       const value = object[key];
-      flatten[flattenKey] = value;
+
       //如果是普通对象，递归设置它的属性
       if (isPlainObject(value)) flatten = { ...flatten, ...LangUtil.flattenObject(value, flattenKey) };
+      else flatten[flattenKey] = value;
     }
     return flatten;
   }

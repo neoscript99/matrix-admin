@@ -25,6 +25,12 @@ export * from './QueryApi';
 //排序支持传字段名列表，或者字段名+顺序类型
 export type CriteriaOrder = [string, 'asc' | 'desc'];
 
+/**
+ * 2021-10,支持Criteria嵌套属性的处理：
+ * {"like":[["dept.name","总%"],["dept.id","0%"]]}
+ * 转为
+ * {"dept":{"like":[["name","总%"],["id","0%"]]}}
+ */
 export interface Criteria {
   and?: Criteria;
   or?: Criteria;

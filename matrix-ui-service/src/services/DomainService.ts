@@ -240,7 +240,7 @@ export class DomainService<T extends Entity = Entity, D extends DomainStore<T> =
   }
 
   /**
-   * 配合前台（antd）查询功能， 当前params和filter只支持单层，如有嵌套属性请自行处理
+   * 配合前台（antd）查询功能， 支持嵌套属性
    * pageInfo已处理
    * @param params 默认后模糊like查询
    * @param sort 已处理
@@ -259,7 +259,7 @@ export class DomainService<T extends Entity = Entity, D extends DomainStore<T> =
     this.processQueryFilter(filter, criteria);
     const pageInfo: PageInfo = params.current && { currentPage: params.current, pageSize: params.pageSize || 10 };
     const options = { criteria, pageInfo };
-    console.debug('DomainService.query: ', options);
+    //console.debug('DomainService.query: ', JSON.stringify(options));
     return this.listPage(options);
   }
 
