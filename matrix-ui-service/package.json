@@ -1,6 +1,6 @@
 {
   "name": "matrix-ui-service",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Object oriented ui service form matrix-admin.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

@@ -8,9 +8,9 @@ import {
   AbstractClient,
   LoginInfo,
   QueryApi,
-  QueryPage,
   SortOrder,
   CriteriaOrder,
+  QueryParam,
 } from './';
 import { DomainStore } from './DomainStore';
 import { LangUtil, ServiceUtil, StringUtil } from '../utils';
@@ -247,17 +247,19 @@ export class DomainService<T extends Entity = Entity, D extends DomainStore<T> =
    * @param filter 默认in查询
    */
   query(
-    params: Partial<T> & QueryPage,
+    params: QueryParam<T>,
     sort: Record<string, SortOrder>,
     filter: Record<keyof T, any[]>,
   ): Promise<ListResult<T>> {
     //保存查询信息，可做页面状态恢复
     this.store.queryOptions = { params, sort, filter };
+    const { keyword, current, pageSize, ...queryParam } = params;
     const criteria: Criteria = { eq: [], like: [], inList: [], order: [] };
-    this.processQueryParams(params, criteria);
+    this.processQueryParams(queryParam, criteria);
+    this.processKeyword(keyword, criteria);
     this.processQuerySort(sort, criteria);
     this.processQueryFilter(filter, criteria);
-    const pageInfo: PageInfo = params.current && { currentPage: params.current, pageSize: params.pageSize || 10 };
+    const pageInfo: PageInfo = current && { currentPage: current, pageSize: pageSize || 10 };
     const options = { criteria, pageInfo };
     //console.debug('DomainService.query: ', JSON.stringify(options));
     return this.listPage(options);
@@ -267,11 +269,15 @@ export class DomainService<T extends Entity = Entity, D extends DomainStore<T> =
    * params是嵌套结构，需要先拉平
    * sort 和 filter的key是逗号份额
    */
-  processQueryParams(params: Partial<T>, criteria: Criteria) {
+  processQueryParams(params: Omit<QueryParam<T>, 'keyword' | 'current' | 'pageSize'>, criteria: Criteria) {
     const likes = criteria.like;
     for (const [k, v] of Object.entries(LangUtil.flattenObject(params))) {
       likes.push([k, v + '%']);
     }
+  }
+  //如果是通用关键字查询，需继承类自行处理
+  processKeyword(keyword: string, criteria: Criteria) {
+    return criteria;
   }
   processQuerySort(sort: Record<string, SortOrder>, criteria: Criteria) {
     const orders = criteria.order;
