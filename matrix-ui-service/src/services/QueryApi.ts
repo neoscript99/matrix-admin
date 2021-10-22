@@ -10,15 +10,22 @@ export interface QueryOptions<T extends Entity> {
   sort: Record<string, SortOrder>;
   filter: Record<keyof T, any[]>;
 }
-export interface QueryPage {
+export type QueryParam<T> = Partial<T> & {
+  //分页信息
   pageSize?: number;
   current?: number;
-}
-export type QueryParam<T> = Partial<T> &
-  QueryPage & {
-    //通用关键字
-    keyword?: string;
-  };
+  //通用关键字
+  keyword?: string;
+};
+export type QueryResult<T> = ListResult<T> & {
+  data?: T[];
+  success?: boolean;
+  total?: number;
+};
 export interface QueryApi<T extends Entity> {
-  query(params: QueryParam<T>, sort: Record<string, SortOrder>, filter: Record<string, any[]>): Promise<ListResult<T>>;
+  query(
+    params: QueryParam<T>,
+    sort: Record<string, SortOrder>,
+    filter: Record<keyof T, any[]>,
+  ): Promise<QueryResult<T>>;
 }

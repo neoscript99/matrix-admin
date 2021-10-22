@@ -11,6 +11,7 @@ import {
   SortOrder,
   CriteriaOrder,
   QueryParam,
+  QueryResult,
 } from './';
 import { DomainStore } from './DomainStore';
 import { LangUtil, ServiceUtil, StringUtil } from '../utils';
@@ -250,26 +251,27 @@ export class DomainService<T extends Entity = Entity, D extends DomainStore<T> =
     params: QueryParam<T>,
     sort: Record<string, SortOrder>,
     filter: Record<keyof T, any[]>,
-  ): Promise<ListResult<T>> {
+  ): Promise<QueryResult<T>> {
     //保存查询信息，可做页面状态恢复
     this.store.queryOptions = { params, sort, filter };
     const { keyword, current, pageSize, ...queryParam } = params;
     const criteria: Criteria = { eq: [], like: [], inList: [], order: [] };
-    this.processQueryParams(queryParam, criteria);
+    this.processQueryParams(queryParam as Partial<T>, criteria);
     this.processKeyword(keyword, criteria);
     this.processQuerySort(sort, criteria);
     this.processQueryFilter(filter, criteria);
     const pageInfo: PageInfo = current && { currentPage: current, pageSize: pageSize || 10 };
     const options = { criteria, pageInfo };
     //console.debug('DomainService.query: ', JSON.stringify(options));
-    return this.listPage(options);
+    //返回结果满足antd-pro的request
+    return this.listPage(options).then((res) => ({ ...res, success: true, total: res.totalCount, data: res.results }));
   }
 
   /**
    * params是嵌套结构，需要先拉平
    * sort 和 filter的key是逗号份额
    */
-  processQueryParams(params: Omit<QueryParam<T>, 'keyword' | 'current' | 'pageSize'>, criteria: Criteria) {
+  processQueryParams(params: Partial<T>, criteria: Criteria) {
     const likes = criteria.like;
     for (const [k, v] of Object.entries(LangUtil.flattenObject(params))) {
       likes.push([k, v + '%']);
