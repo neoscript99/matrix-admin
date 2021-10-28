@@ -5,6 +5,7 @@ const userService = yard.adminServices.userService;
 
 describe('Domain Query', () => {
   it('query api', async () => {
+    //等待登录成功
     await loginPromise;
     const res = await userService.query(
       { dept: { name: '总', id: '0' } as DeptEntity, account: 'admin', current: 1, pageSize: 10, keyword: 'abc' },

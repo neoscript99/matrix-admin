@@ -1,12 +1,14 @@
-import { AdminServices, DomainService, LoginInfo, SpringBootClient } from './';
+import { AdminServices, AfterLoginService, LoginInfo, SpringBootClient } from './';
 export interface ServiceYardOption {
   restClient: SpringBootClient;
   initServices?: Partial<AdminServices>;
 }
-export function getDomainServices(container: any): DomainService[] {
-  return Object.values(container).filter((s) => s instanceof DomainService) as DomainService[];
+//找到所有带afterLogin的属性
+export function getAfterLoginServices(container: any): AfterLoginService[] {
+  return Object.values(container).filter((s: any) => !!s.afterLogin) as AfterLoginService[];
 }
 export class ServiceYard {
+  [key: string]: any;
   adminServices: AdminServices;
   constructor(option: ServiceYardOption) {
     this.adminServices = new AdminServices(option.restClient, option.initServices);
@@ -17,9 +19,8 @@ export class ServiceYard {
   }
 
   afterLogin = (loginInfo: LoginInfo) => {
-    getDomainServices(this.adminServices)
-      .concat(getDomainServices(this))
+    getAfterLoginServices(this.adminServices)
+      .concat(getAfterLoginServices(this))
       .forEach((s) => s.afterLogin(loginInfo));
-    this.adminServices.wxMpService.afterLogin();
   };
 }

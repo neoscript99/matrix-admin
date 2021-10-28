@@ -12,6 +12,7 @@ import {
   CriteriaOrder,
   QueryParam,
   QueryResult,
+  AfterLoginService,
 } from './';
 import { DomainStore } from './DomainStore';
 import { LangUtil, ServiceUtil, StringUtil } from '../utils';
@@ -22,13 +23,12 @@ export interface DomainServiceOptions<D extends DomainStore = DomainStore> {
   storeClass?: new () => D;
   restClient: AbstractClient;
 }
-
 /**
  * 领域业务基类
  */
 export class DomainService<T extends Entity = Entity, D extends DomainStore<T> = DomainStore<T>>
   extends StoreService<D>
-  implements QueryApi<T> {
+  implements QueryApi<T>, AfterLoginService {
   public store: D;
   domain: string;
 

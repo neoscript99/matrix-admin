@@ -11,3 +11,7 @@ export const restClient = new SpringBootClient({ rootUrl, fetch });
 export const yard = new ServiceYard({ restClient });
 //通过await loginPromise;等待登录完成
 export const loginPromise = yard.adminServices.loginService.login({ username: 'admin', isDev: true, password: '' });
+
+export function sleep(seconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+}
