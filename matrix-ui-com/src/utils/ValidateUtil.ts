@@ -1,5 +1,6 @@
 import moment, { unitOfTime } from 'moment';
-import { Rule } from 'rc-field-form/lib/interface';
+import { FormItemProps } from 'antd/lib/form';
+type Rule = FormItemProps['rules'][0];
 /** built-in validation type, available options: https://github.com/yiminghe/async-validator#type */
 export const commonRules: Readonly<{ [key: string]: Rule }> = {
   required: { required: true, whitespace: true, message: '不能为空!' },

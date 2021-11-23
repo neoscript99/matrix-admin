@@ -1,7 +1,6 @@
-import { Button, Checkbox, Dropdown, Form, Input, Menu } from 'antd';
+import { Button, Checkbox, Dropdown, Form, Input, Menu, MenuProps } from 'antd';
 import { CodeOutlined, DownOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { MenuInfo } from 'rc-menu/lib/interface';
 import { useForm } from 'antd/lib/form/Form';
 import { AdminServices, StringUtil } from 'matrix-ui-service';
 import { commonRules, useServiceStore } from '../../../utils';
@@ -58,8 +57,8 @@ export function LoginForm(props: LoginFormProps) {
     [setKaptchaFree, refreshKaptchaId, isDev],
   );
 
-  const demoUserClick = useCallback(
-    ({ key }: MenuInfo) => {
+  const demoUserClick = useCallback<MenuProps['onClick']>(
+    ({ key }) => {
       const item = demoUsers!.find((user) => user.username === key);
       loginService.loginHash({ ...item, isDev, password: 'none' });
     },
@@ -105,7 +104,7 @@ export function LoginForm(props: LoginFormProps) {
 
 interface DemoUserDropdownProps {
   demoUsers: any[];
-  demoUserClick: (param: MenuInfo) => void;
+  demoUserClick: MenuProps['onClick'];
 }
 
 const DemoUserDropdown = (props: DemoUserDropdownProps) => {

@@ -30,7 +30,7 @@ export class ParamList extends EntityPageList<AdminPageProps> {
   getQueryParam(): ListOptions {
     return {
       criteria: {},
-      orders: ['code'],
+      orders: [['code', 'asc']],
     };
   }
 }

@@ -5,7 +5,7 @@ import { FieldProps } from './FieldProps';
 import { AbstractField } from './AbstractField';
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/lib/upload';
 import { ShowUploadListInterface, UploadFile } from 'antd/lib/upload/interface';
-import { AttachmentEntity, AttachmentService } from 'matrix-ui-service';
+import { AttachmentEntity, AttachmentService, ListOptions } from 'matrix-ui-service';
 import isObject from 'lodash/isObject';
 import { FormItemProps } from 'antd/lib/form';
 
@@ -77,7 +77,7 @@ export class UploadWrap extends React.Component<UploadWrapProps, UploadWrapState
     const { value, valueType, maxNumber, attachmentService } = this.props;
     let attList;
     if (valueType === 'string' && typeof value === 'string') {
-      const param = { criteria: { inList: [['id', value.split(',')]] }, order: ['dateCreated'] };
+      const param: ListOptions = { criteria: { inList: [['id', value.split(',')]] }, orders: [['dateCreated', 'asc']] };
       attList = (await attachmentService.list(param)).results;
     }
     if (valueType === 'json' && typeof value === 'string') {

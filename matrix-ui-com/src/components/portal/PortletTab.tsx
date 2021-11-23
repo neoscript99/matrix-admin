@@ -20,7 +20,7 @@ export class PortletTab extends Portlet<PortletProps, S> {
     this.props.services.portletTabRelService
       .listAll({
         criteria: { eq: [['tab.id', this.props.portlet.id]] },
-        orders: ['portletOrder'],
+        orders: [['portletOrder', 'asc']],
       })
       .then((res) => {
         const portletList = res.results.map((rel) => rel.portlet);

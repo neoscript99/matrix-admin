@@ -1,4 +1,6 @@
 ## 更新日志
+- v1.1.1 （兼容）
+  - 支持pnpm  
 - v1.1.0 （兼容）
   - 增加DomainService.query作为前台表格控件通用查询方法
   - 支持Criteria嵌套属性的处理

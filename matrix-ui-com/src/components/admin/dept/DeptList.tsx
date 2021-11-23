@@ -35,7 +35,7 @@ export class DeptList extends EntityList<AdminPageProps> {
   }
   getQueryParam(): ListOptions {
     const param: ListOptions = {
-      orders: ['seq'],
+      orders: [['seq', 'asc']],
     };
     const { searchParam } = this.domainService.store;
     if (searchParam && StringUtil.isNotBlank(searchParam.searchKey)) {

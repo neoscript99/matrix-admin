@@ -1,4 +1,7 @@
 ## 更新记录
+matrix-ui-com@1.0.5:
+- 支持pnpm
+
 matrix-ui-com@1.0.3:
 - 支持微信小程序登录、绑定手机号
 
