@@ -13,6 +13,7 @@ import com.feathermind.matrix.wechat.mp.bean.*;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * 微信公众号扫码（关注+登录）
- *
+ * 微信公众号-服务号扫码（关注+登录）
+ * 注意：订阅号不支持生成带参数的二维码
  * @see < a href="https://blog.csdn.net/qq_42851002/article/details/81327770">例1</ a>
  * @see < a href="https://learnku.com/articles/26718">例2</ a>
  * @see < a href="https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html">生成带参数的二维码</ a>
@@ -147,7 +148,7 @@ public class WxMpController implements InitializingBean, DisposableBean {
     public Object checkBind(@RequestBody WxBindReq req) {
         //log.debug("checkLogin: {}", scene_str);
         String openid = openidCache.get(req.getScene_str());
-        WxUserInfo user = getUserInfo(openid);
+        WxUserInfo user = StringUtils.hasText(openid) ? getUserInfo(openid) : null;
         return wxBinder.bindWxMpUser(user);
     }
 
