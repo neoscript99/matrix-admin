@@ -5,8 +5,8 @@ matrix:
   cas-client-enabled: false
   token-expire-minutes: 30
   #微信公众号登录相关配置
-  wechat.appId: wx601fa973969006a4
-  wechat.appSecret: ee51729f9127038a5d4fd3a06fabcc15
+  wechat.mp.appId: wx601fa973969006a4
+  wechat.mp.appSecret: ee51729f9127038a5d4fd3a06fabcc15
   #微信小程序登录相关配置
   wechat.miniapp.appid: wx95539a6eb4f1300b
   wechat.miniapp.secret: 9e621a3527b870a5881f86c3c5ffe998

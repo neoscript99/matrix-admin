@@ -1,8 +1,9 @@
-package com.feathermind.matrix.wechat.ma.config;
+package com.feathermind.matrix.wechat.config;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +12,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties(WxMaProperties.class)
-public class WxMaConfig {
+@EnableConfigurationProperties(WxProps.class)
+@Slf4j
+public class WxConfig {
     @Autowired
-    private WxMaProperties wxMaProperties;
+    private WxProps matrixWxProps;
 
     @Bean
     public WxMaService wxMaService() {
-        if (this.wxMaProperties == null
-                || StringUtils.isEmpty(this.wxMaProperties.getAppid())
-                || StringUtils.isEmpty(this.wxMaProperties.getSecret())) {
-            throw new RuntimeException("微信小程序相关配置错误，请检查！");
+        WxMaProps wxMaProperties = matrixWxProps.getMiniapp();
+        if (wxMaProperties == null
+                || StringUtils.isEmpty(wxMaProperties.getAppid())
+                || StringUtils.isEmpty(wxMaProperties.getSecret())) {
+            log.warn("没有微信小程序相关配置错误，不启动服务！");
+            return null;
         }
 
         WxMaDefaultConfigImpl config = new WxMaDefaultConfigImpl();

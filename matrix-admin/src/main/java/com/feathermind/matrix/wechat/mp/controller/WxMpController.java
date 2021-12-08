@@ -6,8 +6,9 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.feathermind.matrix.wechat.WxBinder;
+import com.feathermind.matrix.wechat.config.WxProps;
 import com.feathermind.matrix.wechat.mp.bean.WxQrcodeCreateReq;
-import com.feathermind.matrix.wechat.mp.config.WxMpProperties;
+import com.feathermind.matrix.wechat.config.WxMpProps;
 import lombok.extern.slf4j.Slf4j;
 import com.feathermind.matrix.wechat.mp.bean.*;
 import org.springframework.beans.factory.DisposableBean;
@@ -26,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 微信公众号-服务号扫码（关注+登录）
  * 注意：订阅号不支持生成带参数的二维码
+ *
  * @see < a href="https://blog.csdn.net/qq_42851002/article/details/81327770">例1</ a>
  * @see < a href="https://learnku.com/articles/26718">例2</ a>
  * @see < a href="https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html">生成带参数的二维码</ a>
@@ -40,7 +42,7 @@ public class WxMpController implements InitializingBean, DisposableBean {
     private WxBinder wxBinder;
 
     @Autowired
-    private WxMpProperties wxMpProperties;
+    private WxProps matrixWxProps;
     private WxAccessToken wxAccessToken;
 
     /**
@@ -49,13 +51,13 @@ public class WxMpController implements InitializingBean, DisposableBean {
     public synchronized WxAccessToken getAccessToken() {
         if (wxAccessToken != null && wxAccessToken.isValid())
             return wxAccessToken;
-
+        WxMpProps wxMpProps = matrixWxProps.getMp();
         Map req = MapUtil.of(new String[][]{
                 {"grant_type", "client_credential"},
-                {"appid", wxMpProperties.getAppId()},
-                {"secret", wxMpProperties.getAppSecret()}
+                {"appid", wxMpProps.getAppId()},
+                {"secret", wxMpProps.getAppSecret()}
         });
-        String json = HttpUtil.get(wxMpProperties.getAccessTokenUrl(), req);
+        String json = HttpUtil.get(wxMpProps.getAccessTokenUrl(), req);
         log.info(" 获取微信access_token结果：{}", json);
         wxAccessToken = JSONUtil.toBean(json, WxAccessToken.class);
         return wxAccessToken;
@@ -74,8 +76,9 @@ public class WxMpController implements InitializingBean, DisposableBean {
             return errorRes;
         }
         Map urlParam = Collections.singletonMap("access_token", token.getAccess_token());
+        WxMpProps wxMpProps = matrixWxProps.getMp();
         //access_token拼到url中
-        String url = HttpUtil.urlWithForm(wxMpProperties.getQrcodeCreateUrl(), urlParam, StandardCharsets.UTF_8, false);
+        String url = HttpUtil.urlWithForm(wxMpProps.getQrcodeCreateUrl(), urlParam, StandardCharsets.UTF_8, false);
 
         String json = HttpUtil.createPost(url).body(JSONUtil.toJsonStr(req)).execute().body();
         log.info("createQrcode res: {}", json);
@@ -83,7 +86,7 @@ public class WxMpController implements InitializingBean, DisposableBean {
         res.setScene_str(req.getAction_info().getScene().getScene_str());
 
         Map imgUrlParam = Collections.singletonMap("ticket", res.getTicket());
-        res.setWxImgUrl(HttpUtil.urlWithForm(wxMpProperties.getQrcodeShowUrl(), imgUrlParam, StandardCharsets.UTF_8, false));
+        res.setWxImgUrl(HttpUtil.urlWithForm(wxMpProps.getQrcodeShowUrl(), imgUrlParam, StandardCharsets.UTF_8, false));
         return res;
     }
 
@@ -131,7 +134,8 @@ public class WxMpController implements InitializingBean, DisposableBean {
                 {"access_token", wxAccessToken.getAccess_token()},
                 {"openid", openid}
         });
-        String json = HttpUtil.get(wxMpProperties.getUserInfoUrl(), req);
+        WxMpProps wxMpProps = matrixWxProps.getMp();
+        String json = HttpUtil.get(wxMpProps.getUserInfoUrl(), req);
         log.debug("getUserInfo res: {}", json);
         return JSONUtil.toBean(json, WxUserInfo.class);
     }

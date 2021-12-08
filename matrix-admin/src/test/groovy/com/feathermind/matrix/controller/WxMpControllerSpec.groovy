@@ -2,7 +2,7 @@ package com.feathermind.matrix.controller
 
 import cn.hutool.http.HttpUtil
 import com.feathermind.matrix.util.JsonUtil
-import com.feathermind.matrix.wechat.mp.config.WxMpProperties
+import com.feathermind.matrix.wechat.config.WxMpProps
 import com.feathermind.matrix.wechat.mp.controller.WxMpController
 import groovy.util.logging.Slf4j
 import org.springframework.boot.env.YamlPropertySourceLoader
@@ -24,7 +24,7 @@ class WxMpControllerSpec extends Specification {
 
         def ps = new YamlPropertySourceLoader().load('main', res).get(0)
 
-        WxMpProperties wcp = new WxMpProperties();
+        WxMpProps wcp = new WxMpProps();
         wcp.setAppId(ps.getProperty('matrix.wechat.appId'))
         wcp.setAppSecret(ps.getProperty('matrix.wechat.appSecret'))
         log.info("WxConfigProperties: {}", wcp)
