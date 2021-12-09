@@ -41,6 +41,7 @@ dependencies {
     implementation "com.h2database:h2"
     implementation 'com.alibaba:druid-spring-boot-starter:1.2.4'
     implementation 'com.github.binarywang:weixin-java-miniapp:4.1.8.B'
+    implementation 'com.github.binarywang:weixin-java-mp:4.1.8.B'
 
     api 'org.springframework.boot:spring-boot-starter-logging'
     api 'org.springframework.boot:spring-boot-starter-web'

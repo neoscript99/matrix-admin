@@ -11,6 +11,9 @@ import com.feathermind.matrix.wechat.mp.bean.WxQrcodeCreateReq;
 import com.feathermind.matrix.wechat.config.WxMpProps;
 import lombok.extern.slf4j.Slf4j;
 import com.feathermind.matrix.wechat.mp.bean.*;
+import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,8 @@ public class WxMpController implements InitializingBean, DisposableBean {
     @Autowired(required = false)
     private WxBinder wxBinder;
 
+    @Autowired
+    private WxMpService wxMpService;
     @Autowired
     private WxProps matrixWxProps;
     private WxAccessToken wxAccessToken;
@@ -126,9 +131,11 @@ public class WxMpController implements InitializingBean, DisposableBean {
 
     /**
      * 第六步：通过openid获取用户信息
+     * todo 改为wxJava
      */
     public WxUserInfo getUserInfo(String openid) {
         log.debug("getUserInfo req: {}", openid);
+
         WxAccessToken wxAccessToken = getAccessToken();
         Map req = MapUtil.of(new String[][]{
                 {"access_token", wxAccessToken.getAccess_token()},
@@ -137,6 +144,12 @@ public class WxMpController implements InitializingBean, DisposableBean {
         WxMpProps wxMpProps = matrixWxProps.getMp();
         String json = HttpUtil.get(wxMpProps.getUserInfoUrl(), req);
         log.debug("getUserInfo res: {}", json);
+        try {
+            WxMpUser wxMpUser = wxMpService.getUserService().userInfo(openid);
+            log.debug("WxMpUser: {}", wxMpUser);
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+        }
         return JSONUtil.toBean(json, WxUserInfo.class);
     }
 
