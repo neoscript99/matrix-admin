@@ -1,16 +1,16 @@
-package com.feathermind.matrix.wechat.mp.controller;
+package com.feathermind.matrix.wechat.mp;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.feathermind.matrix.wechat.WxBinder;
+import com.feathermind.matrix.wechat.WxUserBinder;
 import com.feathermind.matrix.wechat.config.WxProps;
 import com.feathermind.matrix.wechat.mp.bean.WxQrcodeCreateReq;
 import com.feathermind.matrix.wechat.config.WxMpProps;
 import lombok.extern.slf4j.Slf4j;
 import com.feathermind.matrix.wechat.mp.bean.*;
+import me.chanjar.weixin.common.bean.WxAccessToken;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
@@ -42,45 +42,29 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/wechat/mp")
 public class WxMpController implements InitializingBean, DisposableBean {
     @Autowired(required = false)
-    private WxBinder wxBinder;
+    private WxUserBinder wxUserBinder;
 
     @Autowired
     private WxMpService wxMpService;
     @Autowired
     private WxProps matrixWxProps;
-    private WxAccessToken wxAccessToken;
 
     /**
      * 第一步：获取access_token
+     * 改为wxJava后不需调用
      */
-    public synchronized WxAccessToken getAccessToken() {
-        if (wxAccessToken != null && wxAccessToken.isValid())
-            return wxAccessToken;
-        WxMpProps wxMpProps = matrixWxProps.getMp();
-        Map req = MapUtil.of(new String[][]{
-                {"grant_type", "client_credential"},
-                {"appid", wxMpProps.getAppId()},
-                {"secret", wxMpProps.getAppSecret()}
-        });
-        String json = HttpUtil.get(wxMpProps.getAccessTokenUrl(), req);
-        log.info(" 获取微信access_token结果：{}", json);
-        wxAccessToken = JSONUtil.toBean(json, WxAccessToken.class);
-        return wxAccessToken;
+    public String getAccessToken() throws WxErrorException {
+        return wxMpService.getAccessToken();
     }
 
     /**
      * 第二步：获取二维码地址
      */
     @PostMapping("qrcode")
-    public WxQrcodeCreateRes createQrcode() {
+    public WxQrcodeCreateRes createQrcode() throws WxErrorException {
         WxQrcodeCreateReq req = new WxQrcodeCreateReq();
-        WxAccessToken token = getAccessToken();
-        if (!token.isValid()) {
-            WxQrcodeCreateRes errorRes = new WxQrcodeCreateRes();
-            errorRes.setError(token.getErrmsg());
-            return errorRes;
-        }
-        Map urlParam = Collections.singletonMap("access_token", token.getAccess_token());
+        String token = getAccessToken();
+        Map urlParam = Collections.singletonMap("access_token", token);
         WxMpProps wxMpProps = matrixWxProps.getMp();
         //access_token拼到url中
         String url = HttpUtil.urlWithForm(wxMpProps.getQrcodeCreateUrl(), urlParam, StandardCharsets.UTF_8, false);
@@ -131,26 +115,11 @@ public class WxMpController implements InitializingBean, DisposableBean {
 
     /**
      * 第六步：通过openid获取用户信息
-     * todo 改为wxJava
+     * 2021-12-10，版本1.6.10改为wxJava
      */
-    public WxUserInfo getUserInfo(String openid) {
+    public WxMpUser getUserInfo(String openid) throws WxErrorException {
         log.debug("getUserInfo req: {}", openid);
-
-        WxAccessToken wxAccessToken = getAccessToken();
-        Map req = MapUtil.of(new String[][]{
-                {"access_token", wxAccessToken.getAccess_token()},
-                {"openid", openid}
-        });
-        WxMpProps wxMpProps = matrixWxProps.getMp();
-        String json = HttpUtil.get(wxMpProps.getUserInfoUrl(), req);
-        log.debug("getUserInfo res: {}", json);
-        try {
-            WxMpUser wxMpUser = wxMpService.getUserService().userInfo(openid);
-            log.debug("WxMpUser: {}", wxMpUser);
-        } catch (WxErrorException e) {
-            e.printStackTrace();
-        }
-        return JSONUtil.toBean(json, WxUserInfo.class);
+        return wxMpService.getUserService().userInfo(openid);
     }
 
     /**
@@ -162,11 +131,11 @@ public class WxMpController implements InitializingBean, DisposableBean {
      * - 返回json：{"success": false}
      */
     @PostMapping(value = "checkBind")
-    public Object checkBind(@RequestBody WxBindReq req) {
+    public Object checkBind(@RequestBody WxBindReq req) throws WxErrorException {
         //log.debug("checkLogin: {}", scene_str);
         String openid = openidCache.get(req.getScene_str());
-        WxUserInfo user = StringUtils.hasText(openid) ? getUserInfo(openid) : null;
-        return wxBinder.bindWxMpUser(user);
+        WxMpUser user = StringUtils.hasText(openid) ? getUserInfo(openid) : null;
+        return wxUserBinder.bindUser(user);
     }
 
     /**

@@ -1,10 +1,10 @@
-package com.feathermind.matrix.wechat.ma.controller;
+package com.feathermind.matrix.wechat.ma;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import com.feathermind.matrix.wechat.WxBinder;
+import com.feathermind.matrix.wechat.WxUserBinder;
 import com.feathermind.matrix.wechat.ma.bean.BindPhoneReq;
 import com.feathermind.matrix.wechat.ma.bean.LoginReq;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import java.util.Map;
 @RequestMapping("/wechat/ma")
 public class WxMaController {
     @Autowired(required = false)
-    WxBinder wxBinder;
+    WxUserBinder wxUserBinder;
     @Autowired(required = false)
     WxMaService wxMaService;
     private final Map FAIL = new HashMap<String, Boolean>() {{
@@ -35,22 +35,22 @@ public class WxMaController {
 
     @PostMapping("/wxMaLogin")
     Object wxMaLogin(@RequestBody LoginReq req) {
-        if (wxBinder == null)
+        if (wxUserBinder == null)
             return FAIL;
         WxMaJscode2SessionResult result = getSessionInfo(req.getCode());
-        return wxBinder.wxMaLogin(result.getOpenid(), result.getUnionid());
+        return wxUserBinder.login(result.getOpenid(), result.getUnionid());
     }
 
     @PostMapping("/bindUser")
     Object bindUser(@RequestBody WxMaUserInfo userInfo) {
-        if (wxBinder == null)
+        if (wxUserBinder == null)
             return FAIL;
-        return wxBinder.bindWxMaUser(userInfo);
+        return wxUserBinder.bindUser(userInfo);
     }
 
     @PostMapping("/bindPhone")
     Object bindPhone(@RequestBody BindPhoneReq req) {
-        if (wxBinder == null)
+        if (wxUserBinder == null)
             return FAIL;
 
         WxMaJscode2SessionResult result = getSessionInfo(req.getCode());
@@ -60,7 +60,7 @@ public class WxMaController {
         if (phoneNumberInfo == null) {
             return FAIL;
         }
-        return wxBinder.bindWxPhone(result.getOpenid(), result.getUnionid(), phoneNumberInfo.getPurePhoneNumber());
+        return wxUserBinder.bindPhone(result.getOpenid(), result.getUnionid(), phoneNumberInfo.getPurePhoneNumber());
     }
 
     private WxMaJscode2SessionResult getSessionInfo(String code) {

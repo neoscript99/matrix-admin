@@ -1,14 +1,11 @@
 package com.feathermind.matrix.controller
 
-import cn.binarywang.wx.miniapp.bean.WxMaUserInfo
-import cn.hutool.core.bean.BeanUtil
 import com.feathermind.matrix.controller.bean.LoginInfo
 import com.feathermind.matrix.controller.bean.UserBindRes
 import com.feathermind.matrix.domain.sys.UserBind
 import com.feathermind.matrix.service.AbstractService
 import com.feathermind.matrix.service.UserBindService
-import com.feathermind.matrix.wechat.mp.bean.WxUserInfo
-import com.feathermind.matrix.wechat.WxBinder
+import com.feathermind.matrix.wechat.WxUserBinder
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/userBind")
-class UserBindController extends DomainController<UserBind> implements WxBinder<UserBindRes> {
+class WxUserBindController extends DomainController<UserBind> implements WxUserBinder<UserBindRes> {
     @Autowired
     UserBindService userBindService
     @Autowired
@@ -24,24 +21,19 @@ class UserBindController extends DomainController<UserBind> implements WxBinder<
 
 
     /**
-     * 微信公众号绑定
-     * 这个方法写在小程序登录之前，暂时只要返回loginInfo
-     * @param wxUserInfo
-     * @return
-     */
-    @Override
-    UserBindRes bindWxMpUser(WxUserInfo wxUserInfo) {
-        def bind = BeanUtil.toBean(wxUserInfo, UserBind);
-        bind.source = 'wechat'
-        return bindUser(bind)
-    }
-    /**
-     * 绑定微信小程序用户信息，并返回登录结果
+     * 微信公众号、小程序、开放平台OAuth用户绑定
+     * 支持以下对象
      * @param userInfo
-     * @return
+     * @see me.chanjar.weixin.mp.bean.result.WxMpUser<br>
+     * @see cn.binarywang.wx.miniapp.bean.WxMaUserInfo<br>
+     * @see me.chanjar.weixin.common.bean.WxOAuth2UserInfo<br>
+     *
+     * @return 是否成功：loginInfo.success
      */
     @Override
-    UserBindRes bindWxMaUser(WxMaUserInfo userInfo) {
+    UserBindRes bindUser(Object userInfo) {
+        if(!userInfo)
+            return afterFail('请传入userInfo')
         def bind = new UserBind();
         BeanUtils.copyProperties(userInfo, bind);
         bind.source = 'wechat'
@@ -55,7 +47,7 @@ class UserBindController extends DomainController<UserBind> implements WxBinder<
      * @return
      */
     @Override
-    UserBindRes wxMaLogin(String openId, String unionId) {
+    UserBindRes login(String openId, String unionId) {
         UserBind bind = userBindService.findBind(openId, unionId, null)
         if (!bind)
             return afterFail('未绑定帐号', new UserBind(openid: openId, unionid: unionId));
@@ -69,7 +61,7 @@ class UserBindController extends DomainController<UserBind> implements WxBinder<
      *
      */
     @Override
-    UserBindRes bindWxPhone(String openId, String unionId, String phoneNumber) {
+    UserBindRes bindPhone(String openId, String unionId, String phoneNumber) {
         if (!openId) return afterFail('请传入openId')
         UserBind bind = userBindService.bindPhone(openId, unionId, phoneNumber)
         if (!bind)

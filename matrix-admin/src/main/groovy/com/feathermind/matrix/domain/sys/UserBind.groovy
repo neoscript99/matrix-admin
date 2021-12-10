@@ -20,7 +20,7 @@ class UserBind implements AutoTime {
     String nickname
     String headimgurl
     //	用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
-    String sex
+    Integer sex
     //用户所在城市
     String city
     //用户所在国家
@@ -36,14 +36,21 @@ class UserBind implements AutoTime {
     public void setNickName(String nickName) {
         this.nickname = nickName;
     }
+
     public void setAvatarUrl(String avatarUrl) {
         this.headimgurl = avatarUrl;
     }
+
     public void setOpenId(String openId) {
         this.openid = openId;
     }
+
     public void setUnionId(String unionId) {
         this.unionid = unionId;
+    }
+
+    public void setHeadImgUrl(String url) {
+        this.headimgurl = url;
     }
     static mapping = {
         user lazy: false, fetch: 'join'
