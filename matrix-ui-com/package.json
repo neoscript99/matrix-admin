@@ -1,6 +1,6 @@
 {
   "name": "matrix-ui-com",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Matrix admin ui component.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -8,7 +8,7 @@
   "scripts": {
     "build": "pnpx tsc",
     "watch": "pnpx tsc -w",
-    "pnpm_pub": "pnpx tsc && pnpm publish",
+    "pnpm_pub": "pnpx tsc && pnpm publish --no-git-checks",
     "pnpm_pack": "pnpx tsc && pnpm pack",
     "test": "jest",
     "lint": "eslint src/ --ext .ts --ext .tsx",
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "js-sha256": "^0.9.0",
+    "lodash": "^4.17.20",
     "matrix-ui-service": "workspace:^",
     "moment": "^2.29.1",
     "numeral": "^2.0.6",

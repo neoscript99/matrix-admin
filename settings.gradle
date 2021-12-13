@@ -2,4 +2,5 @@ rootProject.name = 'matrix-admin'
 
 include 'matrix-admin',
         'matrix-ui-com',
+        'matrix-ui-demo',
         'matrix-ui-service'

@@ -11,12 +11,18 @@ export interface LoginProps extends LoginFormProps {
   introRender: ReactNode;
   backgroundImage?: any;
   useWechat?: boolean;
+  useWxOAuth?: boolean;
 }
 
 export function Login(props: LoginProps) {
-  const { adminServices, useWechat, demoUsers, title, introRender, backgroundImage } = props;
+  const { adminServices, useWechat, useWxOAuth, demoUsers, title, introRender, backgroundImage } = props;
   const { loginService, wxMpService, paramService } = adminServices;
   const [type, setType] = useState<string>('account');
+  const changeTab = React.useCallback((key: string) => {
+    //通过微信开发平台登录
+    if (key === 'wechat' && useWxOAuth) window.open('/wechat/open/go', '_self');
+    else setType(key);
+  }, []);
   const loginStore = useServiceStore(loginService);
   const paramStore = useServiceStore(paramService);
   //依赖paramStore
@@ -32,7 +38,7 @@ export function Login(props: LoginProps) {
           {introRender}
         </LoginBoxItem>
         <LoginBoxItem>
-          <Tabs activeKey={type} onChange={setType} style={{ alignSelf: 'stretch' }}>
+          <Tabs activeKey={type} onChange={changeTab} style={{ alignSelf: 'stretch' }}>
             <Tabs.TabPane
               key="account"
               tab={

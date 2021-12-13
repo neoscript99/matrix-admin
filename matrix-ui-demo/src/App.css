@@ -1,0 +1,52 @@
+@import '~antd/dist/antd.css';
+@import '~@ant-design/pro-form/dist/form.css';
+@import '~@ant-design/pro-card/dist/card.css';
+@import '~@ant-design/pro-layout/dist/layout.css';
+@import '~@ant-design/pro-table/dist/table.css';
+@import '~@ant-design/pro-list/dist/list.css';
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.flex-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.logo-font {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #666666;
+    margin: 20px;
+}
+
+.ant-descriptions-title {
+    margin-bottom: 0.5rem;
+}
+
+/*.ant-form-item-label {
+    line-height: 30px;
+}*/
+
+.ant-form-inline .ant-form-item {
+    /*margin-right: 5px;*/
+    margin: 0 5px 0 0;
+}
+
+.ant-form-item {
+    margin-bottom: 10px;
+}
+
+/*上传附件列表自动换行*/
+.ant-upload-list-item {
+    height: auto;
+}
+
+.ant-upload-list-item-name {
+    white-space: normal;
+}

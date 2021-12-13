@@ -126,3 +126,10 @@ publishing {
         }
     }
 }
+
+task copyReact(type: Copy) {
+    from('../matrix-ui-demo/build/') {
+        include '**/*.*'
+    }
+    into 'build/resources/main/static/'
+}

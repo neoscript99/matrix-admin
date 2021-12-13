@@ -1,3 +1,4 @@
 packages:
   - 'matrix-ui-com'
+  - 'matrix-ui-demo'
   - 'matrix-ui-service'
