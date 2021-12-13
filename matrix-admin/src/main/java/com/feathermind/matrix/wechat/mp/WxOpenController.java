@@ -8,7 +8,6 @@ import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +23,6 @@ public class WxOpenController {
     @Autowired
     WxMpService mpService;
 
-    @Autowired
-    private WxProps matrixWxProps;
     @Autowired(required = false)
     private WxUserBinder wxUserBinder;
 
@@ -56,6 +53,6 @@ public class WxOpenController {
         } catch (Exception e) {
             log.error("获取用户信息异常！", e);
         }
-        return "/";
+        return "redirect:/index.html";
     }
 }

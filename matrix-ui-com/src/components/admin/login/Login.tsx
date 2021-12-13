@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo, useState } from 'react';
-import { Tabs,Spin } from 'antd';
+import { Tabs, Spin } from 'antd';
 import { LoginPage, LoginBox, LoginBoxTitle, LoginBoxItem } from './LoginStyled';
 import { useServiceStore } from '../../../utils';
 import { LoginWechat } from './LoginWechat';
