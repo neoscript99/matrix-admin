@@ -28,7 +28,8 @@ export interface DomainServiceOptions<D extends DomainStore = DomainStore> {
  */
 export class DomainService<T extends Entity = Entity, D extends DomainStore<T> = DomainStore<T>>
   extends StoreService<D>
-  implements QueryApi<T>, AfterLoginService {
+  implements QueryApi<T>, AfterLoginService
+{
   public store: D;
   domain: string;
 
@@ -82,11 +83,12 @@ export class DomainService<T extends Entity = Entity, D extends DomainStore<T> =
    * @returns {Promise<{client: *, fields?: *}>}
    */
   list({ criteria = {}, pageInfo, orders }: ListOptions): Promise<ListResult<T>> {
-    criteria.order = [...(criteria.order || []), ...(orders || [])];
-    ServiceUtil.processNestCriteria(criteria);
     const { maxResults, firstResult, order, ...countCriteria } = criteria;
     //先调用count，防止countCriteria被后面的步骤污染
-    const countPromise = pageInfo ? (this.postApi('count', countCriteria) as Promise<number>) : Promise.resolve(0);
+    const countPromise = pageInfo ? this.count(countCriteria) : Promise.resolve(0);
+
+    criteria.order = [...(criteria.order || []), ...(orders || [])];
+    ServiceUtil.processNestCriteria(criteria);
     if (pageInfo) ServiceUtil.processCriteriaPage(criteria, pageInfo);
     const listPromise = this.postApi('list', criteria) as Promise<T[]>;
     if (pageInfo) {
@@ -97,6 +99,18 @@ export class DomainService<T extends Entity = Entity, D extends DomainStore<T> =
     } else {
       return listPromise.then((results) => ({ results, totalCount: results.length }));
     }
+  }
+
+  /**
+   * 数据库count
+   * 注意：嵌套属性中不能带入的order，否则报错
+   * @param criteria
+   */
+  count(criteria: Criteria): Promise<number> {
+    //count时不需要任何order信息，如果是嵌套的order还会报错
+    const { maxResults, firstResult, order, ...countCriteria } = criteria;
+    ServiceUtil.processNestCriteria(countCriteria);
+    return this.postApi('count', countCriteria) as Promise<number>;
   }
 
   /**
