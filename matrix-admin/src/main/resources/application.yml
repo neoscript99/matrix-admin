@@ -30,12 +30,6 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password:
-    druid:
-      validation-query: SELECT 1
-      stat-view-servlet:
-        enabled: true
-      filters: stat
-      filter.stat.log-slow-sql: true
   servlet:
     multipart.max-file-size: 100MB
     multipart.max-request-size: 100MB
