@@ -14,12 +14,11 @@ export function UserProfile(props: AdminPageProps) {
   const handleCheckboxChange = useCallback((e: CheckboxChangeEvent) => setShowPassword(e.target.checked), []);
   const loginStore = useServiceStore(services.loginService);
   const handleSave = useCallback((item: UserEntity) => {
-    if (item.password === services.loginService.initPasswordHash) message.error('新密码不能和初始密码相同');
-    else
-      services.userService.save(item).then((user) => {
-        services.loginService.updateLoginInfo({ user });
-        message.success('保存成功');
-      });
+    //if (item.password === services.loginService.initPasswordHash) message.error('新密码不能和初始密码相同');
+    services.userService.save(item).then((user) => {
+      services.loginService.updateLoginInfo({ user });
+      message.success('保存成功');
+    });
   }, []);
 
   const {

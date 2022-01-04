@@ -1,6 +1,6 @@
 {
   "name": "matrix-ui-service",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Object oriented ui service form matrix-admin.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -8,7 +8,7 @@
   "scripts": {
     "build": "pnpx tsc",
     "watch": "pnpx tsc -w",
-    "pnpm_pub": "pnpx tsc && pnpm publish",
+    "pnpm_pub": "pnpx tsc && pnpm publish --no-git-checks",
     "pnpm_pack": "pnpx tsc && pnpm pack",
     "test": "pnpx jest",
     "lint": "pnpx eslint src/ --ext .ts --ext .tsx",

@@ -18,4 +18,5 @@ class LoginInfo extends ResBean {
     Collection<String> authorities
     String account
     Boolean kaptchaFree
+    Boolean isInitPassword
 }

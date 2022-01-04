@@ -1,6 +1,5 @@
 package com.feathermind.matrix.domain.sys
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.feathermind.matrix.util.EncoderUtil
 import grails.gorm.annotation.Entity
@@ -19,14 +18,14 @@ import com.feathermind.matrix.initializer.InitializeDomain
  * sys包下都是管理后台相关domain
  */
 class User {
-    static encodePassword(String password) {
+    static String encodePassword(String password) {
         return EncoderUtil.sha256(password)
     }
 
     String id
     String account
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    String password = encodePassword('anonymous')
+    String password = encodePassword('Anonymous66++')
     String name
     Boolean editable = true
     Boolean enabled = true

@@ -22,7 +22,7 @@ export function ApplyLogList({ applyId, applyDictType, applyLogService, dictServ
   const columns = useMemo(
     () => [
       TableUtil.commonColumns.index,
-      { title: '用户', dataIndex: ['operator', 'name'], key: 'name' },
+      { title: '用户', dataIndex: ['operator', 'name'] },
       TableUtil.commonColumns.dateCreated,
       {
         title: '状态',
@@ -34,5 +34,5 @@ export function ApplyLogList({ applyId, applyDictType, applyLogService, dictServ
     ],
     [applyDictType],
   );
-  return <Table pagination={false} columns={columns} dataSource={logList} size="small" />;
+  return <Table pagination={false} columns={columns} dataSource={logList} size="small" rowKey="id" />;
 }

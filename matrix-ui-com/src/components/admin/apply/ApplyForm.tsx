@@ -1,7 +1,8 @@
-import React from 'react';
-import { Button, Form, Radio, Input, Space, Card, Col, Row } from 'antd';
+import React, { useCallback } from 'react';
+import { Button, Form, Radio, Input, Space, Card, Col, Row, RadioGroupProps } from 'antd';
 import { AdminServices, ApplyEntity } from 'matrix-ui-service';
 import { ApplyLogList } from './ApplyLogList';
+import { commonRules } from '../../../utils';
 
 const { TextArea } = Input;
 
@@ -26,6 +27,14 @@ export interface ApplyFormProps {
 export function ApplyForm(props: ApplyFormProps) {
   const { apply, ownerRender, adminServices, applyDictType, onSubmit, onCancel, actions } = props;
   const { applyLogService, dictService } = adminServices;
+  const [form] = Form.useForm();
+  const onActionChange = useCallback<RadioGroupProps['onChange']>(
+    (e) => {
+      const map = actions.find((a) => a.value === e.target.value);
+      map && form.setFieldsValue({ info: map.info });
+    },
+    [actions, form],
+  );
   return (
     <>
       {ownerRender}
@@ -42,23 +51,12 @@ export function ApplyForm(props: ApplyFormProps) {
         </Col>
         <Col span={10}>
           <Card title="审批" size="small" style={{ height: '100%' }}>
-            <Form onFinish={onSubmit}>
-              <Form.Item name="action" label="结果" required={true}>
-                <Radio.Group options={actions} />
+            <Form form={form} onFinish={onSubmit}>
+              <Form.Item name="action" label="结果" rules={[commonRules.required]}>
+                <Radio.Group options={actions} onChange={onActionChange} />
               </Form.Item>
-              <Form.Item dependencies={['action']}>
-                {(form) => {
-                  const item = form.getFieldsValue();
-                  if (item.action) {
-                    const map = actions.find((a) => a.value === item.action);
-                    map && form.setFieldsValue({ info: map.info });
-                  }
-                  return (
-                    <Form.Item name="info" label="备注" required={true}>
-                      <TextArea maxLength={255} size="large" />
-                    </Form.Item>
-                  );
-                }}
+              <Form.Item name="info" label="备注" rules={[commonRules.required]}>
+                <TextArea maxLength={255} size="large" />
               </Form.Item>
               <Form.Item>
                 <Space style={{ display: 'flex', justifyContent: 'center' }}>

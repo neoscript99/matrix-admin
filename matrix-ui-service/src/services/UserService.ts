@@ -37,7 +37,7 @@ export class UserService extends DomainService<UserEntity> {
   saveUserRoles(user: Entity, roleIds: string[]) {
     return this.postApi('saveWithRoles', { user, roleIds });
   }
-  resetPassword(user: Entity, passwordHash: string) {
-    return this.postApi('resetPassword', { userId: user.id, passwordHash });
+  resetPassword(user: Entity) {
+    return this.postApi('resetPassword', { userId: user.id });
   }
 }
