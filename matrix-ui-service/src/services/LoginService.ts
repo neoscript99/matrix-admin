@@ -15,6 +15,7 @@ export interface LoginInfo {
   roles?: string[];
   authorities?: string[];
   kaptchaFree?: boolean;
+  isInitPassword?: boolean;
 }
 
 export class LoginStore {
@@ -53,7 +54,8 @@ export class LoginService extends StoreService<LoginStore> {
   store = new LoginStore();
   //用户的初始化密码，可在new LoginService的时候修改
   //如果用户密码登录初始密码，跳转到密码修改页面
-  initPassword = 'abc000';
+  // 前台不再存放初始密码
+  //initPassword = '';
   private afterLogins: AfterLogin[] = [];
 
   constructor(restClient: SpringBootClient) {
@@ -88,7 +90,7 @@ export class LoginService extends StoreService<LoginStore> {
     return this.postApi(isDev ? 'devLogin' : 'login', { username, passwordHash, kaptchaCode }).then((loginInfo) => {
       if (loginInfo.success) {
         //如果密码等于初始密码，强制修改
-        if (passwordHash === this.initPasswordHash) {
+        if (loginInfo.isInitPassword) {
           this.store.forcePasswordChange = true;
           MessageUtil.warn('请修改初始密码');
         }
@@ -168,10 +170,6 @@ export class LoginService extends StoreService<LoginStore> {
 
   get dept() {
     return this.store.loginInfo?.user?.dept;
-  }
-
-  get initPasswordHash() {
-    return StringUtil.sha256(this.initPassword);
   }
 
   addAfterLogin(fun: AfterLogin) {

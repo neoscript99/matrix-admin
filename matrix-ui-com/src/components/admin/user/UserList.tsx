@@ -45,7 +45,7 @@ export class UserList<
   opCol(text: string, record: any) {
     return (
       <Popconfirm
-        title={`确定重置? (${this.props.services.loginService.initPassword})`}
+        title={`确定重置? `}
         onConfirm={this.resetPassword.bind(this, record)}
         okText="确定"
         cancelText="取消"
@@ -61,12 +61,10 @@ export class UserList<
     return { ...props, modalProps: { ...props.modalProps, ...Consts.commonProps.twoColModalProps }, services };
   }
   getInitItem(): Entity {
-    const password = this.props.services.loginService.initPasswordHash;
-    return { editable: true, password };
+    return { editable: true };
   }
   resetPassword(user: Entity) {
-    const password = this.props.services.loginService.initPasswordHash;
-    this.domainService.resetPassword(user, password).then(() => message.success('重置成功'));
+    this.domainService.resetPassword(user).then(() => message.success('重置成功'));
   }
   getOperatorEnable() {
     const base = super.getOperatorEnable();

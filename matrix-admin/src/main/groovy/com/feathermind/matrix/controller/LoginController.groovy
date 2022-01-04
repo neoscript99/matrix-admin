@@ -76,12 +76,13 @@ class LoginController {
         if (gormSessionBean)
             gormSessionBean.tokenDetails = tokenDetails
         return new LoginInfo([
-                success    : true,
-                user       : user,
-                account    : user.account,
-                roles      : tokenDetails.roles,
-                authorities: tokenDetails.authorities,
-                token      : userSecurityService.generateToken(tokenDetails)])
+                success       : true,
+                user          : user,
+                account       : user.account,
+                roles         : tokenDetails.roles,
+                authorities   : tokenDetails.authorities,
+                isInitPassword: user.password == matrixConfigProperties.initPasswordHash,
+                token         : userSecurityService.generateToken(tokenDetails)])
     }
 
     /**
