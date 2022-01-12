@@ -30,6 +30,7 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password:
+    druid.test-while-idle: false
   servlet:
     multipart.max-file-size: 100MB
     multipart.max-request-size: 100MB

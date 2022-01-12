@@ -4,7 +4,7 @@
   "description": "Object oriented ui service form matrix-admin.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "jsnext:main": "src/index.ts",
+  "jsnext:main": "lib/index.ts",
   "scripts": {
     "build": "pnpx tsc",
     "watch": "pnpx tsc -w",
