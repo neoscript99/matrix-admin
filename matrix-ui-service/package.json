@@ -1,6 +1,6 @@
 {
   "name": "matrix-ui-service",
-  "version": "1.1.2",
+  "version": "1.1.3-beta.1",
   "description": "Object oriented ui service form matrix-admin.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -8,7 +8,8 @@
   "scripts": {
     "build": "pnpx tsc",
     "watch": "pnpx tsc -w",
-    "pnpm_pub": "pnpx tsc && pnpm publish --no-git-checks",
+    "pub_prod": "pnpx tsc && pnpm publish --no-git-checks",
+    "pub_beta": "pnpm pub_prod -- --tag beta",
     "pnpm_pack": "pnpx tsc && pnpm pack",
     "test": "pnpx jest",
     "lint": "pnpx eslint src/ --ext .ts --ext .tsx",
@@ -24,7 +25,8 @@
     "url": "git+https://github.com/neoscript99/matrix-admin.git"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org"
+    "registry": "https://registry.npmjs.org",
+    "registry": "https://packages.aliyun.com/606bf85eb209386279b73de9/npm/npm-registry/"
   },
   "dependencies": {
     "js-sha256": "^0.9.0",
