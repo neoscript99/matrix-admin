@@ -11,6 +11,7 @@ import grails.gorm.transactions.ReadOnly
 import org.apache.poi.util.IOUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
+import org.springframework.core.env.Environment
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.support.ResourcePatternResolver
 import org.springframework.stereotype.Service
@@ -23,7 +24,7 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
     @Autowired
     ApplicationContext applicationContext
     @Autowired
-    ParamService paramService
+    private Environment env;
 
     AttachmentInfo saveWithMultipartFile(MultipartFile file, String ownerId, String ownerName) {
         return this.saveWithByte(file.originalFilename, ownerId, ownerName, file.bytes)
@@ -150,7 +151,7 @@ class AttachmentService extends AbstractService<AttachmentInfo> {
      */
     //@Scheduled(cron = "0 0 * * * *")
     void cleanTemp() {
-        def deleteDate = paramService.profiles.equals('dev') ? DateUtil.offsetMinute(DateUtil.date(), -2) : DateUtil.yesterday()
+        def deleteDate = env.activeProfiles.contains('dev') ? DateUtil.offsetMinute(DateUtil.date(), -2) : DateUtil.yesterday()
         log.info("定时删除一些没有owner的附件，删除${deleteDate.toString()}之前的临时附件")
         list([isNull: ['ownerId'],
               lt    : [['dateCreated', deleteDate]]]).each {
