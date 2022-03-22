@@ -1,4 +1,4 @@
-import moment, { unitOfTime } from 'moment';
+import moment, { OpUnitType } from 'dayjs';
 import { FormItemProps } from 'antd/lib/form';
 type Rule = FormItemProps['rules'][0];
 /** built-in validation type, available options: https://github.com/yiminghe/async-validator#type */
@@ -57,13 +57,13 @@ export const genRules = {
 };
 
 export const transforms = {
-  momentToDateUnit(unit: unitOfTime.StartOf, value: moment.Moment) {
+  momentToDateUnit(unit: OpUnitType, value: moment.Dayjs) {
     return value && value.startOf(unit).date();
   },
-  momentToDate(value: moment.Moment) {
+  momentToDate(value: moment.Dayjs) {
     return value && value.date();
   },
-  momentToDayString(value: moment.Moment) {
+  momentToDayString(value: moment.Dayjs) {
     return value && value.format('YYYY-MM-DD');
   },
   dateToMoment(value: any) {

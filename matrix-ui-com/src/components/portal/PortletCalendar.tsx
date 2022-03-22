@@ -2,13 +2,14 @@ import React from 'react';
 import { CalendarOutlined } from '@ant-design/icons';
 import { Badge, Calendar, Card, Popover, List, Divider } from 'antd';
 import urlTemplate from 'url-template';
-import moment, { Moment } from 'moment';
+import moment, { Dayjs } from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import 'moment/locale/zh-cn';
 import { Portlet } from './Portlet';
 import zh from 'antd/lib/calendar/locale/zh_CN';
 import { DomainService } from 'matrix-ui-service';
-import { DomainStore } from 'matrix-ui-service';
 
+moment.extend(isBetween);
 moment.locale('zh-cn');
 
 export class PortletCalendar extends Portlet {
@@ -20,7 +21,7 @@ export class PortletCalendar extends Portlet {
       <Card
         title={portletName}
         extra={
-          <a href={dateLink} target="_blank">
+          <a href={dateLink} target="_blank" rel="noreferrer">
             更多
           </a>
         }
@@ -38,7 +39,7 @@ export class PortletCalendar extends Portlet {
     );
   }
 
-  cellRender(unit: 'day' | 'month', date: Moment) {
+  cellRender(unit: 'day' | 'month', date: Dayjs) {
     const { portlet, dataList } = this.state;
     if (!dataList) return null;
 
@@ -62,7 +63,7 @@ export class PortletCalendar extends Portlet {
               <List.Item>
                 <CalendarOutlined />
                 <Divider type="vertical" />
-                <a href={linkTemplate.expand(item)} target="_blank">
+                <a href={linkTemplate.expand(item)} target="_blank" rel="noreferrer">
                   {item[portlet.titleField]}
                 </a>
               </List.Item>
@@ -83,7 +84,7 @@ export class PortletCalendar extends Portlet {
    * 加了onSelect={this.calSelect}后，点击popup中的链接后打开两个链接，应该是bug，先放到标题栏
    * @param date
    */
-  calSelect = (date?: Moment) => {
+  calSelect = (date?: Dayjs) => {
     const { dateLink, timeFormat } = this.state.portlet;
     const linkTemplate = urlTemplate.parse(dateLink);
 

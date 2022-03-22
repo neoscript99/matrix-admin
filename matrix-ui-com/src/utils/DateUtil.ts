@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment from 'dayjs';
 
 export class DateUtil {
   static dateStringConvert(fromDateFormat: string, toDateFormat: string, text: string) {

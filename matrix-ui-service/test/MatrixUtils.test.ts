@@ -52,4 +52,14 @@ describe('MatrixUtilsTest', () => {
     console.debug(fo);
     expect(fo['dept.seq']).toEqual(1);
   });
+
+  it('flattenObject test', () => {
+    const flat = LangUtil.flattenObject({
+      user: { map: { a: '123424', b: { b1: 'XYZ', b2: 'b2' } } },
+      name: 'name',
+    });
+    console.log(flat);
+    console.log(typeof flat['user.map.b.b2']);
+    expect(flat['user.map.b.b1']).toEqual('XYZ');
+  });
 });

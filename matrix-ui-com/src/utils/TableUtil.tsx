@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import moment from 'moment';
+import moment from 'dayjs';
 import numeral from 'numeral';
 import { EntityColumnProps } from '../components/layout';
 import { PageInfo } from 'matrix-ui-service';

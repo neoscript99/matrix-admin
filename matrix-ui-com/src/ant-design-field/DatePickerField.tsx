@@ -1,20 +1,17 @@
 import React from 'react';
-import { DatePicker } from 'antd';
 import { FieldProps } from './FieldProps';
 import { AbstractField } from './AbstractField';
-import { commonRules } from '../utils';
-import moment from 'moment';
-import { DatePickerProps } from 'antd/lib/date-picker';
+import dayjs, { Dayjs } from 'dayjs';
+import { DatePickerByDayjs, DatePickerByDayjsProps } from './DatePickerByDayjs';
 interface P extends FieldProps {
   //DatePicker的required Rule可能根据返回值是string还是date变化，参考Uploader，有需要加回去
   //required?: boolean;
   defaultDiffDays?: number;
-  originValue?: moment.MomentInput;
+  originValue?: Dayjs;
 }
-export type DatePickerFieldProps = DatePickerProps & P;
+export type DatePickerFieldProps = DatePickerByDayjsProps & P;
 
 /**
- * 输入为moment.MomentInput
  * 输出为string，可重载decorator.getValueFromEvent
  */
 export class DatePickerField extends AbstractField<DatePickerFieldProps> {
@@ -31,18 +28,18 @@ export class DatePickerField extends AbstractField<DatePickerFieldProps> {
     return {
       valuePropName: 'originValue',
       getValueFromEvent: (date, dateString) => dateString,
-      initialValue: defaultDiffDays !== undefined ? moment().add(defaultDiffDays, 'day').format(dateFormat) : undefined,
+      initialValue: defaultDiffDays !== undefined ? dayjs().add(defaultDiffDays, 'day').format(dateFormat) : undefined,
     };
   }
 }
 
-export type DatePickerWrapProps = DatePickerProps & {
-  originValue?: moment.MomentInput;
+export type DatePickerWrapProps = DatePickerByDayjsProps & {
+  originValue?: Dayjs;
   onChangeForString?: (dateString: string) => void;
 };
 export class DatePickerWrap extends React.Component<DatePickerWrapProps> {
   render() {
     const { originValue, value, ...pureProps } = this.props;
-    return <DatePicker {...pureProps} value={originValue ? moment(originValue) : value} />;
+    return <DatePickerByDayjs {...pureProps} value={originValue ? dayjs(originValue) : value} />;
   }
 }
