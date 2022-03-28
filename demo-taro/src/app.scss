@@ -1,0 +1,83 @@
+@import "~taro-ui/dist/style/index.scss";
+
+html,
+body,
+page {
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  outline: 0;
+  font-size: medium;
+  line-height: 1.6;
+  font-family: "PingFang SC", "Microsoft YaHei", 微软雅黑, -apple-system, BlinkMacSystemFont, Helvetica, Tahoma, Arial, sans-serif;
+  background-color: #ffffff;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+}
+
+.nav-bg {
+  background-color: #2A8CE5;
+  height: 10rem;
+  border-bottom-left-radius: 30%;
+  border-bottom-right-radius: 30%;
+  z-index: -1;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+//@see node_modules\taro-ui\dist\style\components\switch.scss
+.form-item {
+  @extend .at-switch;
+
+  padding: 24px 0;
+
+  .form-item-title {
+    margin-right: 16px;
+    min-width: 5rem;
+    max-width: 10rem
+  }
+}
+
+.transparent-blue-bg {
+  background: rgba(97, 144, 232, 0.6);
+}
+
+// taro-ui 微调开始
+.at-card {
+  box-shadow: 0px 0px 0.3rem #c5c5c5;
+  border: 0;
+  margin: 0.4rem;
+}
+
+.at-card__header {
+  border: 0;
+  color: black;
+  font-weight: bold;
+}
+
+.at-noticebar {
+  margin: 0.2rem 0;
+}
+
+//嵌套 selector 优先 单级别 selector
+.at-input {
+  .at-input__title {
+    min-width: 5rem;
+    max-width: 10rem
+  }
+
+  .at-input__input {
+    border: 1px solid #f0f0f0;
+  }
+}
+
+// taro-ui 微调结束

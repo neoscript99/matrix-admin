@@ -128,7 +128,7 @@ publishing {
 }
 
 task copyReact(type: Copy) {
-    from('../matrix-ui-demo/build/') {
+    from('../demo-antd/build/') {
         include '**/*.*'
     }
     into 'build/resources/main/static/'

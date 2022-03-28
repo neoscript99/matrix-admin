@@ -1,0 +1,54 @@
+{
+	"name": "matrix-taro",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Matrix Taro",
+	"templateInfo": {
+		"name": "taro-ui",
+		"typescript": true,
+		"css": "sass"
+	},
+	"scripts": {
+		"build": "pnpx taro build --type weapp",
+		"build:h5": "pnpx taro build --type h5",
+		"dev": "pnpm run build -- --watch",
+		"dev:h5": "pnpm run build:h5 -- --watch",
+		"update_taro": "pnpx taro update project"
+	},
+	"author": "",
+	"dependencies": {
+		"@babel/runtime": "^7.7.7",
+		"@tarojs/cli": "3.4.3",
+		"@tarojs/components": "3.4.3",
+		"@tarojs/mini-runner": "3.4.3",
+		"@tarojs/plugin-platform-alipay": "3.4.3",
+		"@tarojs/plugin-platform-jd": "3.4.3",
+		"@tarojs/plugin-platform-qq": "3.4.3",
+		"@tarojs/plugin-platform-swan": "3.4.3",
+		"@tarojs/plugin-platform-tt": "3.4.3",
+		"@tarojs/plugin-platform-weapp": "3.4.3",
+		"@tarojs/react": "3.4.3",
+		"@tarojs/runner-utils": "3.4.3",
+		"@tarojs/runtime": "3.4.3",
+		"@tarojs/taro": "3.4.3",
+		"@tarojs/taro-h5": "3.4.3",
+		"autoprefixer": "^10.4.2",
+    "matrix-ui-service": "workspace:^",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.0",
+		"taro-ui": "3.1.0-beta.2",
+		"url-template": "^2.0.8"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.8.0",
+		"@tarojs/webpack-runner": "3.4.3",
+		"@types/react": "^17.0.2",
+		"@types/webpack-env": "^1.13.6",
+		"babel-preset-taro": "3.4.3",
+		"eslint-config-taro": "3.4.3",
+		"eslint-plugin-taro": "3.3.20"
+	},
+	"browserslist": [
+		"defaults"
+	]
+}
