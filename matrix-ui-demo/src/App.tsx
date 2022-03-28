@@ -6,8 +6,6 @@ import { config } from './utils';
 import { PageSwitch } from './pages';
 import logo from './asset/logo.png';
 import mainBG from './asset/main_bg.jpg';
-import headBG1 from './asset/header_bg1.png';
-import headBG2 from './asset/header_bg2.png';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
 import { yard } from './services';
@@ -15,21 +13,18 @@ import { yard } from './services';
 const title = 'Matrix Admin Demo';
 const introRender = (
   <>
-    <img src="http://attach.neoscript.wang/fmind_mp_qrcode_344.jpg" width={200} />
+    <img src="http://attach.neoscript.wang/fmind_mp_qrcode_344.jpg" width={200} alt="公众号二维码" />
     <em>羽意软件公众号</em>
   </>
 );
 const logoRender = (
   <div>
-    <img src={logo} height={62} />
+    <img src={logo} height={62} alt="logo" />
     <em className="logo-font" style={{ margin: '0 5px', fontSize: 20 }}>
       {title}
     </em>
   </div>
 );
-const headerPics = [headBG1, headBG2];
-const headerBG = headerPics[Math.round(Math.random())];
-const headerCss = { background: `url(${headerBG}) no-repeat center white` };
 const footRender = (
   <div>
     <span>Matrix Admin ©2020</span>
@@ -52,7 +47,7 @@ export default function App() {
             adminServices={yard.adminServices}
             serverRoot={config.serverRoot}
             logoRender={logoRender}
-            headerCss={headerCss}
+            headerCss={{ background: 'linear-gradient(#B3E5FC, 10%, white)' }}
             footRender={footRender}
           >
             <PageSwitch />
@@ -65,7 +60,6 @@ export default function App() {
             backgroundImage={`url(${mainBG})`}
             demoUsers={config.demoUsers}
             useWechat
-            useWxOAuth
           />
         )}
       </HashRouter>

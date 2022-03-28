@@ -1,10 +1,8 @@
 import React from 'react';
 import { Typography } from 'antd';
-import { ApplyTest } from './test';
 const { Title, Paragraph, Text } = Typography;
 
 export const Welcome = (props: any) => {
-  return <ApplyTest />;
   return (
     <Typography style={{ fontSize: '1.1em' }}>
       <Title level={2}>后台框架</Title>

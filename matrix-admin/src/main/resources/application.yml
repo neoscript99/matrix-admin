@@ -54,23 +54,6 @@ logging:
   pattern.console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID}){magenta} %clr(---){faint} %clr([%t]){faint} %clr(%-60.60logger{59}){cyan} %clr(:){faint} %m%n    %caller{1}${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
   pattern.file: "%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:%5p} ${PID} --- [%t] %-40.40logger{39} : %m%n    %caller{1}${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
   pattern.level: "%5p"
-  level:
-    # equivalent to hibernate.show_sql=true
-    # org.hibernate.SQL: DEBUG
-    org.hibernate.engine.transaction: DEBUG
-    org.hibernate.cache: DEBUG
-    net.sf.ehcache: DEBUG
-    # Logs the JDBC parameters passed to a query
-    #org.hibernate.type: TRACE
-    com.feathermind: DEBUG
-    org.springframework.transaction: DEBUG
-    grails.gorm.transactions: DEBUG
-    org.grails.orm.hibernate.transaction: DEBUG
-    org.springframework.orm.jpa: DEBUG
-    org.grails.gorm.graphql: DEBUG
-    graphql.GraphQL: DEBUG
-    com.oembedler: DEBUG
-    org.dataloader: DEBUG
 
 cas:
   server-url-prefix: http://localhost:7007/cas

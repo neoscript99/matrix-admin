@@ -1,4 +1,4 @@
-import React, { ComponentType, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Layout } from 'antd';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
@@ -28,11 +28,10 @@ export const Home: React.FC<HomeProps> = (props) => {
 
   const onMenuClick = useCallback((menu: MenuEntity) => history.push(`/${menu.app}`), [history]);
 
-  const goProfile = useCallback(() => location.pathname !== profilePath && history.push(profilePath), [
-    profilePath,
-    location.pathname,
-    history,
-  ]);
+  const goProfile = useCallback(
+    () => location.pathname !== profilePath && history.push(profilePath),
+    [profilePath, location.pathname, history],
+  );
   const menuStore = useServiceStore(menuService);
   const loginStore = useServiceStore(loginService);
   const paramStore = useServiceStore(paramService);

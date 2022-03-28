@@ -1,0 +1,26 @@
+matrix:
+  dev-login: true
+spring:
+  datasource:
+    druid:
+      web-stat-filter.enabled: true
+      stat-view-servlet.enabled: true
+
+logging:
+  level:
+    # equivalent to hibernate.show_sql=true
+    # org.hibernate.SQL: DEBUG
+    org.hibernate.engine.transaction: DEBUG
+    org.hibernate.cache: DEBUG
+    net.sf.ehcache: DEBUG
+    # Logs the JDBC parameters passed to a query
+    #org.hibernate.type: TRACE
+    com.feathermind: DEBUG
+    org.springframework.transaction: DEBUG
+    grails.gorm.transactions: DEBUG
+    org.grails.orm.hibernate.transaction: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.grails.gorm.graphql: DEBUG
+    graphql.GraphQL: DEBUG
+    com.oembedler: DEBUG
+    org.dataloader: DEBUG
