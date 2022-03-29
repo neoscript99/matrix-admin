@@ -11,4 +11,7 @@ export class Config {
   get uploadUrl() {
     return `${this.serverRoot}/upload`;
   }
+  asset = {
+    logoIcon: 'https://cdn.feathermind.cn/fmind/fmind-logo.png',
+  };
 }

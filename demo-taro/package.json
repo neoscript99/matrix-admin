@@ -21,6 +21,7 @@
 		"@tarojs/cli": "3.4.3",
 		"@tarojs/components": "3.4.3",
 		"@tarojs/mini-runner": "3.4.3",
+		"@tarojs/plugin-framework-react": "3.4.3",
 		"@tarojs/plugin-platform-alipay": "3.4.3",
 		"@tarojs/plugin-platform-jd": "3.4.3",
 		"@tarojs/plugin-platform-qq": "3.4.3",

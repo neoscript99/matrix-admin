@@ -54,13 +54,6 @@ export class TaroUtil {
     return { attaches, src };
   }
 
-  //裁剪后重新获取数据
-  static async onloadCropperAfter(src: string) {
-    const attaches = [];
-    attaches.push(await TaroUtil.matrixUpload(src)); //上传比对图片获取数据
-    return { attaches, src };
-  }
-
   static matrixUpload(filePath: string): Promise<AttachmentEntity> {
     return new Promise((resolve) => {
       Taro.uploadFile({

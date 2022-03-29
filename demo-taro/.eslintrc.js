@@ -2,7 +2,6 @@
 module.exports = {
   extends: [
     'taro/react',
-    'react-app',
     'plugin:prettier/recommended',
   ],
   rules: {
