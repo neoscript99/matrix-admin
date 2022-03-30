@@ -1,5 +1,6 @@
 matrix:
   dev-login: true
+  file-public: true
 spring:
   datasource:
     druid:

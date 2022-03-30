@@ -14,7 +14,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ showAvatar }) => {
   const { userBind } = useServiceStore(wxMaService);
   const { asset } = config;
   const showTitle = useMemo(() => !showAvatar || !userBind, [showAvatar, userBind]);
-  Taro.showShareMenu({});
+  if (config.isWeapp) Taro.showShareMenu({});
   return (
     <View className="flex-col at-row__align--center">
       <View className="nav-bg" />
