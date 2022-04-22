@@ -1,10 +1,18 @@
 matrix:
   dev-login: true
+
 spring:
+  h2.console:
+    enabled: true
+    settings.web-allow-others: true
   datasource:
     druid:
       web-stat-filter.enabled: true
       stat-view-servlet.enabled: true
+      filter.stat.enabled: true
+
+hibernate:
+  show_sql: true
 
 logging:
   level:

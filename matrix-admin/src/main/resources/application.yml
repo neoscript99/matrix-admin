@@ -1,4 +1,3 @@
-
 matrix:
   default-roles: Public
   #@see https://github.com/Unicon/cas-client-autoconfig-support
@@ -21,16 +20,17 @@ server:
     timeout: 30m
 spring:
   profiles.active: dev
-  h2.console:
-    enabled: true
-    settings.web-allow-others: true
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:h2:file:./build/devDB;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
     username: sa
     password:
-    druid.test-while-idle: false
+    druid:
+      web-stat-filter.enabled: false
+      stat-view-servlet.enabled: false
+      filter.stat.enabled: false
+      test-while-idle: false
   servlet:
     multipart.max-file-size: 100MB
     multipart.max-request-size: 100MB
@@ -40,7 +40,6 @@ spring:
 #org.grails.orm.hibernate.connections.HibernateConnectionSourceSettings
 hibernate:
   hbm2ddl.auto: update
-  show_sql: true
   format_sql: true
   #通过application.groovy实现更细化的控制
   #naming_strategy: neo.script.gorm.general.config.PrefixedNamingStrategy
