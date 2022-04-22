@@ -17,7 +17,7 @@ const Home: React.FC = () => {
       <AtCard>
         {paramStore.allList &&
           paramStore.allList.map((p) => (
-            <View key={p.id}>
+            <View key={p.code}>
               {p.name} - {p.code}
             </View>
           ))}

@@ -11,4 +11,4 @@ export const restClient = new SpringBootClient({ fetch: taroFetch, rootUrl: conf
 export const yard = new ServiceYard({ restClient });
 export const { loginService, wxMaService } = yard.adminServices;
 export const authService = new AuthService(restClient);
-Taro.login().then(({ code }) => wxMaService.wxMaLogin(code));
+if (config.isWeapp) Taro.login().then(({ code }) => wxMaService.wxMaLogin(code));

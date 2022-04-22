@@ -11,6 +11,12 @@ export class Config {
   get uploadUrl() {
     return `${this.serverRoot}/upload`;
   }
+  get isWeapp() {
+    return process.env.TARO_ENV === 'weapp';
+  }
+  get isH5() {
+    return process.env.TARO_ENV === 'h5';
+  }
   asset = {
     logoIcon: 'https://cdn.feathermind.cn/fmind/fmind-logo.png',
   };
