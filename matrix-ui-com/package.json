@@ -6,11 +6,11 @@
   "typings": "lib/index.d.ts",
   "jsnext:main": "src/index.ts",
   "scripts": {
-    "build": "pnpx tsc",
-    "watch": "pnpx tsc -w",
-    "pub_prod": "pnpx tsc && pnpm publish --no-git-checks",
-    "pub_beta": "pnpm pub_prod -- --tag beta",
-    "pnpm_pack": "pnpx tsc && pnpm pack",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "pub_prod": "tsc && npm publish --no-git-checks",
+    "pub_beta": "pnpm pub_prod --tag beta",
+    "pnpm_pack": "tsc && pnpm pack",
     "test": "jest",
     "lint": "eslint src/ --ext .ts --ext .tsx",
     "lintfix": "eslint src/ --ext .ts --ext .tsx --fix"
@@ -25,7 +25,7 @@
     "url": "git+https://github.com/neoscript99/matrix-admin.git"
   },
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/606bf85eb209386279b73de9/npm/npm-registry/"
+    "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
     "dayjs": "^1.11.0",
