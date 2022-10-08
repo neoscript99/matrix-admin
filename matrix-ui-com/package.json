@@ -1,6 +1,6 @@
 {
   "name": "matrix-ui-com",
-  "version": "1.0.8",
+  "version": "1.0.8-beta.2",
   "description": "Matrix admin ui component.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "pub_prod": "tsc && npm publish --no-git-checks",
+    "pub_prod": "tsc && pnpm publish --no-git-checks",
     "pub_beta": "pnpm pub_prod --tag beta",
     "pnpm_pack": "tsc && pnpm pack",
     "test": "jest",
