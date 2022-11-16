@@ -4,23 +4,21 @@ buildscript {
         maven { url 'https://maven.aliyun.com/repository/public/' }
         maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
         mavenCentral()
-        jcenter()
     }
 }
 
 plugins {
     //plugins id 参数不能加gradle.properties变量
-    id 'org.springframework.boot' version '2.2.1.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'groovy'
-    id 'java-library'
-
     id 'maven-publish'
+    id 'java-library'
 }
 
 group = 'com.feathermind.matrix'
 version = '1.6.11-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 repositories {
     mavenLocal()
@@ -29,23 +27,25 @@ repositories {
     maven { url 'https://maven.aliyun.com/repository/spring/' }
     maven { url 'https://maven.aliyun.com/repository/google/' }
     mavenCentral()
-    jcenter()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
     maven { url "https://repo.grails.org/grails/core" }
     maven { url "https://repo.gradle.org/gradle/libs-releases-local/" }
 }
 
 dependencies {
-    api "org.grails:gorm-hibernate5-spring-boot:7.0.4.RELEASE"
+    api "org.grails:gorm-hibernate5-spring-boot:7.3.0"
+    api 'org.codehaus.groovy:groovy-sql:3.0.13'
+
     implementation "org.hibernate:hibernate-core"
     implementation "org.hibernate:hibernate-ehcache"
     implementation "com.h2database:h2"
-    implementation 'com.alibaba:druid-spring-boot-starter:1.2.4'
+    implementation 'com.alibaba:druid-spring-boot-starter:1.2.15'
     implementation 'com.github.binarywang:weixin-java-miniapp:4.1.8.B'
     implementation 'com.github.binarywang:weixin-java-mp:4.1.8.B'
 
     api 'org.springframework.boot:spring-boot-starter-logging'
     api 'org.springframework.boot:spring-boot-starter-web'
-    api 'org.flywaydb:flyway-core'
     //devtools存在Domain Class加载多次问题
     //https://github.com/grails/grails-data-mapping/issues/970
     //developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -60,23 +60,17 @@ dependencies {
     //支持xml解析
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 
-    implementation 'org.projectlombok:lombok:1.18.16'
-    annotationProcessor 'org.projectlombok:lombok:1.18.16'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
-    def gradleVersion = '5.6.4'
-    testImplementation group: 'org.gradle', name: 'gradle-core', version: gradleVersion
-    testImplementation group: 'org.gradle', name: 'gradle-core-api', version: gradleVersion
-    testImplementation group: 'org.gradle', name: 'gradle-tooling-api', version: gradleVersion
-    testImplementation group: 'org.gradle', name: 'gradle-plugins', version: gradleVersion
-    testImplementation group: 'org.gradle', name: 'gradle-base-services', version: gradleVersion
-    testImplementation group: 'org.gradle', name: 'gradle-base-services-groovy', version: gradleVersion
-
-    testImplementation("org.spockframework:spock-spring:1.3-groovy-2.5")
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
-    testImplementation('org.junit.jupiter:junit-jupiter:5.4.0')
+    implementation 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.spockframework:spock-spring:2.3-groovy-3.0"
+    /*
+     testImplementation("org.spockframework:spock-spring:1.3-groovy-2.5")
+     testImplementation('org.springframework.boot:spring-boot-starter-test') {
+         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+     }
+     testImplementation('org.junit.jupiter:junit-jupiter:5.4.0')*/
 }
 
 bootRun {
@@ -101,6 +95,7 @@ task sourceJar(type: Jar) {
     //exclude('com/feathermind/matrix/repositories/GormRepository.groovy')
     //exclude('com/feathermind/matrix/util/GormCriteriaUtil.groovy')
 }
+
 jar {
     enabled = true
 }

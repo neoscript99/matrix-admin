@@ -1,14 +1,14 @@
 package com.feathermind.matrix.config.data
 
 import com.feathermind.matrix.domain.sys.*
-import com.feathermind.matrix.initializer.MatrixFlywayMigration
+import com.feathermind.matrix.initializer.MatrixMigration
 import org.springframework.stereotype.Component
 
 /**
  * Created by Neo on 2017-08-22.
  */
 @Component
-class V0003__menu_init extends MatrixFlywayMigration{
+class V0003__menu_init extends MatrixMigration{
 
     @Override
     void run() {

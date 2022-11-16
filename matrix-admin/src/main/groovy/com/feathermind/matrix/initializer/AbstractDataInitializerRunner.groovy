@@ -68,11 +68,11 @@ abstract class AbstractDataInitializerRunner implements CommandLineRunner {
                 ClassUtils.convertClassNameToResourcePath(SystemPropertyUtils.resolvePlaceholders(basePackage)) + "/" + pattern;
         try {
             Resource[] resources = resourcePatternResolver.getResources(packageSearchPath);
-            List<Class<DataInitializer>> initClasses = []
+            List<Class<MatrixMigration>> initClasses = []
             for (Resource resource : resources) {
                 ClassMetadata metadata = metadataReaderFactory.getMetadataReader(resource).getClassMetadata()
                 if (metadata && metadata.isConcrete()
-                        && metadata.getInterfaceNames().contains(DataInitializer.name)) {
+                        && metadata.getInterfaceNames().contains(MatrixMigration.name)) {
                     String cls = metadata.getClassName()
                     initClasses << Class.forName(cls)
                 }
@@ -80,7 +80,7 @@ abstract class AbstractDataInitializerRunner implements CommandLineRunner {
             initClasses.sort(AnnotationAwareOrderComparator.INSTANCE)
             initClasses.each {
                 log.info("data initialize by {}", it)
-                DataInitializer dataInitializer = it.newInstance()
+                MatrixMigration dataInitializer = it.newInstance()
                 dataInitializer.generalRepository = generalRepository
                 dataInitializer.applicationContext = applicationContext
                 dataInitializer.init()

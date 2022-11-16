@@ -3,7 +3,7 @@ package com.feathermind.matrix.controller
 import cn.hutool.http.HttpUtil
 import com.feathermind.matrix.util.JsonUtil
 import com.feathermind.matrix.wechat.config.WxMpProps
-import com.feathermind.matrix.wechat.mp.controller.WxMpController
+import com.feathermind.matrix.wechat.mp.WxMpController
 import groovy.util.logging.Slf4j
 import org.springframework.boot.env.YamlPropertySourceLoader
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver

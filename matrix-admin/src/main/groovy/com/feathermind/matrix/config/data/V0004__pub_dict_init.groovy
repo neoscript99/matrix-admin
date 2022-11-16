@@ -2,11 +2,11 @@ package com.feathermind.matrix.config.data
 
 import com.feathermind.matrix.domain.sys.Dict
 import com.feathermind.matrix.domain.sys.DictType
-import com.feathermind.matrix.initializer.MatrixFlywayMigration
+import com.feathermind.matrix.initializer.MatrixMigration
 import org.springframework.stereotype.Component
 
 @Component
-class V0004__pub_dict_init extends MatrixFlywayMigration{
+class V0004__pub_dict_init extends MatrixMigration{
 
     @Override
     void run() {

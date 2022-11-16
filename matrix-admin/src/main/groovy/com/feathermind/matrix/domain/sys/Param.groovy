@@ -35,6 +35,7 @@ class Param {
     static mapping = {
         type lazy: false, fetch: 'join'
         lastUser lazy: false, fetch: 'join'
+        value column: 'param_value'
     }
 
     static constraints = {
@@ -45,5 +46,4 @@ class Param {
         validDescribe maxSize: 200
     }
     static final paramList = [ALLOW_ANONYMOUS_LOGIN, SPARE_MINTUES, HOLD_HEART_BEAT]
-    static graphql = true
 }

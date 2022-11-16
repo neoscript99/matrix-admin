@@ -34,8 +34,6 @@ spring:
   servlet:
     multipart.max-file-size: 100MB
     multipart.max-request-size: 100MB
-  flyway:
-    baseline-on-migrate: true
 
 #org.grails.orm.hibernate.connections.HibernateConnectionSourceSettings
 hibernate:
