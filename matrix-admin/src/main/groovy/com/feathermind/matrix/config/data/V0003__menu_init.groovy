@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component
 @Component
 class V0003__menu_init extends MatrixMigration{
 
+    //初始化在同一个事务的时候可以直接用静态变量
+    def static ROOT_MENU = new Menu(label: 'Root', icon: 'folder')
     @Override
     void run() {
-
-        Menu rootMenu = save(new Menu(label: 'Root', icon: 'folder'))
+        Menu rootMenu = save(ROOT_MENU)
 
         initAdminMenu(rootMenu.id).each {
             save(it)
